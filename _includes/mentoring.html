@@ -1,0 +1,58 @@
+{% assign mentoring = site.data.mentoring %}
+
+<section id="mentoring" class="section section-compact">
+  <div class="section-heading">
+    <h2>Mentorship</h2>
+  </div>
+
+  {% if mentoring.intro %}
+    <div class="mentoring-intro">
+      <p>{{ mentoring.intro | escape }}</p>
+    </div>
+  {% endif %}
+
+  <div class="mentoring-list">
+    {% assign mentoring_people = mentoring.people | sort: "order" | reverse %}
+    {% for person in mentoring_people %}
+      <article class="mentoring-row">
+        <h3>{{ person.name | escape }}</h3>
+        {% assign origin = person.from %}
+        {% assign destination = person.first_public_destination %}
+        <p>
+          {% if origin %}
+            <span>
+              {% if person.from_url %}
+                <a href="{{ person.from_url | escape }}">{{ origin | escape }}</a>
+              {% else %}
+                {{ origin | escape }}
+              {% endif %}
+            </span>
+          {% endif %}
+          {% if person.outcome %}
+            {% if origin %}
+              <span class="mentoring-arrow" aria-hidden="true">→</span>
+            {% endif %}
+            <strong>
+              {% if person.outcome_url %}
+                <a href="{{ person.outcome_url | escape }}">{{ person.outcome | escape }}</a>
+              {% else %}
+                {{ person.outcome | escape }}
+              {% endif %}
+            </strong>
+          {% elsif destination %}
+            <span class="mentoring-arrow" aria-hidden="true">→</span>
+            <span class="sr-only">to</span>
+            <strong>
+              {% if person.destination_url %}
+                <a href="{{ person.destination_url | escape }}">{{ destination | escape }}</a>
+              {% else %}
+                {{ destination | escape }}
+              {% endif %}
+            </strong>
+          {% endif %}
+        </p>
+      </article>
+    {% endfor %}
+  </div>
+
+</section>

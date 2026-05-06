@@ -1,0 +1,79 @@
+{% assign profile = site.data.profile %}
+{% assign cv_exists = false %}
+{% for file in site.static_files %}
+  {% if file.path == profile.links.cv %}
+    {% assign cv_exists = true %}
+  {% endif %}
+{% endfor %}
+
+<section id="about" class="profile-intro section">
+  <div class="profile-copy">
+    <h1>{{ profile.name | escape }}</h1>
+    <p class="profile-title">{{ profile.title | escape }}</p>
+    <p class="profile-affiliations" aria-label="Affiliation">
+      <a class="affiliation-logo-link affiliation-usc" href="{{ profile.university.url | escape }}">
+        <img
+          class="affiliation-logo affiliation-logo-usc"
+          src="{{ '/assets/img/usc-trojan-head.png' | relative_url }}"
+          width="24"
+          height="24"
+          alt=""
+          aria-hidden="true">
+        <span>{{ profile.university.name | escape }}</span>
+      </a>
+      {% if profile.lab %}
+        <span aria-hidden="true">·</span>
+        <a class="affiliation-logo-link affiliation-nexdig" href="{{ profile.lab.url | escape }}">
+          <img
+            class="affiliation-logo affiliation-logo-nexdig"
+            src="{{ '/assets/img/nexdig-logo.jpg' | relative_url }}"
+            width="24"
+            height="24"
+            alt=""
+            aria-hidden="true">
+          <span>{{ profile.lab.name | escape }}</span>
+        </a>
+      {% endif %}
+      <span aria-hidden="true">·</span>
+      Advised by <a href="{{ profile.advisor.url | escape }}">{{ profile.advisor.name | escape }}</a>
+    </p>
+
+    <div class="profile-summary">
+      {% if profile.research_thesis_html %}
+        <p>{{ profile.research_thesis_html }}</p>
+      {% endif %}
+      <p class="research-statement">{{ profile.research_statement | escape }}</p>
+      {% if profile.academic_path_html %}
+        <p>{{ profile.academic_path_html }}</p>
+      {% endif %}
+    </div>
+
+    {% if profile.keywords %}
+      <ul class="keyword-list" aria-label="Research keywords">
+        {% for keyword in profile.keywords %}
+          <li>{{ keyword | escape }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="profile-actions" aria-label="Profile links">
+      {% capture email_button_label %}Email: {{ profile.email.display }}{% endcapture %}
+      {% include email_link.html class="button button-primary obfuscated-email-link" label=email_button_label %}
+      <a class="button" href="{{ profile.links.scholar | escape }}">Google Scholar</a>
+      <a class="button" href="{{ profile.links.github | escape }}">GitHub</a>
+      <a class="button" href="{{ profile.links.linkedin | escape }}">LinkedIn</a>
+      {% if cv_exists %}
+        <a class="button" href="{{ profile.links.cv | relative_url | escape }}">CV</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <aside class="profile-media" aria-label="Profile photo">
+    <img
+      class="profile-photo"
+      src="{{ '/assets/img/hanwen.jpg' | relative_url }}"
+      width="300"
+      height="300"
+      alt="{{ profile.name | escape }}">
+  </aside>
+</section>

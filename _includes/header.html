@@ -1,0 +1,37 @@
+{% assign profile = site.data.profile %}
+{% assign cv_path = profile.links.cv | default: "/assets/files/Hanwen_Liu_CV.pdf" %}
+{% assign cv_exists = false %}
+{% for static_file in site.static_files %}
+  {% if static_file.path == cv_path %}
+    {% assign cv_exists = true %}
+  {% endif %}
+{% endfor %}
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header" aria-label="Primary navigation">
+  <nav class="nav-wrap">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ profile.name | escape }} home">
+      <img class="brand-mark" src="{{ '/assets/img/usc-trojan-head.png' | relative_url }}" alt="" aria-hidden="true">
+      <span class="brand-wordmark">{{ profile.display_name | default: profile.name | escape }}</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Toggle navigation</span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+    <ul id="site-nav" class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#mentoring">Mentorship</a></li>
+      <li><a href="#service">Service</a></li>
+      <li><a href="#teaching">Teaching</a></li>
+      <li><a href="#life">Life</a></li>
+      {% if cv_exists %}
+        <li><a href="{{ cv_path | relative_url | escape }}">CV</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</header>

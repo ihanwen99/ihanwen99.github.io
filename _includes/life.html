@@ -1,0 +1,18 @@
+<section id="life" class="section section-compact">
+  <div class="section-heading">
+    <h2>Life</h2>
+  </div>
+
+  <div class="life-intro">
+    <p>{{ site.data.life.intro | escape }}</p>
+  </div>
+
+  <div class="life-grid" aria-label="Photography and life gallery">
+    {% for photo in site.data.life.photos %}
+      <figure class="life-photo">
+        <img src="{{ photo.image | relative_url | escape }}" alt="{{ photo.alt | escape }}" loading="lazy" decoding="async">
+        <figcaption>{{ photo.caption | escape }}</figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+</section>

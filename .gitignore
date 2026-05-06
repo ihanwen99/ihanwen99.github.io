@@ -1,0 +1,10 @@
+.DS_Store
+Gemfile.lock
+_site/
+.jekyll-cache/
+.sass-cache/
+.bundle/
+vendor/
+_data/private_publications.yml
+_data/private_publication_visuals.yml
+_private/

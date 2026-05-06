@@ -1,0 +1,10 @@
+{% assign profile = site.data.profile %}
+<footer class="site-footer">
+  <p>&copy; {{ site.time | date: "%Y" }} {{ profile.name | escape }}. Last updated {{ site.time | date: "%B %-d, %Y" }}.</p>
+  <nav class="footer-links" aria-label="Footer links">
+    {% include email_link.html class="footer-link obfuscated-email-link" label="Email" %}
+    <a href="{{ profile.links.scholar | escape }}">Google Scholar</a>
+    <a href="{{ profile.links.github | escape }}">GitHub</a>
+    <a href="{{ profile.links.linkedin | escape }}">LinkedIn</a>
+  </nav>
+</footer>

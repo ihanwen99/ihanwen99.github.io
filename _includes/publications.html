@@ -1,0 +1,129 @@
+{% assign publications = site.data.publications | where_exp: "pub", "pub.public != false" | sort: "order" | reverse %}
+{% assign by_year = publications | group_by: "year" %}
+{% assign venue_order = "SIGMOD,VLDB,ICDE" | split: "," %}
+{% assign all_total = publications.size %}
+{% assign first_author_total = 0 %}
+{% assign accepted_full_total = 0 %}
+{% for pub in publications %}
+  {% if pub.is_full_paper and pub.status == "accepted" %}
+    {% assign accepted_full_total = accepted_full_total | plus: 1 %}
+  {% endif %}
+  {% assign first_author_name = pub.authors | first %}
+  {% if first_author_name == site.data.profile.name or pub.equal_contribution contains site.data.profile.name %}
+    {% assign first_author_total = first_author_total | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+<section id="publications" class="section">
+  <div class="section-heading">
+    <h2>Publications</h2>
+  </div>
+
+  <div class="publication-intro">
+    <h3>Research Directions</h3>
+    <div class="direction-list" aria-label="Research directions">
+      <div>
+        <strong>AI/ML + LLMs ↔ Database Systems</strong>
+        <span>Self-Evolving and Trustworthy learned query optimization.</span>
+      </div>
+      <div>
+        <strong>Quantum Computing ↔ Data Management Systems</strong>
+        <span>Quantum Computing Applications, Algorithms, and Systems.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="publication-overview">
+    <dl class="publication-stats" aria-label="Publication summary">
+      <div>
+        <dt>{{ all_total }}</dt>
+        <dd>All Papers</dd>
+      </div>
+      <div>
+        <dt>{{ first_author_total }}</dt>
+        <dd>First-Author Papers</dd>
+      </div>
+      <div>
+        <dt>{{ accepted_full_total }}</dt>
+        <dd>Accepted Full Papers</dd>
+      </div>
+    </dl>
+
+    <div class="chart-card">
+      <div class="chart-head">
+        <div>
+          <h3>Accepted Full Papers</h3>
+        </div>
+      </div>
+      {% assign chart_papers = publications | where: "is_full_paper", true | where: "status", "accepted" %}
+      {% assign chart_groups = "SIGMOD,VLDB,ICDE DEFT" | split: "," %}
+      <div id="full-paper-chart" class="publication-chart" role="img" aria-label="Accepted full papers by VLDB, SIGMOD, and ICDE">
+        {% for chart_group in chart_groups %}
+          {% assign chart_group_papers = chart_papers | where: "chart_group", chart_group %}
+          {% case chart_group %}
+            {% when "ICDE DEFT" %}
+              {% assign chart_label = "ICDE" %}
+            {% else %}
+              {% assign chart_label = chart_group %}
+          {% endcase %}
+          <div class="chart-row">
+            <div class="chart-row-label">{{ chart_label }}</div>
+            <div class="chart-track">
+              {% if chart_group_papers.size > 0 %}
+                {% for paper in chart_group_papers %}
+                  <a class="chart-pill" href="#pub-{{ paper.id | slugify }}">{{ paper.short_title | escape | replace: "Q^2O", "Q²O" }}</a>
+                {% endfor %}
+              {% else %}
+                <span class="chart-empty-bar">No accepted full papers yet</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="publication-toolbar" aria-label="Publication controls">
+    <div class="segmented-control" aria-label="Filter publications">
+      <button type="button" data-pub-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-pub-filter="full" aria-pressed="false">Full Papers</button>
+      <button type="button" data-pub-filter="other" aria-pressed="false">Demos / Workshops / Talks</button>
+    </div>
+    <div class="segmented-control" aria-label="Group publications">
+      <button type="button" data-pub-group="year" aria-pressed="true">By Year</button>
+      <button type="button" data-pub-group="venue" aria-pressed="false">By Venue</button>
+    </div>
+  </div>
+
+  <div class="publication-groups" data-publication-groups>
+    <div class="publication-view is-active" data-publication-view="year">
+      {% for group in by_year %}
+        <section class="publication-group" aria-labelledby="pub-year-{{ group.name | slugify }}">
+          <h3 id="pub-year-{{ group.name | slugify }}">{{ group.name | escape }}</h3>
+          <div class="publication-list">
+            {% for pub in group.items %}
+              {% include publication_item.html pub=pub %}
+            {% endfor %}
+          </div>
+        </section>
+      {% endfor %}
+    </div>
+
+    <div class="publication-view" data-publication-view="venue" hidden>
+      {% for venue_name in venue_order %}
+        {% assign venue_items = publications | where: "venue_group", venue_name | sort: "order" | reverse %}
+        {% if venue_items.size > 0 %}
+        <section class="publication-group" aria-labelledby="pub-venue-{{ venue_name | slugify }}">
+          <h3 id="pub-venue-{{ venue_name | slugify }}">{{ venue_name | escape }}</h3>
+          <div class="publication-list">
+            {% for pub in venue_items %}
+              {% include publication_item.html pub=pub anchor_suffix="venue" %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+</section>

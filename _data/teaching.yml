@@ -1,0 +1,9 @@
+- role: "Teaching Assistant"
+  course: "USC CS104 - Data Structures"
+  course_url: "https://catalogue.usc.edu/preview_course_nopop.php?catoid=20&coid=318131"
+  term: "Fall 2025"
+
+- role: "Teaching Assistant"
+  course: "USC CS550 - Advanced Data Stores"
+  course_url: "https://catalogue.usc.edu/preview_course_nopop.php?catoid=20&coid=318177"
+  term: "Fall 2024"

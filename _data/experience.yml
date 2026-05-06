@@ -1,0 +1,23 @@
+- organization: "Learned System Group @ AWS Redshift"
+  organization_url: "https://www.amazon.science/blog/building-systems-that-automatically-adjust-to-workloads-and-data"
+  role: "Applied Scientist Intern"
+  location: "Palo Alto, USA"
+  start: "May 2025"
+  end: "Aug 2025"
+  description: "Worked with Prof. Tim Kraska's group on AWS Redshift and Agentic AI."
+  highlights:
+    - "Topic: Query Rewrite via LLM"
+
+- organization: "Amazon"
+  organization_url: "https://www.amazon.com/"
+  role: "Software Development Engineer Intern"
+  location: "Berlin, Germany"
+  start: "Mar 2024"
+  end: "May 2024"
+
+- organization: "BMW Group"
+  organization_url: "https://www.bmwgroup.com/en.html"
+  role: "Full Stack Software Intern"
+  location: "Munich, Germany"
+  start: "Aug 2022"
+  end: "Jan 2023"

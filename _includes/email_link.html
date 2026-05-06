@@ -1,0 +1,10 @@
+<a
+  class="{{ include.class | default: 'obfuscated-email-link' | escape }}"
+  href="#"
+  data-email-user="{{ site.data.profile.email.user | escape }}"
+  data-email-domain="{{ site.data.profile.email.domain | escape }}"
+  data-email-tld="{{ site.data.profile.email.tld | escape }}"
+  aria-label="Email {{ site.data.profile.name | escape }}"
+>
+  {{ include.label | default: site.data.profile.email.display | escape }}
+</a>

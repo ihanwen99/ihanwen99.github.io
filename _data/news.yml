@@ -1,0 +1,42 @@
+- date: "2026-04"
+  text: "I passed the Ph.D. qualifying exam and officially became a Ph.D. candidate 🎉"
+  category: "milestone"
+
+- date: "2026-01"
+  text: "Two papers on real-time quantum-augmented database optimization were accepted at ICDE 2026"
+  link: "https://arxiv.org/abs/2602.14263"
+  category: "paper"
+
+- date: "2025-08"
+  text: "One full paper on self-evolving learned query optimizer was accepted at SIGMOD 2026"
+  link: "https://dl.acm.org/doi/10.1145/3769826"
+  category: "paper"
+
+- date: "2025-05"
+  text: "One demo paper on quantum-augmented query optimization was accepted at VLDB 2025 Demo"
+  link: "https://doi.org/10.14778/3750601.3750691"
+  category: "paper"
+
+- date: "2025-05"
+  text: "Two workshop papers were accepted at aiDM and Q-Data@SIGMOD 2025"
+  link: "https://viterbi-web.usc.edu/~sabek/pdf/25_workshop_serag.pdf"
+  category: "paper"
+
+- date: "2025-04"
+  text: "My first full paper on verifiable learned query optimization was accepted at VLDB 2025"
+  link: "https://dl.acm.org/doi/10.14778/3742728.3742755"
+  category: "paper"
+
+- date: "2025-01"
+  text: "One workshop paper on join order optimization was accepted at QDML@ICDE 2025"
+  link: "https://doi.org/10.1109/ICDEW67478.2025.00042"
+  category: "paper"
+
+- date: "2024-08"
+  text: "I gave my first database conference presentation on Corra at CloudDB@VLDB 2024"
+  link: "https://vldb.org/workshops/2024/proceedings/CloudDB/clouddb-2.pdf"
+  category: "milestone"
+
+- date: "2024-08"
+  text: "I started my Ph.D. journey in Computer Science at the University of Southern California"
+  category: "milestone"

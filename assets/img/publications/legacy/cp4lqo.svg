@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">CP4LQO visual summary</title>
+  <desc id="desc">Verifiable learned query optimization</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#d6a419"/>
+    </marker>
+    <marker id="arrow-primary" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#8c1515"/>
+    </marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1f2328" flood-opacity="0.13"/>
+    </filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0 H0 V36" fill="none" stroke="#e5ded4" stroke-width="1" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="#fbfaf8"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="url(#grid)" opacity="0.38"/>
+  <rect x="34" y="34" width="12" height="607" rx="6" fill="#8c1515"/>
+  <path d="M34 154 H1166" stroke="#e5ded4" stroke-width="2"/>
+  <circle cx="1064" cy="96" r="56" fill="#fbf3df"/>
+  <circle cx="1114" cy="108" r="28" fill="#d6a419" opacity="0.18"/>
+
+  <rect x="82" y="72" width="78" height="34" rx="17" fill="#8c1515" stroke="none"/>
+<text x="121" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">VLDB</text>
+
+  <rect x="892" y="72" width="78" height="34" rx="17" fill="#f4ebe5" stroke="#ead5c8"/>
+<text x="931" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#8c1515">full</text>
+
+  <rect x="1012" y="72" width="112" height="34" rx="17" fill="#2f6b3f" stroke="none"/>
+<text x="1068" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">accepted</text>
+
+  <text x="600" y="76" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#1f2328">CP4LQO</text>
+  <text x="600" y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="680" fill="#626b74">Verifiable learned query optimization</text>
+
+  <g filter="url(#soft-shadow)">
+    <g>
+  <rect x="88" y="188" width="300" height="250" rx="18" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="88" y="188" width="300" height="38" rx="18" fill="#fbf3df" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M88 212 Q88 226, 106 226 H370 Q388 226, 388 212" fill="#fbf3df"/>
+  <text x="106" y="213" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#8c1515">1. Learned optimizer proposes plans</text>
+</g>
+
+<g>
+  <rect x="450" y="188" width="300" height="250" rx="18" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="450" y="188" width="300" height="38" rx="18" fill="#fbf3df" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M450 212 Q450 226, 468 226 H732 Q750 226, 750 212" fill="#fbf3df"/>
+  <text x="468" y="213" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#8c1515">2. Conformal wrapper bounds risk</text>
+</g>
+
+<g>
+  <rect x="812" y="188" width="300" height="250" rx="18" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="812" y="188" width="300" height="38" rx="18" fill="#fbf3df" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M812 212 Q812 226, 830 226 H1094 Q1112 226, 1112 212" fill="#fbf3df"/>
+  <text x="830" y="213" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#8c1515">3. Search only checkable plans</text>
+</g>
+
+<g transform="translate(140 250) scale(0.72)">
+  <circle cx="210" cy="18" r="18" fill="#8c1515"/>
+  <circle cx="155" cy="78" r="18" fill="#d6a419"/>
+  <circle cx="105" cy="136" r="18" fill="#d6a419"/>
+  <rect x="35" y="190" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="92" y="190" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="148" y="130" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="205" y="72" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <path d="M201 32 L168 64 M152 92 L118 122 M99 154 L68 190 M111 154 L113 190 M164 92 L168 130 M214 32 L224 72" stroke="#8c1515" stroke-width="4" fill="none" stroke-linecap="round"/>
+</g>
+
+<circle cx="313" cy="262" r="17" fill="#f8e8e8" stroke="#a33a3a" stroke-width="2"/>
+<path d="M306 255 L320 269 M320 255 L306 269" stroke="#a33a3a" stroke-width="4" stroke-linecap="round"/>
+
+<text x="305" y="322" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="820" fill="#a33a3a">unsafe winner</text>
+<g transform="translate(500 258)">
+  <line x1="0" y1="120" x2="190" y2="120" stroke="#d8d1c8" stroke-width="2"/>
+  <rect x="18" y="72" width="36" height="48" rx="7" fill="#fff4bf" stroke="#d6a419" stroke-width="2"/>
+  <rect x="76" y="36" width="36" height="84" rx="7" fill="#f4ebe5" stroke="#8c1515" stroke-width="2"/>
+  <rect x="134" y="88" width="36" height="32" rx="7" fill="#fff4bf" stroke="#d6a419" stroke-width="2"/>
+  <path d="M10 76 C58 38, 105 44, 177 60" fill="none" stroke="#8c1515" stroke-width="4"/>
+  <path d="M10 96 C58 58, 105 64, 177 80" fill="none" stroke="#8c1515" stroke-width="4" opacity="0.28"/>
+  <text x="96" y="158" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#8c1515">prediction sets</text>
+<text x="96" y="178" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#8c1515">with validity</text>
+</g>
+<g transform="translate(878 242) scale(0.78)">
+  <circle cx="150" cy="18" r="18" fill="#8c1515"/>
+  <circle cx="78" cy="88" r="18" fill="#d6a419"/>
+  <circle cx="222" cy="88" r="18" fill="#d6a419"/>
+  <rect x="20" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="95" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="168" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <rect x="242" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#8c1515" stroke-width="2"/>
+  <path d="M139 32 L91 75 M161 32 L209 75 M72 104 L48 145 M84 104 L110 145 M216 104 L194 145 M230 104 L260 145" stroke="#8c1515" stroke-width="4" fill="none" stroke-linecap="round"/>
+</g>
+
+<circle cx="1037" cy="265" r="22" fill="#e8f4ec" stroke="#2f6b3f" stroke-width="2"/>
+<path d="M1027 265 L1035 274 L1050 253" fill="none" stroke="#2f6b3f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+<line x1="396" y1="313" x2="440" y2="313" stroke="#d6a419" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="758" y1="313" x2="802" y2="313" stroke="#d6a419" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="600" y="500" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#8c1515">key visual: learned decisions become bounded and verifiable before execution</text>
+
+  </g>
+
+  <rect x="112" y="545" width="976" height="58" rx="18" fill="#fffaf1" stroke="#e5ded4"/>
+  <text x="600" y="568" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#8c1515">Contribution: bounded, checkable learned optimizer decisions before</text>
+<text x="600" y="593" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#8c1515">execution.</text>
+</svg>

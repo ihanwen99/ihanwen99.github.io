@@ -1,0 +1,44 @@
+intro: >
+  I mentor and collaborate with students on database systems and applied AI research.
+  Their success is my success.
+
+people:
+  - name: "Advait Badrish"
+    order: 6
+    outcome: "First Place award at the 69th Annual Washington State Science & Engineering Fair (WSSEF)"
+    outcome_url: "https://wssef.org/"
+
+  - name: "Gaurvi Vishnoi"
+    order: 4
+    from: "M.S., USC"
+    from_url: "https://nexdig.usc.edu/people"
+    first_public_destination: "Adobe"
+    destination_url: "https://www.adobe.com/"
+
+  - name: "Parinda Ashish Pranami"
+    order: 3
+    from: "M.S., USC"
+    from_url: "https://nexdig.usc.edu/people"
+    first_public_destination: "Google"
+    destination_url: "https://www.google.com/"
+
+  - name: "Bowen Wang"
+    order: 2
+    from: "M.S., USC"
+    from_url: "https://nexdig.usc.edu/people"
+    first_public_destination: "Amazon"
+    destination_url: "https://www.amazon.com/"
+
+  - name: "Shashank Giridhara"
+    order: 1
+    from: "M.S., USC"
+    from_url: "https://nexdig.usc.edu/people"
+    first_public_destination: "Amazon Redshift"
+    destination_url: "https://aws.amazon.com/redshift/"
+
+  - name: "Zhaoyang Liu"
+    order: 5
+    from: "M.S., University of Wisconsin–Madison"
+    from_url: "https://www.wisc.edu/"
+    first_public_destination: "USC CS Ph.D. Student"
+    destination_url: "https://www.cs.usc.edu/"

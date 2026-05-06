@@ -1,0 +1,42 @@
+name: "Hanwen Liu"
+display_name: "HANWEN LIU"
+title: "Ph.D. Candidate in Computer Science"
+location: "Los Angeles, CA, USA"
+university:
+  name: "University of Southern California"
+  url: "https://www.usc.edu/"
+lab:
+  name: "NexDIG Lab"
+  url: "https://nexdig.usc.edu/"
+advisor:
+  name: "Prof. Ibrahim Sabek"
+  url: "https://viterbi-web.usc.edu/~sabek/"
+email:
+  user: "hanwen_liu"
+  domain: "usc"
+  tld: "edu"
+  display: "hanwen_liu [at] usc.edu"
+links:
+  scholar: "https://scholar.google.com/citations?user=HDF0su0AAAAJ"
+  github: "https://github.com/ihanwen99"
+  linkedin: "https://linkedin.com/in/liu-hanwen"
+  cv: "/assets/files/Hanwen_Liu_CV.pdf"
+research_statement: "My research has two bidirectional threads: AI/ML + LLMs ↔ Database Systems, and Quantum Computing ↔ Data Management Systems."
+# Trusted, hand-authored HTML for homepage links only. Do not paste untrusted HTML here.
+# research_thesis_html: >
+#   I am a Ph.D. candidate in Computer Science at the
+#   <a href="https://www.usc.edu/">University of Southern California</a>, advised by
+#   <a href="https://viterbi-web.usc.edu/~sabek/">Prof. Ibrahim Sabek</a> in the
+#   <a href="https://nexdig.usc.edu/">NexDIG Lab</a>.
+academic_path_html: >
+  Before USC, I completed my M.Sc. at
+  <a href="https://www.tum.de/en/">Technical University of Munich</a>, advised by
+  <a href="https://www.professoren.tum.de/en/neumann-thomas">Prof. Thomas Neumann</a>,
+  and received my IEEE Honor Bachelor Degree from
+  <a href="https://en.sjtu.edu.cn/">Shanghai Jiao Tong University</a>. I interned with the
+  <a href="https://www.amazon.science/blog/building-systems-that-automatically-adjust-to-workloads-and-data">Learned System Group @ AWS Redshift</a>.
+# keywords:
+#   - "AI/ML + LLMs ↔ Database Systems"
+#   - "Quantum Computing ↔ Data Management Systems"
+  # - "Verifiable Learned Query Optimization"
+  # - "Self-evolving Database Systems"

@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Q²O Demo visual summary</title>
+  <desc id="desc">Quantum-augmented query optimizer inside PostgreSQL</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#0b7285"/>
+    </marker>
+    <marker id="arrow-primary" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#6f1d1b"/>
+    </marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1f2328" flood-opacity="0.13"/>
+    </filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0 H0 V36" fill="none" stroke="#e5ded4" stroke-width="1" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="#fbfaf8"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="url(#grid)" opacity="0.38"/>
+  <rect x="34" y="34" width="12" height="607" rx="6" fill="#6f1d1b"/>
+  <path d="M34 154 H1166" stroke="#e5ded4" stroke-width="2"/>
+  <circle cx="1064" cy="96" r="56" fill="#eef7fa"/>
+  <circle cx="1114" cy="108" r="28" fill="#0b7285" opacity="0.18"/>
+
+  <rect x="82" y="72" width="78" height="34" rx="17" fill="#6f1d1b" stroke="none"/>
+<text x="121" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">VLDB</text>
+
+  <rect x="892" y="72" width="78" height="34" rx="17" fill="#f4ebe5" stroke="#ead5c8"/>
+<text x="931" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#6f1d1b">demo</text>
+
+  <rect x="1012" y="72" width="112" height="34" rx="17" fill="#2f6b3f" stroke="none"/>
+<text x="1068" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">accepted</text>
+
+  <text x="600" y="76" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#1f2328">Q<tspan baseline-shift="super" font-size="65%">2</tspan>O Demo</text>
+  <text x="600" y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="680" fill="#626b74">Quantum-augmented query optimizer inside PostgreSQL</text>
+
+  <g filter="url(#soft-shadow)">
+    <g transform="translate(94 190)">
+  <rect x="0" y="0" width="1012" height="300" rx="24" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="0" y="0" width="1012" height="54" rx="24" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+  <text x="506" y="36" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="880" fill="#6f1d1b">PostgreSQL-integrated optimizer pipeline</text>
+</g>
+<g class="diagram-node">
+  <rect x="132" y="278" width="150" height="82" rx="16" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <ellipse cx="171" cy="304" rx="21" ry="8" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M150 304 V334 C150 345, 192 345, 192 334 V304" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M150 334 C150 345, 192 345, 192 334" fill="none" stroke="#6f1d1b" stroke-width="2"/>
+
+  <text x="210" y="326" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">SQL query</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="322" y="278" width="160" height="82" rx="16" fill="#f8fbfd" stroke="#6f1d1b" stroke-width="2"/>
+  <ellipse cx="361" cy="304" rx="21" ry="8" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M340 304 V334 C340 345, 382 345, 382 334 V304" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M340 334 C340 345, 382 345, 382 334" fill="none" stroke="#6f1d1b" stroke-width="2"/>
+
+  <text x="400" y="326" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">join graph</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="522" y="278" width="170" height="82" rx="16" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <line x1="534" y1="305" x2="539" y2="305" stroke="#6f1d1b" stroke-width="2"/><line x1="585" y1="305" x2="590" y2="305" stroke="#6f1d1b" stroke-width="2"/><line x1="534" y1="314" x2="539" y2="314" stroke="#6f1d1b" stroke-width="2"/><line x1="585" y1="314" x2="590" y2="314" stroke="#6f1d1b" stroke-width="2"/><line x1="534" y1="323" x2="539" y2="323" stroke="#6f1d1b" stroke-width="2"/><line x1="585" y1="323" x2="590" y2="323" stroke="#6f1d1b" stroke-width="2"/><line x1="534" y1="332" x2="539" y2="332" stroke="#6f1d1b" stroke-width="2"/><line x1="585" y1="332" x2="590" y2="332" stroke="#6f1d1b" stroke-width="2"/>
+<rect x="539" y="295" width="46" height="46" rx="9" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<circle cx="553" cy="309" r="5" fill="#0b7285"/>
+<circle cx="570" cy="315" r="5" fill="#0b7285" opacity="0.75"/>
+<circle cx="559" cy="328" r="5" fill="#0b7285" opacity="0.55"/>
+<path d="M553 309 L570 315 L559 328" stroke="#6f1d1b" stroke-width="2" fill="none"/>
+
+  <text x="600" y="326" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">QUBO model</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="732" y="278" width="220" height="82" rx="16" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+  <line x1="744" y1="305" x2="749" y2="305" stroke="#6f1d1b" stroke-width="2"/><line x1="795" y1="305" x2="800" y2="305" stroke="#6f1d1b" stroke-width="2"/><line x1="744" y1="314" x2="749" y2="314" stroke="#6f1d1b" stroke-width="2"/><line x1="795" y1="314" x2="800" y2="314" stroke="#6f1d1b" stroke-width="2"/><line x1="744" y1="323" x2="749" y2="323" stroke="#6f1d1b" stroke-width="2"/><line x1="795" y1="323" x2="800" y2="323" stroke="#6f1d1b" stroke-width="2"/><line x1="744" y1="332" x2="749" y2="332" stroke="#6f1d1b" stroke-width="2"/><line x1="795" y1="332" x2="800" y2="332" stroke="#6f1d1b" stroke-width="2"/>
+<rect x="749" y="295" width="46" height="46" rx="9" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<circle cx="763" cy="309" r="5" fill="#0b7285"/>
+<circle cx="780" cy="315" r="5" fill="#0b7285" opacity="0.75"/>
+<circle cx="769" cy="328" r="5" fill="#0b7285" opacity="0.55"/>
+<path d="M763 309 L780 315 L769 328" stroke="#6f1d1b" stroke-width="2" fill="none"/>
+
+  <text x="810" y="316" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">hybrid quantum</text>
+<text x="810" y="337" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">solver</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="982" y="278" width="140" height="82" rx="16" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <path d="M1022 293 L1042 305 V317 C1042 336, 1022 341, 1022 341 C1022 341, 1002 336, 1002 317 V305 Z" fill="#fff4bf" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M1013 320 L1022 329 L1035 311" fill="none" stroke="#0b7285" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="1060" y="326" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">plan hint</text>
+</g>
+
+<line x1="290" y1="319" x2="314" y2="319" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="490" y1="319" x2="514" y2="319" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="700" y1="319" x2="724" y2="319" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="960" y1="319" x2="974" y2="319" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<g transform="translate(365 398)">
+  <g><line x1="40.9" y1="21.3" x2="68.2" y2="12.899999999999999" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="68.2" y1="12.899999999999999" x2="87.1" y2="30.96" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="40.9" y1="21.3" x2="56.44" y2="38.1" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="56.44" y1="38.1" x2="87.1" y2="30.96" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="56.44" y1="38.1" x2="43.84" y2="54.900000000000006" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="56.44" y1="38.1" x2="81.64" y2="56.16" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="87.1" y1="30.96" x2="81.64" y2="56.16" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><circle cx="40.9" cy="21.3" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="68.2" cy="12.899999999999999" r="11" fill="#0b7285" stroke="#ffffff" stroke-width="3"/><circle cx="87.1" cy="30.96" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="56.44" cy="38.1" r="11" fill="#0b7285" stroke="#ffffff" stroke-width="3"/><circle cx="43.84" cy="54.900000000000006" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="81.64" cy="56.16" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/></g>
+  <path d="M150 36 H430" stroke="#d8d1c8" stroke-width="3"/>
+  <rect x="180" y="12" width="75" height="48" rx="10" fill="#fff4bf" stroke="#0b7285"/>
+  <rect x="282" y="0" width="75" height="60" rx="10" fill="#eef7fa" stroke="#6f1d1b"/>
+  <rect x="384" y="22" width="75" height="38" rx="10" fill="#fff4bf" stroke="#0b7285"/>
+</g>
+<text x="600" y="520" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#6f1d1b">key visual: SQL-to-QUBO-to-plan loop runs inside a real DBMS</text>
+
+  </g>
+
+  <rect x="112" y="545" width="976" height="58" rx="18" fill="#f8fbfd" stroke="#e5ded4"/>
+  <text x="600" y="579" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#6f1d1b">Contribution: end-to-end demonstration in a real DBMS.</text>
+</svg>

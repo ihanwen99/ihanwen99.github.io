@@ -1,0 +1,34 @@
+<section id="experience" class="section section-compact">
+  <div class="section-heading">
+    <h2>Professional Experience</h2>
+  </div>
+
+  <ol class="timeline-list timeline-list-wide">
+    {% for item in site.data.experience %}
+      <li>
+        <div class="timeline-head">
+          <strong class="timeline-role">{{ item.role | escape }}</strong>
+          <span class="timeline-date">{{ item.start | escape }} - {{ item.end | escape }}</span>
+          <span class="timeline-organization">
+            {% if item.organization_url %}
+              <a href="{{ item.organization_url | escape }}">{{ item.organization | escape }}</a>
+            {% else %}
+              {{ item.organization | escape }}
+            {% endif %}
+          </span>
+          <span class="timeline-location">{{ item.location | escape }}</span>
+        </div>
+        {% if item.description %}
+          <p>{{ item.description | escape }}</p>
+        {% endif %}
+        {% if item.highlights %}
+          <ul class="timeline-highlights">
+            {% for highlight in item.highlights %}
+              <li>{{ highlight | escape }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Quantum Ready? visual summary</title>
+  <desc id="desc">Real-time database optimization with quantum solvers</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#0b7285"/>
+    </marker>
+    <marker id="arrow-primary" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#6f1d1b"/>
+    </marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1f2328" flood-opacity="0.13"/>
+    </filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0 H0 V36" fill="none" stroke="#e5ded4" stroke-width="1" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="#fbfaf8"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="url(#grid)" opacity="0.38"/>
+  <rect x="34" y="34" width="12" height="607" rx="6" fill="#6f1d1b"/>
+  <path d="M34 154 H1166" stroke="#e5ded4" stroke-width="2"/>
+  <circle cx="1064" cy="96" r="56" fill="#eef7fa"/>
+  <circle cx="1114" cy="108" r="28" fill="#0b7285" opacity="0.18"/>
+
+  <rect x="82" y="72" width="78" height="34" rx="17" fill="#6f1d1b" stroke="none"/>
+<text x="121" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">ICDE</text>
+
+  <rect x="892" y="72" width="122" height="34" rx="17" fill="#f4ebe5" stroke="#ead5c8"/>
+<text x="953" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#6f1d1b">lightning</text>
+
+  <rect x="1012" y="72" width="112" height="34" rx="17" fill="#2f6b3f" stroke="none"/>
+<text x="1068" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">accepted</text>
+
+  <text x="600" y="76" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#1f2328">Quantum Ready?</text>
+  <text x="600" y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="680" fill="#626b74">Real-time database optimization with quantum solvers</text>
+
+  <g filter="url(#soft-shadow)">
+    <g transform="translate(108 218)">
+  <rect x="0" y="0" width="984" height="104" rx="22" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <path d="M70 52 H910" stroke="#d8d1c8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="80" cy="52" r="18" fill="#0b7285" stroke="#ffffff" stroke-width="4"/><text x="80" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="850" fill="#6f1d1b">DB task</text><circle cx="300" cy="52" r="18" fill="#0b7285" stroke="#ffffff" stroke-width="4"/><text x="300" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="850" fill="#6f1d1b">QUBO</text><circle cx="520" cy="52" r="18" fill="#0b7285" stroke="#ffffff" stroke-width="4"/><text x="520" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="850" fill="#6f1d1b">solve</text><circle cx="740" cy="52" r="18" fill="#0b7285" stroke="#ffffff" stroke-width="4"/><text x="740" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="850" fill="#6f1d1b">plan</text><circle cx="900" cy="52" r="18" fill="#0b7285" stroke="#ffffff" stroke-width="4"/><text x="900" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="850" fill="#6f1d1b">execute</text>
+  <path d="M70 52 H520" stroke="#0b7285" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+</g>
+<g class="diagram-node">
+  <rect x="180" y="384" width="260" height="86" rx="16" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+  <line x1="192" y1="411" x2="197" y2="411" stroke="#6f1d1b" stroke-width="2"/><line x1="243" y1="411" x2="248" y2="411" stroke="#6f1d1b" stroke-width="2"/><line x1="192" y1="420" x2="197" y2="420" stroke="#6f1d1b" stroke-width="2"/><line x1="243" y1="420" x2="248" y2="420" stroke="#6f1d1b" stroke-width="2"/><line x1="192" y1="429" x2="197" y2="429" stroke="#6f1d1b" stroke-width="2"/><line x1="243" y1="429" x2="248" y2="429" stroke="#6f1d1b" stroke-width="2"/><line x1="192" y1="438" x2="197" y2="438" stroke="#6f1d1b" stroke-width="2"/><line x1="243" y1="438" x2="248" y2="438" stroke="#6f1d1b" stroke-width="2"/>
+<rect x="197" y="401" width="46" height="46" rx="9" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<circle cx="211" cy="415" r="5" fill="#0b7285"/>
+<circle cx="228" cy="421" r="5" fill="#0b7285" opacity="0.75"/>
+<circle cx="217" cy="434" r="5" fill="#0b7285" opacity="0.55"/>
+<path d="M211 415 L228 421 L217 434" stroke="#6f1d1b" stroke-width="2" fill="none"/>
+
+  <text x="258" y="424" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">Q<tspan baseline-shift="super" font-size="65%">2</tspan>O</text>
+<text x="258" y="445" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">proof-of-concept</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="470" y="384" width="280" height="86" rx="16" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <path d="M510 399 L530 411 V423 C530 442, 510 447, 510 447 C510 447, 490 442, 490 423 V411 Z" fill="#fff4bf" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M501 426 L510 435 L523 417" fill="none" stroke="#0b7285" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="548" y="414" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">latency /</text>
+<text x="548" y="435" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">quality</text>
+<text x="548" y="456" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">tradeoff</text>
+</g>
+
+<g class="diagram-node">
+  <rect x="780" y="384" width="250" height="86" rx="16" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <ellipse cx="819" cy="410" rx="21" ry="8" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M798 410 V440 C798 451, 840 451, 840 440 V410" fill="#eef7fa" stroke="#6f1d1b" stroke-width="2"/>
+<path d="M798 440 C798 451, 840 451, 840 440" fill="none" stroke="#6f1d1b" stroke-width="2"/>
+
+  <text x="858" y="424" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">PostgreSQL</text>
+<text x="858" y="445" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="760" fill="#1f2328">execution</text>
+</g>
+
+<line x1="450" y1="427" x2="462" y2="427" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="760" y1="427" x2="772" y2="427" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="600" y="520" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#6f1d1b">key visual: feasibility is a systems question, not just a solver benchmark</text>
+
+  </g>
+
+  <rect x="112" y="545" width="976" height="58" rx="18" fill="#f8fbfd" stroke="#e5ded4"/>
+  <text x="600" y="568" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#6f1d1b">Contribution: feasibility evidence for latency-constrained quantum-augmented</text>
+<text x="600" y="593" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#6f1d1b">optimization.</text>
+</svg>

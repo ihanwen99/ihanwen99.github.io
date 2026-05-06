@@ -1,0 +1,36 @@
+{% assign news_items = site.data.news %}
+<section id="news" class="section section-compact">
+  <div class="section-heading news-heading">
+    <h2>News</h2>
+  </div>
+
+  <ol class="news-list">
+    {% for item in news_items %}
+      {% assign date_parts = item.date | split: "-" %}
+      {% if date_parts.size >= 2 %}
+        {% assign news_date_display = date_parts[1] | append: "." | append: date_parts[0] %}
+      {% else %}
+        {% assign news_date_display = item.date %}
+      {% endif %}
+      <li class="news-item{% if item.highlight %} is-highlight{% endif %}"{% if forloop.index > 5 %} data-news-extra hidden{% endif %}>
+        <div class="news-meta">
+          <time datetime="{{ item.date | escape }}">[{{ news_date_display | escape }}]</time>
+          {% if item.category %}
+            <span class="mini-badge">{{ item.category | escape }}</span>
+          {% endif %}
+        </div>
+        <p class="news-content">
+          {% if item.link %}
+            <a href="{{ item.link | escape }}">{{ item.text | escape }}</a>
+          {% else %}
+            {{ item.text | escape }}
+          {% endif %}
+        </p>
+      </li>
+    {% endfor %}
+  </ol>
+
+  {% if news_items.size > 5 %}
+    <button class="text-button news-toggle" type="button" data-news-toggle aria-expanded="false">Show more updates</button>
+  {% endif %}
+</section>

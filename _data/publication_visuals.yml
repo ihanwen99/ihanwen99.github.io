@@ -1,0 +1,16 @@
+# Optional publication visual interface.
+#
+# The homepage does not show paper figures by default. To add a future figure,
+# place a reviewed image under assets/img/publications/ and add an entry like:
+#
+# cp4lqo:
+#   enabled: true
+#   src: "/assets/img/publications/cp4lqo.png"
+#   alt: "Architecture summary for CP4LQO"
+#
+# Draft legacy SVGs from the first visual pass are archived under
+# assets/img/publications/legacy/ for later review. They are not shown unless
+# explicitly enabled below.
+#
+# Keep `enabled: false` or remove the entry while a figure is still a draft.
+{}

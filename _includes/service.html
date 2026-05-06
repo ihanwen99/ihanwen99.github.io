@@ -1,0 +1,31 @@
+<section id="service" class="section section-compact">
+  <div class="section-heading">
+    <h2>Academic Service</h2>
+  </div>
+
+  <div class="service-list">
+    {% for item in site.data.service %}
+      <article class="service-item">
+        <div class="service-row">
+          <strong>
+            {% if item.venue_url %}
+              <a href="{{ item.venue_url | escape }}">{{ item.venue | escape }}</a>
+            {% else %}
+              {{ item.venue | escape }}
+            {% endif %}
+          </strong>
+          <span>
+            {% if item.link %}
+              <a href="{{ item.link | escape }}">{{ item.role | escape }}</a>
+            {% else %}
+              {{ item.role | escape }}
+            {% endif %}
+          </span>
+          {% if item.description %}
+            <p>{{ item.description | escape }}</p>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Bushy Join Trees visual summary</title>
+  <desc id="desc">Hybrid quantum-classical optimization beyond left-deep plans</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#0b7285"/>
+    </marker>
+    <marker id="arrow-primary" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#6f1d1b"/>
+    </marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1f2328" flood-opacity="0.13"/>
+    </filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0 H0 V36" fill="none" stroke="#e5ded4" stroke-width="1" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="#fbfaf8"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="34" y="34" width="1132" height="607" rx="30" fill="url(#grid)" opacity="0.38"/>
+  <rect x="34" y="34" width="12" height="607" rx="6" fill="#6f1d1b"/>
+  <path d="M34 154 H1166" stroke="#e5ded4" stroke-width="2"/>
+  <circle cx="1064" cy="96" r="56" fill="#eef7fa"/>
+  <circle cx="1114" cy="108" r="28" fill="#0b7285" opacity="0.18"/>
+
+  <rect x="82" y="72" width="92" height="34" rx="17" fill="#6f1d1b" stroke="none"/>
+<text x="128" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">SIGMOD</text>
+
+  <rect x="892" y="72" width="112" height="34" rx="17" fill="#f4ebe5" stroke="#ead5c8"/>
+<text x="948" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#6f1d1b">workshop</text>
+
+  <rect x="1012" y="72" width="112" height="34" rx="17" fill="#2f6b3f" stroke="none"/>
+<text x="1068" y="95" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#ffffff">accepted</text>
+
+  <text x="600" y="76" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="880" fill="#1f2328">Bushy Join Trees</text>
+  <text x="600" y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="680" fill="#626b74">Hybrid quantum-classical optimization beyond left-deep plans</text>
+
+  <g filter="url(#soft-shadow)">
+    <g>
+  <rect x="104" y="202" width="290" height="245" rx="18" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="104" y="202" width="290" height="38" rx="18" fill="#eef7fa" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M104 226 Q104 240, 122 240 H376 Q394 240, 394 226" fill="#eef7fa"/>
+  <text x="122" y="227" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#6f1d1b">Left-deep search</text>
+</g>
+
+<g>
+  <rect x="455" y="202" width="290" height="245" rx="18" fill="#f8fbfd" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="455" y="202" width="290" height="38" rx="18" fill="#eef7fa" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M455 226 Q455 240, 473 240 H727 Q745 240, 745 226" fill="#eef7fa"/>
+  <text x="473" y="227" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#6f1d1b">Bushy search space</text>
+</g>
+
+<g>
+  <rect x="806" y="202" width="290" height="245" rx="18" fill="#ffffff" stroke="#e5ded4" stroke-width="2"/>
+  <rect x="806" y="202" width="290" height="38" rx="18" fill="#eef7fa" stroke="#e5ded4" stroke-width="2"/>
+  <path d="M806 226 Q806 240, 824 240 H1078 Q1096 240, 1096 226" fill="#eef7fa"/>
+  <text x="824" y="227" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#6f1d1b">Hybrid quantum-classical search</text>
+</g>
+
+<g transform="translate(122 265) scale(0.82)">
+  <circle cx="210" cy="18" r="18" fill="#6f1d1b"/>
+  <circle cx="155" cy="78" r="18" fill="#0b7285"/>
+  <circle cx="105" cy="136" r="18" fill="#0b7285"/>
+  <rect x="35" y="190" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="92" y="190" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="148" y="130" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="205" y="72" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <path d="M201 32 L168 64 M152 92 L118 122 M99 154 L68 190 M111 154 L113 190 M164 92 L168 130 M214 32 L224 72" stroke="#6f1d1b" stroke-width="4" fill="none" stroke-linecap="round"/>
+</g>
+
+<g transform="translate(484 250) scale(0.86)">
+  <circle cx="150" cy="18" r="18" fill="#6f1d1b"/>
+  <circle cx="78" cy="88" r="18" fill="#0b7285"/>
+  <circle cx="222" cy="88" r="18" fill="#0b7285"/>
+  <rect x="20" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="95" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="168" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <rect x="242" y="146" width="42" height="34" rx="8" fill="#ffffff" stroke="#6f1d1b" stroke-width="2"/>
+  <path d="M139 32 L91 75 M161 32 L209 75 M72 104 L48 145 M84 104 L110 145 M216 104 L194 145 M230 104 L260 145" stroke="#6f1d1b" stroke-width="4" fill="none" stroke-linecap="round"/>
+</g>
+
+<g><line x1="903.5" y1="283.5" x2="949.0" y2="269.5" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="949.0" y1="269.5" x2="980.5" y2="299.6" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="903.5" y1="283.5" x2="929.4" y2="311.5" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="929.4" y1="311.5" x2="980.5" y2="299.6" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="929.4" y1="311.5" x2="908.4" y2="339.5" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="929.4" y1="311.5" x2="971.4" y2="341.6" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><line x1="980.5" y1="299.6" x2="971.4" y2="341.6" stroke="#6f1d1b" stroke-width="3" opacity="0.5"/><circle cx="903.5" cy="283.5" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="949.0" cy="269.5" r="11" fill="#0b7285" stroke="#ffffff" stroke-width="3"/><circle cx="980.5" cy="299.6" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="929.4" cy="311.5" r="11" fill="#0b7285" stroke="#ffffff" stroke-width="3"/><circle cx="908.4" cy="339.5" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/><circle cx="971.4" cy="341.6" r="11" fill="#6f1d1b" stroke="#ffffff" stroke-width="3"/></g>
+<line x1="402" y1="325" x2="448" y2="325" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="753" y1="325" x2="798" y2="325" stroke="#0b7285" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="600" y="456" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="850" fill="#6f1d1b">larger plan space</text>
+<text x="600" y="520" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="850" fill="#6f1d1b">key visual: quantum-oriented join optimization moves beyond left-deep plans</text>
+
+  </g>
+
+  <rect x="112" y="545" width="976" height="58" rx="18" fill="#f8fbfd" stroke="#e5ded4"/>
+  <text x="600" y="579" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#6f1d1b">Contribution: expands quantum-oriented join optimization to bushy trees.</text>
+</svg>

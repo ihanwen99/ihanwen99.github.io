@@ -1,0 +1,207 @@
+- id: "cp4lqo"
+  order: 3
+  short_title: "CP4LQO"
+  title: "Conformal Prediction for Verifiable Learned Query Optimization"
+  authors:
+    - "Hanwen Liu"
+    - "Shashank Giridhara"
+    - "Ibrahim Sabek"
+  year: 2025
+  venue: "VLDB 2025"
+  venue_url: "https://vldb.org/2025/"
+  venue_group: "VLDB"
+  chart_group: "VLDB"
+  type: "full"
+  is_full_paper: true
+  status: "accepted"
+  topic: "AI/LLM for Database Systems"
+  one_liner: ""
+  links:
+    pdf: "https://www.vldb.org/pvldb/vol18/p2653-liu.pdf"
+    arxiv: "https://arxiv.org/abs/2505.02284"
+    doi: "https://dl.acm.org/doi/10.14778/3742728.3742755"
+    code: "https://github.com/ihanwen99/Conformal-Prediction-for-Verifiable-Learned-Query-Optimization"
+
+- id: "sefrqo"
+  order: 7
+  short_title: "SEFRQO"
+  title: "SEFRQO: A Self-Evolving Fine-Tuned RAG-Based Query Optimizer"
+  authors:
+    - "Hanwen Liu"
+    - "Qihan Zhang"
+    - "Ryan Marcus"
+    - "Ibrahim Sabek"
+  equal_contribution:
+    - "Hanwen Liu"
+    - "Qihan Zhang"
+  year: 2026
+  venue: "SIGMOD 2026"
+  venue_url: "https://2026.sigmod.org/"
+  venue_group: "SIGMOD"
+  chart_group: "SIGMOD"
+  type: "full"
+  is_full_paper: true
+  status: "accepted"
+  topic: "AI/LLM for Database Systems"
+  one_liner: ""
+  links:
+    arxiv: "https://arxiv.org/abs/2508.17556"
+    doi: "https://dl.acm.org/doi/10.1145/3769826"
+
+- id: "hybrid-qc-db-framework"
+  order: 9
+  short_title: "QC4DB Vision"
+  title: "Towards a Hybrid Quantum-Classical Computing Framework for Database Optimization Problems in Real Time Setup"
+  authors:
+    - "Hanwen Liu"
+    - "Ibrahim Sabek"
+  equal_contribution:
+    - "Hanwen Liu"
+    - "Ibrahim Sabek"
+  year: 2026
+  venue: "ICDE 2026 DEFT Track"
+  venue_url: "https://icde2026.github.io/cf-future.html"
+  venue_group: "ICDE"
+  chart_group: "ICDE DEFT"
+  type: "full"
+  is_full_paper: true
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    arxiv: "https://arxiv.org/abs/2602.14263"
+
+- id: "is-quantum-ready"
+  order: 8
+  short_title: "Quantum Ready?"
+  title: "Is Quantum Computing Ready for Real-Time Database Optimization?"
+  authors:
+    - "Hanwen Liu"
+    - "Ibrahim Sabek"
+  year: 2026
+  venue: "ICDE 2026 Lightning Talk"
+  venue_url: "https://icde2026.github.io/cf-lightning-talks.html"
+  venue_group: "ICDE"
+  chart_group: null
+  type: "talk"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    arxiv: "https://arxiv.org/abs/2601.12123"
+
+- id: "q2o-demo"
+  order: 4
+  short_title: "Q²O Demo"
+  title: "A Demonstration of Q²O: Quantum-Augmented Query Optimizer"
+  authors:
+    - "Hanwen Liu"
+    - "Federico Spedalieri"
+    - "Ibrahim Sabek"
+  year: 2025
+  venue: "VLDB 2025 Demo"
+  venue_url: "https://vldb.org/2025/"
+  venue_group: "VLDB"
+  chart_group: null
+  type: "demo"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    pdf: "https://www.vldb.org/pvldb/vol18/p5439-liu.pdf"
+    doi: "https://doi.org/10.14778/3750601.3750691"
+    code: "https://github.com/ihanwen99/Q2O"
+
+- id: "bushy-join-trees"
+  order: 6
+  short_title: "Bushy Join Trees"
+  title: "Hybrid Quantum-Classical Optimization for Bushy Join Trees"
+  authors:
+    - "Hanwen Liu"
+    - "Abhishek Kumar"
+    - "Federico Spedalieri"
+    - "Ibrahim Sabek"
+  year: 2025
+  venue: "Q-Data@SIGMOD 2025"
+  venue_url: "https://itrummer.github.io/qdata/qdata25.html"
+  venue_group: "SIGMOD"
+  chart_group: null
+  type: "workshop"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    doi: "https://dl.acm.org/doi/10.1145/3736393.3736695"
+
+- id: "cqm-join-orders"
+  order: 2
+  short_title: "CQM Join Orders"
+  title: "Optimizing Join Orders via Constrained Quadratic Models"
+  authors:
+    - "Hanwen Liu"
+    - "Pranshi Saxena"
+    - "Federico Spedalieri"
+    - "Ibrahim Sabek"
+  year: 2025
+  venue: "QDML@ICDE 2025"
+  venue_url: "https://ieeexplore.ieee.org/document/11108153"
+  venue_group: "ICDE"
+  chart_group: null
+  type: "workshop"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    paper: "https://ieeexplore.ieee.org/document/11108153"
+    doi: "https://doi.org/10.1109/ICDEW67478.2025.00042"
+
+- id: "serag"
+  order: 5
+  short_title: "SERAG"
+  title: "SERAG: Self-Evolving RAG System for Query Optimization"
+  authors:
+    - "Hanwen Liu"
+    - "Qihan Zhang"
+    - "Ryan Marcus"
+    - "Ibrahim Sabek"
+  equal_contribution:
+    - "Hanwen Liu"
+    - "Qihan Zhang"
+  year: 2025
+  venue: "aiDM@SIGMOD 2025"
+  venue_url: "https://aidm-conf.org/"
+  venue_group: "SIGMOD"
+  chart_group: null
+  type: "workshop"
+  is_full_paper: false
+  status: "accepted"
+  topic: "AI/LLM for Database Systems"
+  one_liner: ""
+  links:
+    pdf: "https://viterbi-web.usc.edu/~sabek/pdf/25_workshop_serag.pdf"
+
+- id: "corra"
+  order: 1
+  short_title: "Corra"
+  title: "Corra: Correlation-Aware Column Compression"
+  authors:
+    - "Hanwen Liu"
+    - "Mihail Stoian"
+    - "Alexander van Renen"
+    - "Andreas Kipf"
+  year: 2024
+  venue: "CloudDB@VLDB 2024"
+  venue_url: "https://clouddbworkshop.github.io/2024/"
+  venue_group: "VLDB"
+  chart_group: null
+  type: "workshop"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Database Systems"
+  one_liner: ""
+  links:
+    pdf: "https://vldb.org/workshops/2024/proceedings/CloudDB/clouddb-2.pdf"
