@@ -5,3 +5,11 @@
   organization_url: "https://www.vldb.org/"
   year: 2027
   link: "https://www.vldb.org/2027/shadow-pc.html"
+
+- role: "Reviewer"
+  venue: "Efficient Reasoning Workshop at NeurIPS 2025"
+  venue_url: "https://efficient-reasoning.github.io/"
+  organization: "NeurIPS 2025 Workshop on Efficient Reasoning"
+  organization_url: "https://neurips.cc/virtual/2025/workshop/109556"
+  year: 2025
+  link: "https://efficient-reasoning.github.io/"

@@ -71,6 +71,24 @@
   links:
     arxiv: "https://arxiv.org/abs/2602.14263"
 
+- id: "qfusion"
+  order: 10
+  short_title: "QFusion"
+  title: "QFusion: A Demonstration of Boundary-Aware Fusion Planning and Execution for Large-Scale QUBO Optimization"
+  authors:
+    - "Hanwen Liu"
+    - "Ibrahim Sabek"
+  year: 2026
+  venue: "VLDB 2026 Demo"
+  venue_url: "https://vldb.org/2026/"
+  venue_group: "VLDB"
+  chart_group: null
+  type: "demo"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+
 - id: "is-quantum-ready"
   order: 8
   short_title: "Quantum Ready?"

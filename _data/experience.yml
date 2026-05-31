@@ -1,3 +1,12 @@
+- organization: "AWS Redshift"
+  organization_url: "https://aws.amazon.com/redshift/"
+  role: "Applied Scientist Intern"
+  location: "Seattle, USA"
+  start: "May 2026"
+  end: "Aug 2026"
+  highlights:
+    - "Topic: Root Cause Analysis (RCA) Agent Systems"
+
 - organization: "Learned System Group @ AWS Redshift"
   organization_url: "https://www.amazon.science/blog/building-systems-that-automatically-adjust-to-workloads-and-data"
   role: "Applied Scientist Intern"
