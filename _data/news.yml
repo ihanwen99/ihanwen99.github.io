@@ -1,3 +1,7 @@
+- date: "2026-06"
+  text: "One tutorial on quantum computing and databases was accepted at VLDB 2026 Tutorial"
+  category: "paper"
+
 - date: "2026-05"
   text: "One demo paper on boundary-aware QUBO fusion was accepted at VLDB 2026 Demo"
   category: "paper"

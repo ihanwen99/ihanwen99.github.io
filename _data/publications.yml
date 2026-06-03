@@ -89,6 +89,25 @@
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
 
+- id: "quantum-db-tutorial"
+  order: 11
+  short_title: "Quantum4DB"
+  title: "How Can Quantum Computing and Databases Meet \"in Practice\"?"
+  authors:
+    - "Hanwen Liu"
+    - "Ibrahim Sabek"
+    - "Xuanhe Zhou"
+  year: 2026
+  venue: "VLDB 2026 Tutorial"
+  venue_url: "https://vldb.org/2026/"
+  venue_group: "VLDB"
+  chart_group: null
+  type: "tutorial"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+
 - id: "is-quantum-ready"
   order: 8
   short_title: "Quantum Ready?"

@@ -109,8 +109,16 @@
 
     filterButtons.forEach(function (button) {
       button.addEventListener("click", function () {
-        publicationFilter = button.dataset.pubFilter;
-        setPressed(filterButtons, button);
+        var nextFilter = button.dataset.pubFilter;
+        var activeButton = button;
+
+        if (nextFilter !== "all" && publicationFilter === nextFilter) {
+          nextFilter = "all";
+          activeButton = document.querySelector('[data-pub-filter="all"]') || button;
+        }
+
+        publicationFilter = nextFilter;
+        setPressed(filterButtons, activeButton);
         updatePublications();
       });
     });

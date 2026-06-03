@@ -38,6 +38,14 @@
 {% elsif pub.links.project %}
   {% assign title_link = pub.links.project %}
 {% endif %}
+{% assign venue_label = pub.venue %}
+{% if pub.type == "demo" %}
+  {% assign venue_label = venue_label | replace: " Demo", "" %}
+{% elsif pub.type == "tutorial" %}
+  {% assign venue_label = venue_label | replace: " Tutorial", "" %}
+{% elsif pub.type == "talk" %}
+  {% assign venue_label = venue_label | replace: " Lightning Talk", "" %}
+{% endif %}
 
 <article
   id="pub-{% if include.anchor_suffix %}{{ include.anchor_suffix | slugify }}-{% endif %}{{ pub.id | slugify }}"
@@ -59,12 +67,6 @@
     {% endif %}
 
     <div class="publication-body">
-      <div class="publication-meta">
-        <span class="badge venue">{{ pub.venue | escape }}</span>
-        <span class="badge type">{{ type_label }}</span>
-        <span class="badge status status-{{ pub.status | slugify }}">{{ status_label | strip | escape }}</span>
-      </div>
-
       <h4>
         {% if title_link != "" %}
           <a href="{{ title_link | escape }}">{% include format_text.html text=pub.title %}</a>
@@ -84,6 +86,11 @@
         {% if pub.topic %}
           <span class="publication-topic">{{ pub.topic | escape }}</span>
         {% endif %}
+        <div class="publication-meta">
+          <span class="badge venue">{{ venue_label | escape }}</span>
+          <span class="badge type">{{ type_label }}</span>
+          <span class="badge status status-{{ pub.status | slugify }}">{{ status_label | strip | escape }}</span>
+        </div>
         {% if pub.links %}
           {% assign paper_link = "" %}
           {% if pub.links.doi %}
