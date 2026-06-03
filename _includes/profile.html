@@ -58,12 +58,12 @@
 
     <div class="profile-actions" aria-label="Profile links">
       {% capture email_button_label %}Email: {{ profile.email.display }}{% endcapture %}
-      {% include email_link.html class="button button-primary obfuscated-email-link" label=email_button_label %}
-      <a class="button" href="{{ profile.links.scholar | escape }}">Google Scholar</a>
-      <a class="button" href="{{ profile.links.github | escape }}">GitHub</a>
-      <a class="button" href="{{ profile.links.linkedin | escape }}">LinkedIn</a>
+      {% include email_link.html class="button button-primary obfuscated-email-link profile-action-email" label=email_button_label %}
+      <a class="button profile-action-scholar" href="{{ profile.links.scholar | escape }}">Google Scholar</a>
+      <a class="button profile-action-github" href="{{ profile.links.github | escape }}">GitHub</a>
+      <a class="button profile-action-linkedin" href="{{ profile.links.linkedin | escape }}">LinkedIn</a>
       {% if cv_exists %}
-        <a class="button" href="{{ profile.links.cv | relative_url | escape }}">CV</a>
+        <a class="button profile-action-cv" href="{{ profile.links.cv | relative_url | escape }}">CV</a>
       {% endif %}
     </div>
   </div>

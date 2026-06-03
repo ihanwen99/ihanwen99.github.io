@@ -5,6 +5,7 @@
   --cardinal-dark: #5f0f0f;
   --gold: #d6a419;
   --ink: #1f2328;
+  --title-ink: #1f2328;
   --muted: #626b74;
   --soft: #f7f4ef;
   --line: #e5ded4;
@@ -14,6 +15,7 @@
   --shadow: 0 16px 40px rgba(31, 35, 40, 0.08);
   --radius: 8px;
   --max-width: 1060px;
+  --publication-chip-font: 0.76rem;
 }
 
 * {
@@ -367,14 +369,17 @@ h4 {
   justify-self: end;
   width: 100%;
   max-width: 290px;
+  margin-top: 1.35rem;
 }
 
 .profile-photo {
   display: block;
-  width: min(100%, 260px);
-  aspect-ratio: 1;
+  width: 250px;
+  max-width: 100%;
+  height: 300px;
   margin-left: auto;
   object-fit: cover;
+  object-position: 56% 50%;
   border-radius: 50%;
   box-shadow: 0 14px 34px rgba(31, 35, 40, 0.12);
 }
@@ -488,6 +493,12 @@ h4 {
   font-size: 0.64rem;
   font-weight: 750;
   text-transform: uppercase;
+}
+
+.mini-badge-milestone {
+  color: var(--paper);
+  background: var(--cardinal);
+  border-color: var(--cardinal);
 }
 
 .publication-toolbar {
@@ -837,13 +848,13 @@ h4 {
 .badge {
   display: inline-flex;
   align-items: center;
-  min-height: 1.25rem;
+  min-height: 1.35rem;
   padding: 0.08rem 0.38rem;
   color: var(--muted);
   background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 999px;
-  font-size: 0.68rem;
+  font-size: var(--publication-chip-font);
   font-weight: 720;
   text-decoration: none;
 }
@@ -855,9 +866,9 @@ h4 {
 }
 
 .badge.type {
-  color: var(--cardinal-dark);
-  background: #f4ebe5;
-  border-color: #ead5c8;
+  color: #6b4b16;
+  background: #fff8e6;
+  border-color: #ecd9a8;
 }
 
 .badge.status-accepted {
@@ -872,9 +883,18 @@ h4 {
   font-size: 0.94rem;
 }
 
+.publication-body h4 {
+  color: var(--title-ink);
+}
+
 .publication-body h4 a {
-  color: var(--cardinal);
+  color: inherit;
   text-decoration: none;
+}
+
+.publication-entry.is-full-paper .publication-body h4,
+.publication-entry.is-full-paper .publication-body h4 a {
+  color: var(--cardinal);
 }
 
 .publication-body h4 a:hover {
@@ -896,9 +916,12 @@ h4 {
 }
 
 .publication-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
   color: var(--cardinal);
-  font-size: 0.86rem;
-  font-weight: 720;
+  font-size: 0.82rem;
+  font-weight: 760;
   line-height: 1;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
@@ -916,12 +939,15 @@ h4 {
 }
 
 .publication-topic {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
   padding: 0.18rem 0.48rem;
   color: var(--cardinal-dark);
-  background: #f4ebe5;
-  border: 1px solid #ead5c8;
+  background: #fff3ec;
+  border: 1px solid #efcdbf;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: var(--publication-chip-font);
   font-weight: 650;
 }
 
@@ -1274,10 +1300,12 @@ h4 {
   .profile-media {
     justify-self: start;
     max-width: 100%;
+    margin-top: 0;
   }
 
   .profile-photo {
-    width: 220px;
+    width: 210px;
+    height: 252px;
     margin-left: 0;
   }
 
@@ -1414,6 +1442,7 @@ h4 {
 
   .profile-photo {
     width: 168px;
+    height: 168px;
     margin-right: auto;
     margin-left: auto;
   }
@@ -1421,6 +1450,7 @@ h4 {
   .profile-media {
     justify-self: center;
     max-width: 168px;
+    margin-top: 0;
   }
 
   .profile-actions {
@@ -1430,16 +1460,18 @@ h4 {
     margin-top: 1rem;
   }
 
+  .profile-action-email,
+  .profile-action-github,
+  .profile-action-cv {
+    display: none;
+  }
+
   .profile-actions .button {
     width: 100%;
     min-height: 2.35rem;
     padding-right: 0.45rem;
     padding-left: 0.45rem;
     text-align: center;
-  }
-
-  .profile-actions .button-primary {
-    grid-column: 1 / -1;
   }
 
   .publication-intro,
@@ -1493,11 +1525,16 @@ h4 {
   }
 
   .publication-toolbar .segmented-control:first-child {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 0.72fr 1.12fr 1.36fr;
   }
 
   .publication-toolbar .segmented-control:first-child button[data-pub-filter="other"] {
-    grid-column: 1 / -1;
+    font-size: 0;
+  }
+
+  .publication-toolbar .segmented-control:first-child button[data-pub-filter="other"]::after {
+    font-size: 0.78rem;
+    content: attr(data-mobile-label);
   }
 
   .publication-toolbar .segmented-control:last-child {
@@ -1510,7 +1547,9 @@ h4 {
     justify-content: center;
     min-height: 2.22rem;
     padding: 0.38rem 0.5rem;
+    font-size: 0.78rem;
     line-height: 1.2;
+    white-space: nowrap;
   }
 
   .publication-layout {
@@ -1540,16 +1579,18 @@ h4 {
   }
 
   .publication-topic {
-    font-size: 0.72rem;
+    min-height: 1.24rem;
+    font-size: 0.7rem;
   }
 
   .badge {
-    min-height: 1.18rem;
-    font-size: 0.64rem;
+    min-height: 1.24rem;
+    font-size: 0.7rem;
   }
 
   .publication-links a {
-    font-size: 0.82rem;
+    min-height: 1.24rem;
+    font-size: 0.76rem;
   }
 
   .publication-stats {

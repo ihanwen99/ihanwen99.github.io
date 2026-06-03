@@ -1,9 +1,11 @@
 - date: "2026-06"
   text: "One tutorial on quantum computing and databases was accepted at VLDB 2026 Tutorial"
+  publication_id: "quantum-db-tutorial"
   category: "paper"
 
 - date: "2026-05"
   text: "One demo paper on boundary-aware QUBO fusion was accepted at VLDB 2026 Demo"
+  publication_id: "qfusion"
   category: "paper"
 
 - date: "2026-04"

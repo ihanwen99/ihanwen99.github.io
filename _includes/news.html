@@ -16,12 +16,14 @@
         <div class="news-meta">
           <time datetime="{{ item.date | escape }}">[{{ news_date_display | escape }}]</time>
           {% if item.category %}
-            <span class="mini-badge">{{ item.category | escape }}</span>
+            <span class="mini-badge mini-badge-{{ item.category | slugify }}">{{ item.category | escape }}</span>
           {% endif %}
         </div>
         <p class="news-content">
           {% if item.link %}
             <a href="{{ item.link | escape }}">{{ item.text | escape }}</a>
+          {% elsif item.publication_id %}
+            <a href="#pub-{{ item.publication_id | slugify }}">{{ item.text | escape }}</a>
           {% else %}
             {{ item.text | escape }}
           {% endif %}

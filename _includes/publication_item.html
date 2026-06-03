@@ -89,7 +89,9 @@
         <div class="publication-meta">
           <span class="badge venue">{{ venue_label | escape }}</span>
           <span class="badge type">{{ type_label }}</span>
-          <span class="badge status status-{{ pub.status | slugify }}">{{ status_label | strip | escape }}</span>
+          {% unless pub.status == "accepted" %}
+            <span class="badge status status-{{ pub.status | slugify }}">{{ status_label | strip | escape }}</span>
+          {% endunless %}
         </div>
         {% if pub.links %}
           {% assign paper_link = "" %}
