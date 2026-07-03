@@ -5,6 +5,7 @@ _site/
 .sass-cache/
 .bundle/
 vendor/
+.claude/
 _data/private_publications.yml
 _data/private_publication_visuals.yml
 _private/

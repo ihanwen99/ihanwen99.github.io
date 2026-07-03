@@ -55,7 +55,7 @@
           <h3>Accepted Full Papers</h3>
         </div>
       </div>
-      {% assign chart_papers = publications | where: "is_full_paper", true | where: "status", "accepted" %}
+      {% assign chart_papers = publications | where: "is_full_paper", true | where: "status", "accepted" | sort: "order" %}
       {% assign chart_groups = "SIGMOD,VLDB,ICDE DEFT" | split: "," %}
       <div id="full-paper-chart" class="publication-chart" role="img" aria-label="Accepted full papers by VLDB, SIGMOD, and ICDE">
         {% for chart_group in chart_groups %}
@@ -80,6 +80,19 @@
           </div>
         {% endfor %}
       </div>
+      {% assign chart_years = chart_papers | map: "year" | sort %}
+      {% assign year_min = chart_years | first %}
+      {% assign year_max = chart_years | last %}
+      {% if year_min and year_max %}
+        <div class="chart-axis" aria-hidden="true">
+          <span class="chart-axis-spacer"></span>
+          <div class="chart-axis-track">
+            {% for axis_year in (year_min..year_max) %}
+              <span class="chart-axis-year">{{ axis_year }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 

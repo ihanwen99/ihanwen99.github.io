@@ -487,7 +487,7 @@ h4 {
   flex: 0 0 auto;
   padding: 0.08rem 0.36rem;
   color: var(--muted);
-  background: var(--paper-alt);
+  background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 999px;
   font-size: 0.64rem;
@@ -774,6 +774,31 @@ h4 {
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 650;
+}
+
+.chart-axis {
+  display: grid;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  gap: 0.72rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed var(--line);
+}
+
+.chart-axis-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.chart-axis-year {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 
 .publication-group {
@@ -1642,6 +1667,14 @@ h4 {
     justify-content: start;
     min-height: 1.8rem;
     font-size: 0.82rem;
+  }
+
+  .chart-axis {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-axis-spacer {
+    display: none;
   }
 
   .timeline-list-wide {

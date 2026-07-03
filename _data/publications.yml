@@ -89,20 +89,66 @@
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
 
+- id: "qdbo"
+  order: 13
+  short_title: "QDBO"
+  title: "QDBO: A Real-time Quantum-augmented Database System Optimizer"
+  authors:
+    - "Hanwen Liu"
+    - "Abhishek Kumar"
+    - "Federico Spedalieri"
+    - "Ibrahim Sabek"
+  year: 2026
+  venue: "VLDB 2026"
+  venue_url: "https://vldb.org/2026/"
+  venue_group: "VLDB"
+  chart_group: "VLDB"
+  type: "full"
+  is_full_paper: true
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+  links:
+    code: "https://github.com/ihanwen99/VLDB26-QDBO"
+
 - id: "quantum-db-tutorial"
   order: 11
   short_title: "Quantum4DB"
-  title: "How Can Quantum Computing and Databases Meet \"in Practice\"?"
+  title: "How Can Quantum Computing and Databases Meet \"in Practice\"? From Algorithms to Systems"
   authors:
     - "Hanwen Liu"
+    - "Yiran Li"
     - "Ibrahim Sabek"
     - "Xuanhe Zhou"
+    - "Hans-Arno Jacobsen"
   year: 2026
   venue: "VLDB 2026 Tutorial"
   venue_url: "https://vldb.org/2026/"
   venue_group: "VLDB"
   chart_group: null
   type: "tutorial"
+  is_full_paper: false
+  status: "accepted"
+  topic: "Quantum-Augmented Database Systems"
+  one_liner: ""
+
+- id: "tn-page"
+  order: 12
+  short_title: "TN-Page"
+  title: "Quantum-Ready Approximate Data Management using Tensor-Network Physical Pages"
+  authors:
+    - "Muzhi Chen"
+    - "Hanwen Liu"
+    - "Xuanhe Zhou"
+    - "Hongming Xu"
+    - "Zhenghao Li"
+    - "Wei Zhou"
+    - "Fan Wu"
+  year: 2026
+  venue: "QCDKM@VLDB 2026"
+  venue_group: "VLDB"
+  chart_group: null
+  type: "workshop"
   is_full_paper: false
   status: "accepted"
   topic: "Quantum-Augmented Database Systems"
