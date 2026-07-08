@@ -1,0 +1,107 @@
+{% assign profile = site.data.profile %}
+{% assign seo_title = page.seo_title | default: site.seo_title | default: site.title %}
+{% assign seo_description = page.description | default: site.description %}
+{% assign canonical_url = page.url | replace: "index.html", "" | absolute_url %}
+{% assign seo_image = "/assets/img/hanwen.jpg" | absolute_url %}
+{% assign site_language = site.lang | default: "en-US" %}
+{% assign keywords = page.keywords | default: site.keywords %}
+{% assign google_site_verification = site.google_site_verification | default: "" | strip %}
+{% capture same_as %}
+[
+  {{ profile.links.scholar | jsonify }},
+  {{ profile.links.github | jsonify }},
+  {{ profile.links.linkedin | jsonify }}
+]
+{% endcapture %}
+
+<title>{{ seo_title | escape }}</title>
+<meta name="description" content="{{ seo_description | escape }}">
+<meta name="author" content="{{ site.author | default: profile.name | escape }}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+{% if keywords %}
+  <meta name="keywords" content="{{ keywords | join: ', ' | escape }}">
+{% endif %}
+{% if google_site_verification != "" %}
+  <meta name="google-site-verification" content="{{ google_site_verification | escape }}">
+{% endif %}
+<link rel="canonical" href="{{ canonical_url }}">
+<link rel="me" href="{{ profile.links.scholar | escape }}">
+<link rel="me" href="{{ profile.links.github | escape }}">
+<link rel="me" href="{{ profile.links.linkedin | escape }}">
+
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta property="og:title" content="{{ seo_title | escape }}">
+<meta property="og:description" content="{{ seo_description | escape }}">
+<meta property="og:type" content="profile">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:image" content="{{ seo_image }}">
+<meta property="og:image:alt" content="{{ profile.name | escape }}">
+<meta property="og:locale" content="{{ site_language | replace: '-', '_' }}">
+<meta property="profile:first_name" content="Hanwen">
+<meta property="profile:last_name" content="Liu">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo_title | escape }}">
+<meta name="twitter:description" content="{{ seo_description | escape }}">
+<meta name="twitter:image" content="{{ seo_image }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": {{ canonical_url | append: "#website" | jsonify }},
+      "url": {{ canonical_url | jsonify }},
+      "name": {{ site.title | jsonify }},
+      "description": {{ seo_description | jsonify }},
+      "inLanguage": {{ site_language | jsonify }}
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": {{ canonical_url | append: "#profile" | jsonify }},
+      "url": {{ canonical_url | jsonify }},
+      "name": {{ seo_title | jsonify }},
+      "description": {{ seo_description | jsonify }},
+      "inLanguage": {{ site_language | jsonify }},
+      "isPartOf": {
+        "@id": {{ canonical_url | append: "#website" | jsonify }}
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "@id": {{ canonical_url | append: "#hanwen-liu" | jsonify }},
+        "name": {{ profile.name | jsonify }},
+        "url": {{ canonical_url | jsonify }},
+        "image": {{ seo_image | jsonify }},
+        "jobTitle": {{ profile.title | jsonify }},
+        "sameAs": {{ same_as | strip }},
+        "affiliation": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": {{ profile.university.name | jsonify }},
+            "url": {{ profile.university.url | jsonify }}
+          },
+          {
+            "@type": "ResearchOrganization",
+            "name": {{ profile.lab.name | jsonify }},
+            "url": {{ profile.lab.url | jsonify }}
+          }
+        ],
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Technical University of Munich",
+            "url": "https://www.tum.de/en/"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Shanghai Jiao Tong University",
+            "url": "https://en.sjtu.edu.cn/"
+          }
+        ],
+        "knowsAbout": {{ keywords | jsonify }}
+      }
+    }
+  ]
+}
+</script>

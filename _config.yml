@@ -3,6 +3,20 @@ description: "Ph.D. candidate at USC working on database systems, AI/ML and LLMs
 baseurl: "/me"
 url: "https://ihanwen99.github.io"
 timezone: "America/Los_Angeles"
+lang: "en-US"
+author: "Hanwen Liu"
+seo_title: "Hanwen Liu | Database Systems, AI/LLM, and Quantum Computing"
+keywords:
+  - "Hanwen Liu"
+  - "Database Systems"
+  - "Query Optimization"
+  - "AI for Databases"
+  - "LLM for Databases"
+  - "Quantum Computing"
+  - "Quantum-Augmented Database Systems"
+  - "University of Southern California"
+  - "NexDIG Lab"
+google_site_verification: ""
 
 markdown: kramdown
 permalink: pretty
