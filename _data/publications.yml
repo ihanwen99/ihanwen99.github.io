@@ -89,6 +89,26 @@
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
 
+- id: "sefrqo-plus"
+  order: 14
+  short_title: "SEFRQO+"
+  title: "SEFRQO-Plus: A Self-Evolving Query Optimizer via Large Language Models and Retrieval-Augmented Generation"
+  authors:
+    - "Hanwen Liu"
+    - "Qihan Zhang"
+    - "Ryan Marcus"
+    - "Ibrahim Sabek"
+  year: 2026
+  venue: "VLDB Journal"
+  venue_url: "https://link.springer.com/journal/778"
+  venue_group: "VLDB"
+  chart_group: "VLDB"
+  type: "journal"
+  is_full_paper: true
+  status: "accepted"
+  topic: "AI/LLM for Database Systems"
+  one_liner: ""
+
 - id: "qdbo"
   order: 13
   short_title: "QDBO"

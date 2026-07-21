@@ -57,7 +57,7 @@
       </div>
       {% assign chart_papers = publications | where: "is_full_paper", true | where: "status", "accepted" | sort: "order" %}
       {% assign chart_groups = "SIGMOD,VLDB,ICDE DEFT" | split: "," %}
-      <div id="full-paper-chart" class="publication-chart" role="img" aria-label="Accepted full papers by VLDB, SIGMOD, and ICDE">
+      <div id="full-paper-chart" class="publication-chart" role="group" aria-label="Accepted full papers by VLDB, SIGMOD, and ICDE">
         {% for chart_group in chart_groups %}
           {% assign chart_group_papers = chart_papers | where: "chart_group", chart_group %}
           {% case chart_group %}
@@ -67,7 +67,7 @@
               {% assign chart_label = chart_group %}
           {% endcase %}
           <div class="chart-row">
-            <div class="chart-row-label">{{ chart_label }}</div>
+            <button type="button" class="chart-row-label" data-chart-venue="{{ chart_label | slugify }}" aria-label="Show {{ chart_label }} publications">{{ chart_label }}</button>
             <div class="chart-track">
               {% if chart_group_papers.size > 0 %}
                 {% for paper in chart_group_papers %}

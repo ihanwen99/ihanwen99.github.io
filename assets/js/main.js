@@ -142,6 +142,21 @@
       });
     });
 
+    Array.prototype.slice.call(document.querySelectorAll("[data-chart-venue]")).forEach(function (label) {
+      label.addEventListener("click", function () {
+        var venueButton = document.querySelector('[data-pub-group="venue"]');
+        publicationGroup = "venue";
+        if (venueButton) {
+          setPressed(groupButtons, venueButton);
+        }
+        updatePublications();
+        var target = document.getElementById("pub-venue-" + label.dataset.chartVenue);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
     updatePublications();
   }
 

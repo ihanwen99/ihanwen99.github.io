@@ -721,6 +721,17 @@ h4 {
   border-radius: 8px;
   font-size: 0.86rem;
   font-weight: 740;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.chart-row-label:hover {
+  background: #fff3d8;
+  border-color: #d9b96a;
+}
+
+.publication-group > h3 {
+  scroll-margin-top: 5.2rem;
 }
 
 .chart-track {

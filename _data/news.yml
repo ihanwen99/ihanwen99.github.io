@@ -1,4 +1,9 @@
 - date: "2026-07"
+  text: "One journal paper on self-evolving LLM-based query optimization was accepted at the VLDB Journal"
+  publication_id: "sefrqo-plus"
+  category: "paper"
+
+- date: "2026-07"
   text: "One full paper on real-time quantum-augmented database optimization was accepted at VLDB 2026"
   publication_id: "qdbo"
   category: "paper"
