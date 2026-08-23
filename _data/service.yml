@@ -1,3 +1,13 @@
+# Ordered newest-first. `link` makes the role text clickable — only set it
+# when there is a public page; never a CMT/login-gated invitation link.
+
+- role: "PC Member, Full Paper Track"
+  venue: "WSDM 2027"
+  venue_url: "https://www.wsdm-conference.org/2027/"
+  organization: "ACM International Conference on Web Search and Data Mining"
+  organization_url: "https://www.wsdm-conference.org/"
+  year: 2027
+
 - role: "Shadow PC Member"
   venue: "VLDB 2027"
   venue_url: "https://www.vldb.org/2027/"
@@ -7,9 +17,16 @@
   link: "https://www.vldb.org/2027/shadow-pc.html"
 
 - role: "Reviewer"
-  venue: "Efficient Reasoning Workshop at NeurIPS 2025"
+  venue: "The VLDB Journal"
+  venue_url: "https://link.springer.com/journal/778"
+  organization: "Springer"
+  year: 2026
+
+# Two editions of the same workshop series, merged into one entry.
+# venue_url points at the 1st edition (NeurIPS 2025) site — the only one
+# published so far; swap in the COLM 2026 page once it is live.
+- role: "Reviewer"
+  venue: "Efficient Reasoning Workshop @ COLM 2026 & NeurIPS 2025"
   venue_url: "https://efficient-reasoning.github.io/"
-  organization: "NeurIPS 2025 Workshop on Efficient Reasoning"
-  organization_url: "https://neurips.cc/virtual/2025/workshop/109556"
-  year: 2025
-  link: "https://efficient-reasoning.github.io/"
+  organization: "Workshop on Efficient Reasoning"
+  year: 2026
