@@ -8,7 +8,13 @@
       <article class="service-item">
         <div class="service-row">
           <strong>
-            {% if item.venue_url %}
+            {%- comment -%}
+              venue_html is trusted, hand-authored markup — use it only when an
+              entry needs more than one link (e.g. two editions of a workshop).
+            {%- endcomment -%}
+            {% if item.venue_html %}
+              {{ item.venue_html }}
+            {% elsif item.venue_url %}
               <a href="{{ item.venue_url | escape }}">{{ item.venue | escape }}</a>
             {% else %}
               {{ item.venue | escape }}

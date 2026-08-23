@@ -1,7 +1,7 @@
 # Ordered newest-first. `link` makes the role text clickable — only set it
 # when there is a public page; never a CMT/login-gated invitation link.
 
-- role: "PC Member, Full Paper Track"
+- role: "PC Member"
   venue: "WSDM 2027"
   venue_url: "https://www.wsdm-conference.org/2027/"
   organization: "ACM International Conference on Web Search and Data Mining"
@@ -22,11 +22,14 @@
   organization: "Springer"
   year: 2026
 
-# Two editions of the same workshop series, merged into one entry.
-# venue_url points at the 1st edition (NeurIPS 2025) site — the only one
-# published so far; swap in the COLM 2026 page once it is live.
+# Two editions of the same workshop series, merged into one entry — each
+# edition links to its own site, so this uses venue_html (trusted markup).
 - role: "Reviewer"
   venue: "Efficient Reasoning Workshop @ COLM 2026 & NeurIPS 2025"
-  venue_url: "https://efficient-reasoning.github.io/"
+  venue_html: >
+    Efficient Reasoning Workshop @
+    <a href="https://wdlctc.github.io/efficient-reasoning-2026/">COLM 2026</a>
+    &amp;
+    <a href="https://efficient-reasoning.github.io/">NeurIPS 2025</a>
   organization: "Workshop on Efficient Reasoning"
   year: 2026
