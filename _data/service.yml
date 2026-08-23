@@ -1,13 +1,6 @@
 # Ordered newest-first. `link` makes the role text clickable — only set it
 # when there is a public page; never a CMT/login-gated invitation link.
 
-- role: "PC Member"
-  venue: "WSDM 2027"
-  venue_url: "https://www.wsdm-conference.org/2027/"
-  organization: "ACM International Conference on Web Search and Data Mining"
-  organization_url: "https://www.wsdm-conference.org/"
-  year: 2027
-
 - role: "Shadow PC Member"
   venue: "VLDB 2027"
   venue_url: "https://www.vldb.org/2027/"
@@ -27,8 +20,7 @@
 - role: "Reviewer"
   venue: "Efficient Reasoning Workshop @ COLM 2026 & NeurIPS 2025"
   venue_html: >
-    Efficient Reasoning Workshop @
-    <a href="https://wdlctc.github.io/efficient-reasoning-2026/">COLM 2026</a>
+    <a href="https://wdlctc.github.io/efficient-reasoning-2026/">Efficient Reasoning Workshop @ COLM 2026</a>
     &amp;
     <a href="https://efficient-reasoning.github.io/">NeurIPS 2025</a>
   organization: "Workshop on Efficient Reasoning"
