@@ -12,8 +12,8 @@ people:
     order: 4
     from: "M.S., USC"
     from_url: "https://nexdig.usc.edu/people"
-    first_public_destination: "Adobe"
-    destination_url: "https://www.adobe.com/"
+    first_public_destination: "Autodesk"
+    destination_url: "https://www.autodesk.com/"
 
   - name: "Parinda Ashish Pranami"
     order: 3
