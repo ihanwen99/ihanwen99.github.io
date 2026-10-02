@@ -86,6 +86,8 @@
   status: "accepted"
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
+  links:
+    doi: "https://doi.org/10.14778/3827998.3828132"
 
 - id: "sefrqo-plus"
   order: 14
@@ -127,6 +129,7 @@
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
   links:
+    doi: "https://doi.org/10.14778/3836663.3836712"
     code: "https://github.com/ihanwen99/VLDB26-QDBO"
 
 - id: "quantum-db-tutorial"
@@ -149,6 +152,8 @@
   status: "accepted"
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
+  links:
+    doi: "https://doi.org/10.14778/3827998.3828148"
 
 - id: "tn-page"
   order: 12
