@@ -28,12 +28,18 @@
               {% endif %}
             </span>
           {% endif %}
-          {% if person.outcome %}
+          {% if person.outcome_html or person.outcome %}
             {% if origin %}
               <span class="mentoring-arrow" aria-hidden="true">→</span>
             {% endif %}
             <strong>
-              {% if person.outcome_url %}
+              {%- comment -%}
+                outcome_html is trusted, hand-authored markup — use it only when
+                an entry needs more than one link (e.g. an award plus a paper).
+              {%- endcomment -%}
+              {% if person.outcome_html %}
+                {{ person.outcome_html }}
+              {% elsif person.outcome_url %}
                 <a href="{{ person.outcome_url | escape }}">{{ person.outcome | escape }}</a>
               {% else %}
                 {{ person.outcome | escape }}
