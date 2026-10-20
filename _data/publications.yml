@@ -108,6 +108,8 @@
   status: "accepted"
   topic: "AI/LLM for Database Systems"
   one_liner: ""
+  links:
+    doi: "https://doi.org/10.1007/s00778-026-00999-z"
 
 - id: "qdbo"
   order: 13
