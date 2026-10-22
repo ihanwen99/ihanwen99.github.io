@@ -1,5 +1,5 @@
 - id: "cp4lqo"
-  order: 3
+  order: 6
   short_title: "CP4LQO"
   title: "Conformal Prediction for Verifiable Learned Query Optimization"
   authors:
@@ -22,7 +22,7 @@
     code: "https://github.com/ihanwen99/Conformal-Prediction-for-Verifiable-Learned-Query-Optimization"
 
 - id: "sefrqo"
-  order: 7
+  order: 12
   short_title: "SEFRQO"
   title: "SEFRQO: A Self-Evolving Fine-Tuned RAG-Based Query Optimizer"
   authors:
@@ -47,7 +47,7 @@
     doi: "https://dl.acm.org/doi/10.1145/3769826"
 
 - id: "hybrid-qc-db-framework"
-  order: 9
+  order: 13
   short_title: "QC4DB Vision"
   title: "Towards a Hybrid Quantum-Classical Computing Framework for Database Optimization Problems in Real Time Setup"
   authors:
@@ -70,7 +70,7 @@
     doi: "https://doi.org/10.1109/ICDE65706.2026.00336"
 
 - id: "qfusion"
-  order: 10
+  order: 9
   short_title: "QFusion"
   title: "QFusion: A Demonstration of Boundary-Aware Fusion Planning and Execution for Large-Scale QUBO Optimization"
   authors:
@@ -90,7 +90,7 @@
     doi: "https://doi.org/10.14778/3827998.3828132"
 
 - id: "sefrqo-plus"
-  order: 14
+  order: 15
   short_title: "SEFRQO+"
   title: "SEFRQO-Plus: A Self-Evolving Query Optimizer via Large Language Models and Retrieval-Augmented Generation"
   authors:
@@ -112,7 +112,7 @@
     doi: "https://doi.org/10.1007/s00778-026-00999-z"
 
 - id: "qdbo"
-  order: 13
+  order: 14
   short_title: "QDBO"
   title: "QDBO: A Real-time Quantum-augmented Database System Optimizer"
   authors:
@@ -135,7 +135,7 @@
     code: "https://github.com/ihanwen99/VLDB26-QDBO"
 
 - id: "quantum-db-tutorial"
-  order: 11
+  order: 10
   short_title: "Quantum4DB"
   title: "How Can Quantum Computing and Databases Meet \"in Practice\"? From Algorithms to Systems"
   authors:
@@ -158,7 +158,7 @@
     doi: "https://doi.org/10.14778/3827998.3828148"
 
 - id: "tn-page"
-  order: 12
+  order: 11
   short_title: "TN-Page"
   title: "Quantum-Ready Approximate Data Management using Tensor-Network Physical Pages"
   authors:
@@ -200,7 +200,7 @@
     doi: "https://doi.org/10.1109/ICDE65706.2026.00366"
 
 - id: "q2o-demo"
-  order: 4
+  order: 3
   short_title: "Q²O Demo"
   title: "A Demonstration of Q²O: Quantum-Augmented Query Optimizer"
   authors:
@@ -223,7 +223,7 @@
     code: "https://github.com/ihanwen99/Q2O"
 
 - id: "bushy-join-trees"
-  order: 6
+  order: 5
   short_title: "Bushy Join Trees"
   title: "Hybrid Quantum-Classical Optimization for Bushy Join Trees"
   authors:
@@ -268,7 +268,7 @@
     doi: "https://doi.org/10.1109/ICDEW67478.2025.00042"
 
 - id: "serag"
-  order: 5
+  order: 4
   short_title: "SERAG"
   title: "SERAG: Self-Evolving RAG System for Query Optimization"
   authors:
@@ -293,7 +293,7 @@
 # ACM DL; only the advisor's homepage PDF exists, which we don't link.
 
 - id: "when-not-to-hint"
-  order: 15
+  order: 7
   short_title: "When Not to Hint"
   title: "When Not to Hint: Adapting an LLM Query Optimizer to a New Database Instance"
   authors:

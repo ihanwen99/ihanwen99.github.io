@@ -8,9 +8,9 @@ people:
     # outcome_html is trusted markup — see _includes/mentoring.html. Keeps the
     # original WSSEF wording/link (Hanwen, 2026-09-14) and adds the new paper.
     outcome_html: >
-      <a href="https://wssef.org/">First Place award at the 69th Annual Washington State Science &amp; Engineering Fair (WSSEF)</a>
+      <a href="https://wssef.org/">69th Annual WSSEF First Place award</a>
       &amp; co-author of
-      <a href="#pub-when-not-to-hint">"When Not to Hint"</a> at MLForSys@NeurIPS 2026
+      <a href="#pub-when-not-to-hint">"When Not to Hint"</a> (MLForSys@NeurIPS 2026)
 
   - name: "Gaurvi Vishnoi"
     order: 4
