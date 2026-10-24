@@ -70,7 +70,7 @@
     doi: "https://doi.org/10.1109/ICDE65706.2026.00336"
 
 - id: "qfusion"
-  order: 9
+  order: 10
   short_title: "QFusion"
   title: "QFusion: A Demonstration of Boundary-Aware Fusion Planning and Execution for Large-Scale QUBO Optimization"
   authors:
@@ -135,7 +135,7 @@
     code: "https://github.com/ihanwen99/VLDB26-QDBO"
 
 - id: "quantum-db-tutorial"
-  order: 10
+  order: 11
   short_title: "Quantum4DB"
   title: "How Can Quantum Computing and Databases Meet \"in Practice\"? From Algorithms to Systems"
   authors:
@@ -158,7 +158,7 @@
     doi: "https://doi.org/10.14778/3827998.3828148"
 
 - id: "tn-page"
-  order: 11
+  order: 8
   short_title: "TN-Page"
   title: "Quantum-Ready Approximate Data Management using Tensor-Network Physical Pages"
   authors:
@@ -180,7 +180,7 @@
   one_liner: ""
 
 - id: "is-quantum-ready"
-  order: 8
+  order: 9
   short_title: "Quantum Ready?"
   title: "Is Quantum Computing Ready for Real-Time Database Optimization?"
   authors:
