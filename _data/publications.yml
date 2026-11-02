@@ -45,6 +45,7 @@
   one_liner: ""
   links:
     doi: "https://dl.acm.org/doi/10.1145/3769826"
+    code: "https://github.com/ihanwen99/SEFRQO"
 
 - id: "hybrid-qc-db-framework"
   order: 13
@@ -68,6 +69,7 @@
   one_liner: ""
   links:
     doi: "https://doi.org/10.1109/ICDE65706.2026.00336"
+    code: "https://github.com/ihanwen99/icde26-future-technology"
 
 - id: "qfusion"
   order: 10
@@ -88,6 +90,7 @@
   one_liner: ""
   links:
     doi: "https://doi.org/10.14778/3827998.3828132"
+    code: "https://github.com/ihanwen99/vldb26-demo"
 
 - id: "sefrqo-plus"
   order: 15
@@ -110,6 +113,7 @@
   one_liner: ""
   links:
     doi: "https://doi.org/10.1007/s00778-026-00999-z"
+    code: "https://github.com/ihanwen99/SEFRQO-PLUS"
 
 - id: "qdbo"
   order: 14
@@ -156,6 +160,7 @@
   one_liner: ""
   links:
     doi: "https://doi.org/10.14778/3827998.3828148"
+    code: "https://github.com/ihanwen99/vldb26-tutorial"
 
 - id: "tn-page"
   order: 8
@@ -178,6 +183,8 @@
   status: "accepted"
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
+  links:
+    pdf: "https://vldb.org/2026/Workshops/VLDB-Workshops-2026/QCDKM/QCDKM26_8.pdf"
 
 - id: "is-quantum-ready"
   order: 9
@@ -198,6 +205,7 @@
   one_liner: ""
   links:
     doi: "https://doi.org/10.1109/ICDE65706.2026.00366"
+    code: "https://github.com/ihanwen99/Q2O"
 
 - id: "q2o-demo"
   order: 3
@@ -243,6 +251,7 @@
   one_liner: ""
   links:
     doi: "https://dl.acm.org/doi/10.1145/3736393.3736695"
+    code: "https://github.com/ihanwen99/Q2O"
 
 - id: "cqm-join-orders"
   order: 2
@@ -266,6 +275,7 @@
   links:
     paper: "https://ieeexplore.ieee.org/document/11108153"
     doi: "https://doi.org/10.1109/ICDEW67478.2025.00042"
+    code: "https://github.com/ihanwen99/Q2O"
 
 - id: "serag"
   order: 4
