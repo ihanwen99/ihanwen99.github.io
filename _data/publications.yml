@@ -183,8 +183,6 @@
   status: "accepted"
   topic: "Quantum-Augmented Database Systems"
   one_liner: ""
-  links:
-    pdf: "https://vldb.org/2026/Workshops/VLDB-Workshops-2026/QCDKM/QCDKM26_8.pdf"
 
 - id: "is-quantum-ready"
   order: 9
