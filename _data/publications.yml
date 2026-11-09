@@ -272,7 +272,6 @@
   links:
     paper: "https://ieeexplore.ieee.org/document/11108153"
     doi: "https://doi.org/10.1109/ICDEW67478.2025.00042"
-    code: "https://github.com/ihanwen99/Q2O"
 
 - id: "serag"
   order: 4
@@ -296,8 +295,6 @@
   status: "accepted"
   topic: "AI/LLM for Database Systems"
   one_liner: ""
-  links:
-    code: "https://github.com/ihanwen99/SEFRQO"
 # No official proceedings link found — aiDM workshop papers are not in the
 # ACM DL; only the advisor's homepage PDF exists, which we don't link.
 
