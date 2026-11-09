@@ -249,7 +249,6 @@
   one_liner: ""
   links:
     doi: "https://dl.acm.org/doi/10.1145/3736393.3736695"
-    code: "https://github.com/ihanwen99/Bushy-Join-Trees"
 
 - id: "cqm-join-orders"
   order: 2
