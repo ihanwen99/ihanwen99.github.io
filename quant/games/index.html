@@ -1,0 +1,2918 @@
+---
+layout: null
+permalink: /quant/games/
+sitemap: false
+---
+{% raw %}<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>交易游戏模拟器</title>
+<style>
+:root {
+  --bg: #f7f7f5; --panel: #ffffff; --ink: #1d1d1f; --muted: #6b6b70; --line: #dcdcd8; --accent: #1f5fbf; --accent-ink: #ffffff;
+  --hit: #1c7c3a; --miss: #a33a2a; --warn: #9a5b00; --won: #eaf6ee; --tipbg: #f1f4fa; --arbbg: #fff5e0; --pracbg: #eef7f0;
+  --c-you: #1f5fbf; --c-kelly: #1c8a4a; --c-half: #c77700;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17181b; --panel: #212226; --ink: #ececee; --muted: #a0a0a8; --line: #3a3b40; --accent: #6ea2ff; --accent-ink: #0d1320;
+    --hit: #5fcf86; --miss: #ff8a75; --warn: #f0b45a; --won: #1d3326; --tipbg: #262b36; --arbbg: #3a301c; --pracbg: #1c2a22;
+    --c-you: #6ea2ff; --c-kelly: #5fcf86; --c-half: #f0b45a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17181b; --panel: #212226; --ink: #ececee; --muted: #a0a0a8; --line: #3a3b40; --accent: #6ea2ff; --accent-ink: #0d1320;
+  --hit: #5fcf86; --miss: #ff8a75; --warn: #f0b45a; --won: #1d3326; --tipbg: #262b36; --arbbg: #3a301c; --pracbg: #1c2a22;
+  --c-you: #6ea2ff; --c-kelly: #5fcf86; --c-half: #f0b45a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 15px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 12px 16px 40px; }
+h1 { font-size: 20px; margin: 4px 0 8px; }
+h3 { margin: 6px 0; } h4 { margin: 14px 0 6px; }
+.seedbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.seedbar input { width: 120px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+.tabs button { border: 1px solid var(--line); border-bottom: none; border-radius: 8px 8px 0 0; background: transparent; color: var(--muted); padding: 7px 12px; font-size: 15px; }
+.tabs button[aria-selected="true"] { background: var(--panel); color: var(--ink); font-weight: 600; }
+.rule { margin: 0 0 6px; font-weight: 600; }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; margin-bottom: 10px; }
+details summary { cursor: pointer; color: var(--accent); }
+details ul { padding-left: 20px; margin: 6px 0; }
+.opts { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 8px 0; }
+input, select, button { font: inherit; color: var(--ink); }
+input[type=number], input[type=text], select { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+button { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+button:disabled { opacity: .45; cursor: default; }
+.status { display: flex; flex-wrap: wrap; gap: 16px; font-weight: 600; margin: 4px 0 10px; }
+.muted { color: var(--muted); font-weight: normal; }
+.block { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; }
+.bhead { display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; margin-bottom: 4px; }
+.betrow { display: grid; grid-template-columns: 1fr 64px 110px; gap: 8px; align-items: center; padding: 5px 0; border-top: 1px solid var(--line); }
+.betrow:has(.res) { grid-template-columns: 1fr 64px 110px 170px; }
+.betrow.head { border-top: none; color: var(--muted); font-size: 13px; }
+.betrow.won { background: var(--won); }
+.betrow .odds { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.betrow .stake input { width: 100%; }
+.tip { font-size: 12.5px; color: var(--muted); background: var(--tipbg); border-radius: 4px; padding: 1px 6px; margin-top: 2px; display: inline-block; }
+.tip.arb { background: var(--arbbg); color: var(--warn); display: block; margin-top: 6px; }
+.res { font-size: 13.5px; }
+.res.hit { color: var(--hit); font-weight: 600; } .res.miss { color: var(--muted); }
+.outcome { margin-top: 6px; font-weight: 600; }
+.sumline { margin: 6px 0; }
+.err { color: var(--miss); min-height: 1.2em; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.recap, .final { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: 8px 14px; margin: 10px 0; }
+.recap ul, .final ul { padding-left: 20px; }
+.big { font-weight: 700; font-size: 16px; }
+.one { font-weight: 600; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { border-bottom: 1px solid var(--line); padding: 4px 6px; text-align: right; white-space: nowrap; }
+td.left, th.left { text-align: left; white-space: normal; }
+.cards { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.card { display: inline-flex; width: 42px; height: 56px; align-items: center; justify-content: center; border: 2px solid var(--ink); border-radius: 6px; font-size: 20px; font-weight: 700; background: var(--panel); }
+.card.down { background: repeating-linear-gradient(45deg, var(--tipbg), var(--tipbg) 6px, var(--line) 6px, var(--line) 12px); color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.stat .k { font-size: 12.5px; color: var(--muted); } .stat .v { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 8px 0; }
+.form input[type=number] { width: 90px; } .form input[type=text] { width: 150px; }
+.chk { display: inline-flex; align-items: center; gap: 4px; }
+.log { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; max-height: 240px; overflow-y: auto; font-size: 13.5px; }
+.log .l-you { font-weight: 600; } .log .l-fill { color: var(--accent); } .log .l-snipe { color: var(--miss); font-weight: 600; }
+.log .l-flip, .log .l-round { color: var(--hit); font-weight: 600; } .log .l-bots, .log .l-info { color: var(--muted); } .log .l-warn { color: var(--warn); }
+.question { font-size: 17px; font-weight: 600; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; }
+.tag { display: inline-block; font-size: 12px; background: var(--tipbg); border-radius: 4px; padding: 0 6px; margin-right: 8px; color: var(--muted); }
+.curve { width: 100%; height: auto; max-height: 260px; }
+.curve .grid { stroke: var(--line); stroke-width: 1; } .curve .base { stroke: var(--muted); stroke-dasharray: 4 4; }
+.curve .ax { fill: var(--muted); font-size: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13.5px; }
+.legend i { display: inline-block; width: 14px; height: 4px; margin-right: 5px; vertical-align: middle; border-radius: 2px; }
+.prac { background: var(--pracbg); border: 1px solid var(--line); border-left: 4px solid var(--c-kelly); border-radius: 8px; padding: 6px 12px; margin: 8px 0; font-size: 14px; }
+.prac .ptitle, .ask .ptitle { font-weight: 700; color: var(--c-kelly); margin-bottom: 2px; }
+.pverdict { color: var(--warn); font-weight: 600; }
+.tip.pfb { display: block; background: var(--pracbg); color: var(--ink); margin-top: 4px; }
+.tip.pfb[hidden] { display: none; }
+.ask { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+.ask .ptitle { color: var(--warn); }
+.opt { display: block; margin: 4px 0; }
+.opt textarea { display: block; width: 100%; margin-top: 4px; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+.chip { display: inline-block; border: 1px solid var(--ink); border-radius: 6px; padding: 2px 8px; margin: 2px; background: var(--panel); font-weight: 600; }
+.chip.down { background: var(--tipbg); color: var(--muted); border-style: dashed; }
+.rulebox { background: var(--arbbg); border-radius: 8px; padding: 6px 12px; margin-bottom: 8px; }
+.hbline { margin: 8px 0 0; }
+.practicebar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+@media (max-width: 600px) {
+  .betrow, .betrow:has(.res) { grid-template-columns: 1fr 52px 84px; }
+  .betrow .res { grid-column: 1 / -1; }
+  .tabs button { padding: 6px 9px; font-size: 14px; }
+}
+/* ===== 可读性：字号、对比度、颜色只表达含义（正 EV 绿、负 EV 红、套利蓝，其余中性） ===== */
+:root {
+  --bg: #f5f5f3; --panel: #ffffff; --ink: #111114; --muted: #3d3d44; --line: #c6c6c0;
+  --pos: #11703a; --neg: #b3261e; --arb: #1a4fb4; --posbg: #e5f3ea; --negbg: #fbe9e8; --arbbg: #e7eefc;
+  --tipbg: #efefec; --pracbg: #f3f3f0; --btn: #111114; --btn-ink: #ffffff; --ref: #8a8a92;
+  --accent: var(--ink); --accent-ink: var(--bg); --hit: var(--pos); --miss: var(--neg); --warn: var(--ink); --won: var(--posbg);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121316; --panel: #1c1d21; --ink: #f3f3f5; --muted: #cfcfd6; --line: #4a4b52;
+    --pos: #63d68e; --neg: #ff9389; --arb: #93b8ff; --posbg: #173123; --negbg: #3b1d1b; --arbbg: #1b2944;
+    --tipbg: #2a2b30; --pracbg: #23242a; --btn: #f3f3f5; --btn-ink: #111114; --ref: #9a9aa4;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121316; --panel: #1c1d21; --ink: #f3f3f5; --muted: #cfcfd6; --line: #4a4b52;
+  --pos: #63d68e; --neg: #ff9389; --arb: #93b8ff; --posbg: #173123; --negbg: #3b1d1b; --arbbg: #1b2944;
+  --tipbg: #2a2b30; --pracbg: #23242a; --btn: #f3f3f5; --btn-ink: #111114; --ref: #9a9aa4;
+}
+body { font-size: 16px; line-height: 1.65; }
+h1 { font-size: 24px; }
+a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+details summary { color: var(--ink); font-weight: 600; }
+.tabs button { color: var(--muted); font-size: 16px; padding: 8px 14px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--ink); }
+.rule { font-size: 16px; }
+input, select, button { font-size: 16px; }
+input[type=number], input[type=text], select { padding: 8px 10px; min-height: 42px; border-color: var(--muted); }
+button { padding: 9px 16px; min-height: 42px; border-color: var(--muted); }
+button.primary { background: var(--btn); color: var(--btn-ink); border-color: var(--btn); }
+.form input[type=number] { width: 110px; } .form input[type=text] { width: 170px; }
+.sbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; margin: 6px 0 12px; }
+.sitem .sk { font-size: 14px; color: var(--muted); }
+.sitem .sv { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.sv.pos, b.pos, .pos { color: var(--pos); } .sv.neg, b.neg, .neg { color: var(--neg); } .arbt { color: var(--arb); }
+.sseed { margin-left: auto; font-size: 14px; color: var(--muted); }
+.clock { font-size: 18px; font-weight: 700; min-height: 0; }
+.stat .k { font-size: 14px; } .stat .v { font-size: 20px; }
+.howto { border-left: 4px solid var(--ink); }
+.howto ol { margin: 6px 0; padding-left: 22px; } .howto li { margin: 4px 0; }
+.howto .hnote { margin: 4px 0; font-size: 14px; color: var(--muted); }
+.rules summary { color: var(--muted); }
+.block { padding: 10px 14px; }
+.betrow { grid-template-columns: 1fr 96px 130px; gap: 10px; padding: 10px 0; }
+.betrow:has(.res) { grid-template-columns: 1fr 96px 130px 180px; }
+.betrow.head { font-size: 14px; }
+.betrow .odds { font-size: 18px; }
+.bname { font-size: 16px; }
+.tip { font-size: 14px; color: var(--ink); padding: 3px 8px; }
+.tip.arb { background: var(--arbbg); color: var(--arb); font-weight: 600; }
+.res { font-size: 15px; }
+.res.miss { color: var(--muted); }
+.recap, .final { border-left-color: var(--ink); padding: 10px 16px; }
+.big { font-size: 19px; }
+table { font-size: 15px; } th, td { padding: 7px 8px; }
+.book td button { min-height: 36px; padding: 5px 10px; font-size: 15px; }
+.log { font-size: 15px; } .log .l-fill { color: var(--ink); } .log .l-flip, .log .l-round { color: var(--ink); } .log .l-snipe { color: var(--neg); }
+.log .l-bots, .log .l-info { color: var(--muted); } .log .l-warn { color: var(--neg); }
+.prac { border-left-color: var(--ink); font-size: 15px; } .prac .ptitle, .ask .ptitle { color: var(--ink); }
+.pverdict { color: var(--ink); }
+.ask { border-left-color: var(--ink); } .ask .ptitle { color: var(--ink); }
+.tag { font-size: 13px; color: var(--muted); }
+.chip { font-size: 16px; padding: 4px 10px; }
+.rulebox { background: var(--tipbg); border: 1px solid var(--line); }
+.fig { margin: 12px 0; } .fig figcaption { font-weight: 700; margin-bottom: 4px; }
+.chart { width: 100%; max-width: 560px; height: auto; display: block; }
+.chart .grid { stroke: var(--line); stroke-width: 1; } .chart .base, .chart .axis0 { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart .ax, .chart .val { fill: var(--ink); font-size: 11px; } .chart .lab { fill: var(--ink); font-size: 11.5px; }
+.chart .ln { stroke-width: 2.4; } .chart .ln.you { stroke: var(--ink); } .chart .ln.kelly { stroke: var(--ref); stroke-dasharray: 6 4; } .chart .ln.half { stroke: var(--ref); stroke-dasharray: 2 3; }
+.chart .pt.you { fill: var(--ink); } .chart .pt.kelly, .chart .pt.half { fill: var(--ref); }
+.chart .bar.you { fill: var(--ink); } .chart .bar.kelly { fill: var(--panel); stroke: var(--ref); stroke-width: 1.5; }
+.chart .bar.pos { fill: var(--pos); } .chart .bar.neg { fill: var(--neg); } .chart .bar.zero { fill: var(--ref); }
+.legend { font-size: 14px; gap: 16px; }
+.legend i.lg { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--ink); margin-right: 6px; vertical-align: middle; }
+.legend i.lg.kelly { border-top: 3px dashed var(--ref); } .legend i.lg.half { border-top: 3px dotted var(--ref); }
+.legend i.lg.bar { height: 12px; border: none; border-radius: 2px; background: var(--ink); }
+.legend i.lg.bar.kelly { background: var(--panel); border: 1.5px solid var(--ref); }
+@media (max-width: 600px) {
+  .wrap { padding: 10px 16px 32px; }
+  .sbar { gap: 4px 16px; padding: 8px 12px; } .sitem .sv { font-size: 19px; } .sseed { margin-left: 0; width: 100%; }
+  .betrow, .betrow:has(.res) { grid-template-columns: 1fr 64px 96px; gap: 8px; }
+  .betrow .odds { font-size: 16px; }
+  .form input[type=number] { width: 96px; } .form input[type=text] { width: 140px; }
+  .tabs button { padding: 7px 10px; font-size: 15px; }
+  .chart .ax, .chart .val { font-size: 15px; } .chart .lab { font-size: 16px; }
+}
+.chart.tl .band { fill: var(--ref); opacity: .22; }
+.chart.tl .midln { stroke: var(--ink); stroke-width: 2.2; } .chart.tl .midpt { fill: var(--ink); }
+.chart.tl .mkt { stroke: var(--ref); stroke-width: 1.6; stroke-dasharray: 4 3; }
+.chart.tl .yourq { stroke: var(--ink); stroke-width: 3.2; stroke-linecap: round; } .chart.tl .qlink { stroke: var(--ink); stroke-width: 1; opacity: .5; }
+.chart.tl .other { stroke: var(--ref); stroke-width: 1.4; }
+.chart.tl .fill.buy { fill: var(--ink); } .chart.tl .fill.sell { fill: var(--panel); stroke: var(--ink); stroke-width: 1.4; }
+.chart.tl .flip { stroke: var(--muted); stroke-dasharray: 2 3; } .chart.tl .fliplab { fill: var(--ink); font-size: 10.5px; font-weight: 700; }
+.chart .truth { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 1 3; } .chart .truthlab { fill: var(--ink); font-size: 11px; font-weight: 700; }
+.chart .pop { animation: pop .5s ease-out; transform-box: fill-box; transform-origin: center; }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.chart .track { fill: var(--tipbg); stroke: var(--line); } .chart .seg.s0 { fill: var(--ink); } .chart .seg.s1 { fill: var(--ref); }
+.chart .goal { stroke: var(--ink); stroke-width: 2; }
+.chart .grow { animation: grow .6s ease-out; transform-box: fill-box; transform-origin: left center; }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .chart .pop, .chart .grow { animation: none; } }
+.legend i.tli { display: inline-block; width: 18px; height: 0; margin-right: 5px; vertical-align: middle; border-top: 2.5px solid var(--ink); }
+.legend i.tli.band { height: 10px; border: none; background: var(--ref); opacity: .35; }
+.legend i.tli.yourq { border-top-width: 4px; } .legend i.tli.mkt { border-top: 2px dashed var(--ref); } .legend i.tli.other { width: 2px; height: 12px; border: none; background: var(--ref); }
+.legend i.tli.buy { width: 0; height: 0; border: 6px solid transparent; border-bottom: 10px solid var(--ink); border-top: none; }
+.legend i.tli.sell { width: 0; height: 0; border: 6px solid transparent; border-top: 10px solid var(--ink); border-bottom: none; }
+.legend i.tli.truth { border-top: 2.5px dotted var(--ink); }
+@media (max-width: 600px) { .chart.tl .fliplab, .chart .truthlab { font-size: 14px; } .chart.tl .ax { font-size: 13px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Optiver 交易游戏模拟器</h1>
+<div class="seedbar">
+  <label>随机种子 <input id="seed" type="text" aria-label="随机种子"></label>
+  <button id="seed-restart">用这个种子重开当前游戏</button>
+  <button id="seed-new">换新种子</button>
+  <span class="muted">同一个种子，赔率、牌和题目都一样，可以重玩同一局。</span>
+</div>
+<div class="practicebar">
+  <label class="chk"><input type="checkbox" id="practice"> 练习模式</label>
+  <span class="muted">打开后，每一步做完立刻给出建议动作和理由，不用等整局结束（下注和赛马：每填完一项；做市、估算市场、牌桌：每做完一步；区间估算：每交一题）。策略和速查表见 <a href="../speed/" target="_top">Optiver 游戏策略手册</a>。</span>
+</div>
+<nav class="tabs" role="tablist">
+  <button data-tab="bet" role="tab">下注游戏</button>
+  <button data-tab="mm" role="tab">三张牌之和做市</button>
+  <button data-tab="est" role="tab">区间估算</button>
+  <button data-tab="hr" role="tab">赛马</button>
+  <button data-tab="emk" role="tab">多人估算市场</button>
+  <button data-tab="ct" role="tab">牌桌做市</button>
+</nav>
+
+<section class="game" id="tab-bet" hidden>
+  <p class="rule">起始 1000 美元；每轮骰子、硬币、扑克牌三块盘同时开，每块 5 到 7 个赌注；你填每项押多少，按 Kelly 打分，不看最后赚多少。</p>
+  <details class="howto" data-tab="bet" open><summary>怎么玩（三步）</summary><ol><li>每项数出真实概率 p（骰子 36 种、硬币 8 种、两张牌 52 × 51 种），乘上赔率 d：p × d 大于 1 才值得押。</li><li>先找套利：同一块里几项正好分完所有结果、1/赔率加起来小于 1，就按 1/赔率的比例都押上。</li><li>按优势定仓：单项 Kelly = (p × d − 1) ÷ (d − 1)，填好金额后点「结算这一轮」，回答交易员的追问。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>赔率是小数赔率 d：押 1 美元，中了拿回 d 美元（含本金），没中这 1 美元没了。隐含概率 = 1 ÷ d，是庄家按多大的概率在给价。</li>
+    <li>真实概率 p 要你自己算：骰子 36 种结果等可能，硬币 3 次共 8 种序列等可能，两张牌不放回共 52 × 51 种有序结果等可能。p × d 大于 1 是正期望，每押 1 美元平均赚 p × d − 1。</li>
+    <li>同一块里的赌注可能重叠（相关），也可能正好把所有结果分完；三块之间互相独立。总押注不能超过当前资金，没押的钱留着不动。每轮赔率重洗。</li>
+    <li>套利：一块里如果几项合起来覆盖了所有结果，而它们的 1 ÷ d 加起来小于 1，就按 1 ÷ d 的比例押这几项，不管结果如何都赚。约三分之一的轮次会故意放一组，别的轮次偶尔也会碰巧出现。</li>
+    <li>打分：Kelly 是让「期望对数增长」g 最大的押法，所有赌注一起算（每项押当前资金的几成）。每轮效率 = 你的 g ÷ Kelly 的 g × 100：100 是和 Kelly 一样，0 是和一分不下一样，负数是比不下还差。g 按真实概率算，和这一轮实际掷出什么无关，所以运气不影响分数。</li>
+    <li>逐项点评（和终端版一样）：Kelly 不押而你押了，指出是负期望还是不值得；Kelly 押 1% 以上而你几乎没押，是漏押；超过 Kelly 两倍是押过头；不到 Kelly 四成是太保守。总押注不到 Kelly 总额四成，另外提示整体太保守。</li>
+    <li>参照线：同样的结果下还跑着一个 Kelly 机器人和一个半 Kelly 机器人（每项押 Kelly 的一半）。优势小时半 Kelly 的 g 大约是 Kelly 的四分之三；每项押注额减半，每轮收益的标准差也正好减半。</li>
+    <li>「显示提示」打开后，每项显示隐含概率、真实概率、每押 1 美元的期望和 Kelly 比例（这是三块盘一起算的联合 Kelly，不是单项公式）。先关着自己算，再打开对答案。</li>
+    <li>交易员追问：每轮点「结算」之前，交易员会挑一项问「为什么押它」「为什么押这么多」或「为什么不押」，你选一个理由（也可以在框里写自己的话），答完才揭晓结果。</li>
+    <li>「显示 x to 1」：把赔率换成净赔率写法，x to 1 = 押 1 赢了另得 x（小数赔率 d 对应 d − 1 to 1）；打开「显示提示」时同时标出公允赔率（按真实概率算的赔率）。</li>
+    <li>「短局打分」是 QuantVault「Probability Market-Taking」游戏公布的打分方式（没有证据说就是 Optiver 的规则）：正 EV 的项押单项 Kelly 的 1.5 到 2 倍，每项最多本金的 10%；套利每条腿都押、让每个结果拿回一样多，参考规模本金的 15%；押负 EV、押过头、任何一项超过本金 25% 扣纪律分；交易员追问也算一项。各项 0 到 1 分、平均后乘 100，怎么折算是这里定的。打开后它和 Kelly 效率分并列显示。勾「跳过好的不扣分」时，漏押正 EV 的项不扣分，押负 EV 照样扣。</li>
+    <li>两个分数目标不同：Kelly 效率看长期资金增长，短局打分看期望利润。现场先问清怎么计分。</li>
+    <li>讲解：<a href="../speed/" target="_top">QR 下注游戏</a>（B1 赔率和套利、B4 多结果 Kelly、B7 相关赌注、B13 常见错误）；打法：<a href="../speed/" target="_top">策略手册「下注游戏」</a>。</li>
+  </ul></details>
+  <div class="opts">
+    <label class="chk"><input type="checkbox" id="bet-hint"> 显示提示</label>
+    <label class="chk"><input type="checkbox" id="bet-xto1"> 显示 x to 1</label>
+    <label class="chk"><input type="checkbox" id="bet-short"> 短局打分（QuantVault 的做法）</label>
+    <label class="chk"><input type="checkbox" id="bet-skipok"> 跳过好的不扣分</label>
+    <label>轮数 <select id="bet-rounds"><option>4</option><option selected>6</option><option>8</option><option>10</option></select></label>
+  </div>
+  <div id="bet-body"></div>
+</section>
+
+<section class="game" id="tab-mm" hidden>
+  <p class="rule">合约按 3 张牌的点数之和结算；3 轮、每轮 2 步，第 2、3 轮开始前各翻一张；你报双边价或吃机器人的价，仓位上限 ±10 份。</p>
+  <details class="howto" data-tab="mm" open><summary>怎么玩（三步）</summary><ol><li>看公开期望和剩余标准差（开局 21 和 6.35），中心放在你的公允价上。</li><li>报买价和卖价（开局 ±2 左右、小份数），或者直接买入、卖出别人的价。</li><li>下一步要翻牌时撤价或勾「只成交一次」，翻牌后按新期望改价。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>从 52 张牌里不放回抽 3 张（A = 1，J、Q、K = 11、12、13），合约值 = 三张之和。买 1 份付你的成交价，结算时每份值三张之和；卖 1 份反过来。最后一张在结算时翻开。</li>
+    <li>公开期望 = 已翻开的点数之和 + 没翻的张数 × 剩下 52 − 已翻张数 张牌的平均点数。开局期望 21，标准差约 6.35；每翻一张，期望跟着变，标准差变小。</li>
+    <li>每一步选一个：「报价」报买价、卖价和每边几份；「买入」按机器人里最低的卖价买（每个机器人最多 2 份，价从低往高吃）；「卖出」按最高的买价卖；「不动」；「撤价」。</li>
+    <li>报价默认一直挂着，直到你改价、撤价或被吃完；每一步你操作完，机器人按随机顺序看一遍你挂着的价，觉得有利就成交。勾「只成交一次」就是终端版的做法：机器人看完这一次就撤。</li>
+    <li>机器人怎么成交：它的估值比你的卖价高出超过它的门槛，就买你的卖价；你的买价比它的估值高出超过门槛，就卖给你。稳健：估值 = 公开期望，门槛 1，报价半宽 max(1, 0.5 × 剩余标准差)，每次最多 2 份。知情：偷看了第三张牌，估值按已知的牌算，门槛 1，每次最多 3 份；它的报价中间价只取公开期望和它的估值的中点，半宽 2。噪声：估值 = 公开期望加一个标准差 3 的随机误差，门槛 0，2 份。跟风：估值 = 最近一笔成交价，门槛 1.5，2 份。狙击：不报价，估值 = 最新公开期望，门槛 0.5，3 份。</li>
+    <li>面经里交易员会打你过时的报价：翻牌那一刻，狙击机器人在你能改价之前先按新期望看你还挂着的旧价：你的卖价比新期望低 0.5 以上，它就买；你的买价比新期望高 0.5 以上，它就卖给你。所以翻牌前那一步，要么撤价，要么勾「只成交一次」。</li>
+    <li>机器人之间的报价交叉时会互相成交，成交价写在记录里，这也是信息。</li>
+    <li>每轮结束时按「翻开下一张以后的公开期望」给仓位估值，第 3 轮按结算值。结算后拆账：和每个机器人成交各赚亏多少，和知情机器人亏的就是逆向选择，翻牌时被狙击打掉的单独列出；再给一个参照做法（每步按最新公开期望 ± 2 报 1 份、只成交一次）在同一副牌下的 PnL。</li>
+    <li>讲解：<a href="../speed/" target="_top">QR 交易游戏与团队挑战</a>（TG2 规则和术语、TG5 读别人的报价、TG6 逐步翻牌、TG8 私有信息、TG10 仓位）；打法：<a href="../speed/" target="_top">策略手册「三张牌之和做市」</a>。</li>
+  </ul></details>
+  <div id="mm-body"></div>
+</section>
+
+<section class="game" id="tab-est" hidden>
+  <p class="rule">5 轮，每轮一道题，报区间 [L, U]；套住真值得 L ÷ U 分，没套住 0 分，目标累计 2.0。</p>
+  <details class="howto" data-tab="est" open><summary>怎么玩（三步）</summary><ol><li>先给一个点估计 m（拆成几个已知数相乘）。</li><li>报区间：下界 = m ÷ 1.41，上界 = m × 1.41（宽 2 倍），套住得 下界 ÷ 上界 分。</li><li>5 轮累计到 2.0：领先就报宽一点求稳，落后就收窄。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>每题填下界和上界，可以写 3e6、3,000,000、300万、2.5亿、40k、3m、2b、1.5t。填反了会自动对调。</li>
+    <li>套住时得 L ÷ U：区间越窄越接近 1 分；没套住 0 分。一轮最多 1 分，5 轮凑 2.0，平均每轮要 0.4，例如每题报 2 倍宽（U ÷ L = 2）全套住正好 2.5 分。</li>
+    <li>每题揭晓真值、拆解思路、一个参考区间和出处。题目来自讲解页的 40 道题库（生活、金融、物理、科技），可以只选一类。</li>
+    <li>最后给校准报告（和终端版 estimation_drill.py 一样）：把你的区间当作 90% 区间，看命中率、中心偏高还是偏低、点估计一般差几倍、区间偏窄还是偏宽，以及按你实际的误差，L ÷ U 规则下每题报多宽期望分最高。</li>
+    <li>讲解：<a href="../speed/" target="_top">QR 区间估算与校准</a>（EST1 规则、EST5 报多宽、EST6 凑 2.0 分的打法）；打法：<a href="../speed/" target="_top">策略手册「区间估算」</a>。</li>
+  </ul></details>
+  <div class="opts">
+    <label>题目类别 <select id="est-cat"><option>全部</option><option>生活</option><option>金融</option><option>物理</option><option>科技</option></select></label>
+  </div>
+  <div id="est-body"></div>
+</section>
+
+<section class="game" id="tab-hr" hidden>
+  <p class="rule">每轮 4 到 8 匹马，赢的概率 = 能力 ÷ 能力总和；先估隐含概率之和，再决定押哪几匹、押多少，结算后和多结果 Kelly 比。</p>
+  <details class="howto" data-tab="hr" open><summary>怎么玩（三步）</summary><ol><li>每匹赢的概率 = 能力 ÷ 能力总和；算隐含概率之和 Σ(1/赔率)，小于 1 就是套利。</li><li>按 p × 赔率从大到小选马：比留现金比例 R 大的才押，每匹押 p − R ÷ 赔率。</li><li>填好金额后点「开跑并结算」，对照 Kelly 看差在哪。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>每匹马的能力是 1 到 6 的整数，某匹赢的概率 p = 它的能力 ÷ 所有马的能力之和。赔率是小数赔率，庄家开的价带抽水和随机误差。</li>
+    <li>隐含概率之和 = 每匹马的 1 ÷ 赔率加起来。大于 1 的部分是庄家抽水；小于 1 时按 1 ÷ 赔率的比例押每一匹，不管谁赢都赚，这是套利。先在框里填你估的和，结算时告诉你差多少。</li>
+    <li>只押 p × 赔率 够大的马。多结果 Kelly 的规则：按 p × 赔率从大到小把马加进来，只要下一匹的 p × 赔率大于 R 就加，R =（1 − 已选马的 p 之和）÷（1 − 已选马的 1 ÷ 赔率之和），起点 R = 1；每匹押资金的 p − R ÷ 赔率，R 就是留在手里的现金比例。有套利时 R = 0，Kelly 按 p 把钱全押上。</li>
+    <li>打分和下注游戏一样：效率 = 你的期望对数增长 ÷ Kelly 的 × 100，逐项点评漏押、押过头、太保守和漏了套利。</li>
+    <li>讲解：<a href="../speed/" target="_top">QR 下注游戏</a>（B2 套利、B3 抽水、B4 同时下几个互斥结果的 Kelly）；打法：<a href="../speed/" target="_top">策略手册「赛马」</a>。</li>
+  </ul></details>
+  <div class="opts">
+    <label class="chk"><input type="checkbox" id="hr-hint"> 显示提示</label>
+    <label class="chk"><input type="checkbox" id="hr-xto1"> 显示 x to 1</label>
+    <label>轮数 <select id="hr-rounds"><option>3</option><option selected>5</option><option>8</option></select></label>
+  </div>
+  <div id="hr-body"></div>
+</section>
+
+<section class="game" id="tab-emk" hidden>
+  <p class="rule">一道区间估算题当合约，按真值结算；6 回合，每回合你报一次双边价或吃别人的价，5 个匿名报价人里有懂行的、一般的、乱报的和跟风的；仓位上限 ±6 份。</p>
+  <details class="howto" data-tab="emk" open><summary>怎么玩（三步）</summary><ol><li>先自己估一个数，再看 5 个报价人的买卖价：报得窄、回合之间稳的人更可能懂行。</li><li>围绕加权的中心报买价和卖价（可以写 3万、2.5亿），或者直接吃明显偏的价。</li><li>被买走就往上挪，被卖就往下挪；6 回合后按真值结算。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>题目从区间估算的 40 道题库里抽。买 1 份付成交价，结算时每份值真值；卖 1 份反过来。PnL 同时换算成「几个真值」，不同题之间可比。</li>
+    <li>每回合选一个：「报价」填买价、卖价和份数（可以写 3万、2.5亿、40k、3e6），报价人看一次，觉得有利就成交，不挂单；「买入」按最低的卖价买，「卖出」按最高的买价卖，每个报价人每次最多成交它的份数；「不动」。</li>
+    <li>报价人（结算时揭晓谁是谁）：懂行 1 个，估计的对数误差标准差 0.1，报得最窄，你的价比它的估计差 6% 以上就来成交；一般 2 个，两人犯同一个错（共同的对数误差 0.45，各自再加 0.15），会往成交价学 30%，差 20% 以上才成交；乱报 1 个，每回合重新瞎猜（误差 1.0），宽度随机，和准不准无关，差 30% 以上才成交；跟风 1 个，中间价跟着最近一笔成交走。报价人之间报价交叉时会互相成交，成交价写在记录里。</li>
+    <li>窍门：别人的报价是他们的估计。报得窄、回合之间又稳的人更可能懂行，给他更大权重；中间价每回合乱跳的人权重给低。练习模式的建议就是按「1 /（半宽² + 他中间价的波动）」加权求对数中心。</li>
+    <li>讲解：<a href="../speed/" target="_top">QR 交易游戏与团队挑战</a>（TG4 估算市场、TG5 合并别人的估计）、<a href="../speed/" target="_top">区间估算</a> EST8；打法：<a href="../speed/" target="_top">策略手册「估算市场」</a>。</li>
+  </ul></details>
+  <div id="em-body"></div>
+</section>
+
+<section class="game" id="tab-ct" hidden>
+  <p class="rule">你和 3 到 5 个机器人各两张暗牌，三张公共牌每轮翻一张；标的是场上所有牌之和。每局换规则：A 当 1 还是 14，黑色花色算负还是红心算负。每轮你先报价（价差最多 5，数量最多 10），再看机器人的报价决定成交。</p>
+  <details class="howto" data-tab="ct" open><summary>怎么玩（三步）</summary><ol><li>先看本局规则（A 当 1 还是 14、哪些花色算负），公允价 = 看得到的牌 + 暗牌张数 × 每张平均。</li><li>你先报价（价差最多 5）；机器人报价后，它们的报价中点暴露了它们的牌，用来修正公允价。</li><li>成交窗口里先抓明显的错价，仓位保持在 ±15 以内。</li></ol><p class="hnote">玩完一局以后，下次打开这张卡片默认收起；点标题可以再展开。</p></details>
+  <details class="rules"><summary>完整规则和打分</summary><ul>
+    <li>规则照 QuantVault 的「Card Table」游戏公布的说法做（它标作 Optiver 风格第二轮；没有证据说就是 Optiver 的规则），细节是这里定的。</li>
+    <li>牌值：2 到 13 按点数（J、Q、K = 11、12、13），A 按本局规则当 1 或 14；本局规则说「黑桃、梅花算负」就把黑色牌记成负数，说「红心算负」就只把红心记成负数。标的 = 每人两张 + 三张公共牌，全部加起来。</li>
+    <li>每轮：先翻一张公共牌；你报双边价，每个机器人看自己的两张牌和公共牌估值，你的价对它有利（差 1 以上）就来成交，每个最多 3 份；然后每个机器人报价，每个报价有 5 份，你可以卖给它的买价、买它的卖价。约 40% 的轮次会有一个机器人报错价（偏离它自己的估值 4 到 7）；别的看起来偏的报价，可能只是它的牌好或差。</li>
+    <li>你结束成交以后，机器人之间会按各自的牌互相成交：某个机器人按自己的估值觉得别人的报价差 2 以上，就把它吃掉；错价通常活不过这一步，所以要先手。勾「计时」后按 QuantVault 的节奏：报价 20 秒（超时算不报），成交窗口 8 秒，前 2 秒只有你能成交。</li>
+    <li>打分是三项平均，PnL 只显示不计分：定价（报价中心离参考公允价多近）、抓错价（错价抓到几个）、纪律（不做坏交易、仓位在 ±15 以内、自己的报价别被打）。复盘写了每一项怎么算。</li>
+    <li>窍门：机器人的报价中点 ≈ 它的两张牌 + 公共牌 + 它看不到的牌 × 平均，反过来能推出它两张牌的和；同一个机器人的牌不会变，这一轮暗示的和上一轮对不上，就像是错价。</li>
+    <li>打法和每种规则下单张暗牌的期望、标准差：<a href="../speed/" target="_top">策略手册「牌桌做市」</a>。</li>
+  </ul></details>
+  <div class="opts"><label class="chk"><input type="checkbox" id="ct-timer"> 计时（报价 20 秒，成交窗口 8 秒）</label></div>
+  <div id="ct-body"></div>
+</section>
+</div>
+<script>
+// CORE-BEGIN
+const Core = (() => {
+  'use strict';
+  // ------------------------------------------------------------ 工具和随机数
+  const sum = a => { let s = 0; for (const x of a) s += x; return s; };
+  function hashSeed(s) {
+    s = String(s);
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return h >>> 0;
+  }
+  function makeRng(seed) {
+    let a = hashSeed(seed);
+    const r = {};
+    r.random = () => {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    r.uniform = (lo, hi) => lo + (hi - lo) * r.random();
+    r.randint = (lo, hi) => lo + Math.floor(r.random() * (hi - lo + 1));
+    r.gauss = (mu, s) => { let u = 0; while (u === 0) u = r.random(); const v = r.random(); return mu + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    r.shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(r.random() * (i + 1)); const t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; };
+    r.sample = (arr, k) => r.shuffle(arr.slice()).slice(0, k);
+    r.weighted = w => { const s = sum(w); let u = r.random() * s; for (let i = 0; i < w.length; i++) { u -= w[i]; if (u < 0) return i; } return w.length - 1; };
+    return r;
+  }
+
+  // ------------------------------------------------------------ Kelly（照搬 betting_game.py）
+  function project(y, cap = 1) {
+    const clip = v => Math.min(Math.max(v, 0), cap);
+    const f = y.map(clip);
+    if (sum(f) <= 1) return f;
+    let lo = 0, hi = Math.max(...y);
+    for (let k = 0; k < 60; k++) {
+      const lam = (lo + hi) / 2;
+      if (sum(y.map(v => clip(v - lam))) > 1) lo = lam; else hi = lam;
+    }
+    return y.map(v => clip(v - hi));
+  }
+  // P[i]：结果 i 的概率；R[i][j]：押 1 元在第 j 项、结果 i 时拿回多少
+  function growth(P, R, f) {
+    const s = sum(f);
+    let tot = 0;
+    for (let i = 0; i < P.length; i++) {
+      let w = 1 - s;
+      const row = R[i];
+      for (let j = 0; j < f.length; j++) w += row[j] * f[j];
+      if (w <= 0) return -Infinity;
+      tot += P[i] * Math.log(w);
+    }
+    return tot;
+  }
+  const maxDiff = (a, b) => { let m = 0; for (let i = 0; i < a.length; i++) m = Math.max(m, Math.abs(a[i] - b[i])); return m; };
+  function ascent(n, gradFn, growthFn, cap, iters) {
+    let f = new Array(n).fill(0), step = 1, gf = 0;
+    for (let it = 0; it < iters; it++) {
+      const grad = gradFn(f);
+      step *= 2;
+      let g, gg;
+      for (;;) {
+        g = project(f.map((x, j) => x + step * grad[j]), cap);
+        gg = growthFn(g);
+        if (gg >= gf) break;
+        step /= 2;
+        if (step < 1e-14) return f;
+      }
+      if (maxDiff(f, g) < 1e-11) return g;
+      f = g; gf = gg;
+    }
+    return f;
+  }
+  function kelly(P, R, cap = 1, iters = 4000) {
+    const n = R[0].length;
+    const gradFn = f => {
+      const s = sum(f), grad = new Array(n).fill(0);
+      for (let i = 0; i < P.length; i++) {
+        let w = 1 - s;
+        for (let j = 0; j < n; j++) w += R[i][j] * f[j];
+        const c = P[i] / w;
+        for (let j = 0; j < n; j++) grad[j] += c * (R[i][j] - 1);
+      }
+      return grad;
+    };
+    return ascent(n, gradFn, f => growth(P, R, f), cap, iters);
+  }
+
+  // 几块互相独立的盘一起下（骰子、硬币、扑克牌）：联合结果是各块结果的乘积，资金共用。
+  // block = {P: [各结果概率], R: [[该块每项赌注的回报]]}
+  function padBlocks(blocks) {
+    const B = blocks.slice();
+    while (B.length < 3) B.push({ P: [1], R: [[]] });
+    const off = [];
+    let o = 0;
+    for (const b of B) { off.push(o); o += b.R[0].length; }
+    return { B, off, n: o };
+  }
+  function blockA(B, off, f) {
+    return B.map((b, bi) => b.R.map(row => { let a = 0; for (let j = 0; j < row.length; j++) a += row[j] * f[off[bi] + j]; return a; }));
+  }
+  function growthBlocks(blocks, f) {
+    const { B, off } = padBlocks(blocks);
+    const s = sum(f), A = blockA(B, off, f);
+    const [P0, P1, P2] = B.map(b => b.P), [A0, A1, A2] = A;
+    let tot = 0;
+    for (let i = 0; i < P0.length; i++) for (let j = 0; j < P1.length; j++) {
+      const base = 1 - s + A0[i] + A1[j], p01 = P0[i] * P1[j];
+      for (let k = 0; k < P2.length; k++) {
+        const w = base + A2[k];
+        if (w <= 0) return -Infinity;
+        tot += p01 * P2[k] * Math.log(w);
+      }
+    }
+    return tot;
+  }
+  function kellyBlocks(blocks, cap = 1, iters = 4000) {
+    const { B, off, n } = padBlocks(blocks);
+    const gradFn = f => {
+      const s = sum(f), A = blockA(B, off, f);
+      const [P0, P1, P2] = B.map(b => b.P), [A0, A1, A2] = A;
+      const Q = B.map(b => new Float64Array(b.P.length));
+      let T = 0;
+      for (let i = 0; i < P0.length; i++) for (let j = 0; j < P1.length; j++) {
+        const base = 1 - s + A0[i] + A1[j], p01 = P0[i] * P1[j];
+        for (let k = 0; k < P2.length; k++) {
+          const v = p01 * P2[k] / (base + A2[k]);
+          T += v; Q[0][i] += v; Q[1][j] += v; Q[2][k] += v;
+        }
+      }
+      const grad = new Array(n).fill(0);
+      B.forEach((b, bi) => {
+        const nb = b.R[0].length;
+        for (let j = 0; j < nb; j++) { let g = 0; for (let i = 0; i < b.P.length; i++) g += b.R[i][j] * Q[bi][i]; grad[off[bi] + j] = g - T; }
+      });
+      return grad;
+    };
+    return ascent(n, gradFn, f => growthBlocks(blocks, f), cap, iters);
+  }
+
+  // 互斥且穷尽的结果（赛马）：多结果 Kelly 的闭式解，用来和数值解对拍。
+  function kellyExclusive(p, d) {
+    const idx = p.map((_, i) => i).sort((a, b) => p[b] * d[b] - p[a] * d[a]);
+    let sp = 0, sq = 0, R = 1;
+    const S = [];
+    for (const i of idx) {
+      if (p[i] * d[i] <= R) break;          // 可以证明：满足这个条件时加进来以后 Σ(1/d) 仍小于 1
+      S.push(i); sp += p[i]; sq += 1 / d[i];
+      R = sq < 1 ? Math.max(0, (1 - sp) / (1 - sq)) : 0;
+    }
+    const f = p.map(() => 0);
+    for (const i of S) f[i] = Math.max(0, p[i] - R / d[i]);
+    return { f, R };
+  }
+
+  // ------------------------------------------------------------ 下注游戏：三块盘
+  const odds = (p, lo, hi, rng) => Math.max(1.05, Math.round(rng.uniform(lo, hi) / p / 0.05) * 0.05);
+
+  const DICE_RAW = [];
+  for (let a = 1; a <= 6; a++) for (let b = 1; b <= 6; b++) DICE_RAW.push([a, b]);
+  const COIN_RAW = [];
+  for (let m = 0; m < 8; m++) COIN_RAW.push([(m >> 2) & 1, (m >> 1) & 1, m & 1]);   // 1 = 正面
+  const SUITS = ['黑桃', '红桃', '方块', '梅花'];
+  const RANKNAME = r => ({ 1: 'A', 11: 'J', 12: 'Q', 13: 'K' }[r] || String(r));
+  const CARD52 = [];
+  for (let s = 0; s < 4; s++) for (let r = 1; r <= 13; r++) CARD52.push({ r, s, red: s === 1 || s === 2 });
+  const CARD_RAW = [];
+  for (let i = 0; i < 52; i++) for (let j = 0; j < 52; j++) if (i !== j) CARD_RAW.push([CARD52[i], CARD52[j]]);
+  const heads = c => c[0] + c[1] + c[2];
+
+  const CATS = [
+    {
+      key: 'dice', name: '骰子', intro: '掷两个公平骰子，36 种结果等可能。',
+      raw: DICE_RAW,
+      show: ([a, b]) => `掷出 ${a} 和 ${b}，和 = ${a + b}`,
+      draw: rng => [rng.randint(1, 6), rng.randint(1, 6)],
+      pool: [
+        ['和 = 7', ([a, b]) => a + b === 7],
+        ['和 ≥ 10', ([a, b]) => a + b >= 10],
+        ['和 ≤ 4', ([a, b]) => a + b <= 4],
+        ['对子（两个点数一样）', ([a, b]) => a === b],
+        ['和为偶数', ([a, b]) => (a + b) % 2 === 0],
+        ['至少一个 6', ([a, b]) => a === 6 || b === 6],
+        ['和为 11 或 12', ([a, b]) => a + b >= 11],
+        ['第一个骰子 ≥ 4', ([a]) => a >= 4],
+      ],
+      parts: [
+        [['和 ≤ 6', ([a, b]) => a + b <= 6], ['和 = 7', ([a, b]) => a + b === 7], ['和 ≥ 8', ([a, b]) => a + b >= 8]],
+        [['和为偶数', ([a, b]) => (a + b) % 2 === 0], ['和为奇数', ([a, b]) => (a + b) % 2 === 1]],
+        [['和 ≤ 5', ([a, b]) => a + b <= 5], ['和在 6 到 8 之间', ([a, b]) => a + b >= 6 && a + b <= 8], ['和 ≥ 9', ([a, b]) => a + b >= 9]],
+      ],
+    },
+    {
+      key: 'coin', name: '硬币', intro: '公平硬币连抛 3 次，8 种正反序列等可能。',
+      raw: COIN_RAW,
+      show: c => '抛出 ' + c.map(x => (x ? '正' : '反')).join(' ') + `（${heads(c)} 次正面）`,
+      draw: rng => [rng.random() < 0.5 ? 1 : 0, rng.random() < 0.5 ? 1 : 0, rng.random() < 0.5 ? 1 : 0],
+      pool: [
+        ['三次都是正面', c => heads(c) === 3],
+        ['恰好两次正面', c => heads(c) === 2],
+        ['至少一次正面', c => heads(c) >= 1],
+        ['第一次是正面', c => c[0] === 1],
+        ['出现连续两次正面', c => (c[0] && c[1]) || (c[1] && c[2]) ? true : false],
+        ['正反交替（正反正或反正反）', c => c[0] !== c[1] && c[1] !== c[2]],
+        ['三次全一样', c => c[0] === c[1] && c[1] === c[2]],
+        ['第一次和第三次相同', c => c[0] === c[2]],
+      ],
+      parts: [
+        [['正面 0 次', c => heads(c) === 0], ['正面 1 次', c => heads(c) === 1], ['正面 2 次', c => heads(c) === 2], ['正面 3 次', c => heads(c) === 3]],
+        [['正面 ≤ 1 次', c => heads(c) <= 1], ['正面 ≥ 2 次', c => heads(c) >= 2]],
+      ],
+    },
+    {
+      key: 'cards', name: '扑克牌', intro: '一副 52 张牌，不放回抽 2 张，分第一张和第二张（A = 1，J、Q、K = 11、12、13）。',
+      raw: CARD_RAW,
+      show: ([x, y]) => `抽到 ${SUITS[x.s]}${RANKNAME(x.r)} 和 ${SUITS[y.s]}${RANKNAME(y.r)}`,
+      draw: rng => { const s = rng.sample(CARD52, 2); return [s[0], s[1]]; },
+      pool: [
+        ['两张同花色', ([x, y]) => x.s === y.s],
+        ['两张点数相同（对子）', ([x, y]) => x.r === y.r],
+        ['至少一张 A', ([x, y]) => x.r === 1 || y.r === 1],
+        ['两张都是人头牌（J、Q、K）', ([x, y]) => x.r >= 11 && y.r >= 11],
+        ['点数之和 ≥ 20', ([x, y]) => x.r + y.r >= 20],
+        ['点数乘积是偶数', ([x, y]) => (x.r * y.r) % 2 === 0],
+        ['第一张是红桃', ([x]) => x.s === 1],
+        ['至少一张红桃', ([x, y]) => x.s === 1 || y.s === 1],
+      ],
+      parts: [
+        [['两张都是红色', ([x, y]) => x.red && y.red], ['两张都是黑色', ([x, y]) => !x.red && !y.red], ['一红一黑', ([x, y]) => x.red !== y.red]],
+        [['第二张点数更大', ([x, y]) => y.r > x.r], ['两张点数相同', ([x, y]) => y.r === x.r], ['第二张点数更小', ([x, y]) => y.r < x.r]],
+      ],
+    },
+  ];
+
+  // 把原始结果按「每项赌注中没中」的组合压缩成原子结果，概率相加
+  function compress(raw, preds) {
+    const map = new Map(), P = [], hits = [], atomOf = [];
+    const pr = 1 / raw.length;
+    raw.forEach((o, idx) => {
+      const h = preds.map(fn => (fn(o) ? 1 : 0));
+      const key = h.join('');
+      let a = map.get(key);
+      if (a === undefined) { a = P.length; map.set(key, a); P.push(0); hits.push(h); }
+      P[a] += pr;
+      atomOf[idx] = a;
+    });
+    return { P, hits, map };
+  }
+  function atomOfOutcome(block, o) {
+    const key = block.preds.map(fn => (fn(o) ? 1 : 0)).join('');
+    return block.map.get(key);
+  }
+  function makeBlock(cat, picks) {
+    const preds = picks.map(x => x.fn);
+    const { P, hits, map } = compress(cat.raw, preds);
+    const bets = picks.map((x, j) => ({ name: x.name, d: x.d, p: sum(P.filter((_, i) => hits[i][j])) }));
+    const R = hits.map(h => h.map((v, j) => (v ? bets[j].d : 0)));
+    return { key: cat.key, name: cat.name, intro: cat.intro, cat, preds, map, P, hits, R, bets };
+  }
+  function pickBets(cat, rng, mode) {
+    const k = rng.randint(5, 7);
+    let picks = [];
+    if (mode) {
+      const part = cat.parts[rng.randint(0, cat.parts.length - 1)];
+      for (let tries = 0; tries < 200; tries++) {
+        const lo = mode === 'arb' ? 1.0 : 0.85, hi = mode === 'arb' ? 1.12 : 1.05;
+        picks = part.map(([name, fn]) => {
+          const p = cat.raw.filter(fn).length / cat.raw.length;
+          return { name, fn, d: odds(p, lo, hi, rng) };
+        });
+        const s = sum(picks.map(x => 1 / x.d));
+        if (mode !== 'arb' || s < 0.995) break;
+      }
+    }
+    const names = new Set(picks.map(x => x.name));
+    const rest = rng.shuffle(cat.pool.filter(([n]) => !names.has(n)));
+    for (const [name, fn] of rest) {
+      if (picks.length >= k) break;
+      const p = cat.raw.filter(fn).length / cat.raw.length;
+      picks.push({ name, fn, d: odds(p, 0.85, 1.2, rng) });
+    }
+    return rng.shuffle(picks);
+  }
+  // 一轮：三块盘同时开；约 35% 的轮次，其中一块故意放一组隐含概率和小于 1 的赌注
+  function genBetRound(rng) {
+    const arbBlock = rng.random() < 0.35 ? rng.randint(0, 2) : -1;
+    const blocks = CATS.map((cat, bi) => {
+      const mode = bi === arbBlock ? 'arb' : rng.random() < 0.35 ? 'part' : null;
+      return makeBlock(cat, pickBets(cat, rng, mode));
+    });
+    blocks.forEach(b => { b.arbs = findCovers(b); });
+    const outcomes = blocks.map(b => b.cat.draw(rng));
+    return { blocks, outcomes };
+  }
+  // 在一块盘里找「覆盖全部结果」的赌注组合：按 1/d 比例押，每个结果至少拿回 1/Σ(1/d)
+  function findCovers(block) {
+    const n = block.bets.length, out = [];
+    for (let m = 1; m < (1 << n); m++) {
+      const S = [];
+      for (let j = 0; j < n; j++) if (m & (1 << j)) S.push(j);
+      if (!block.hits.every(h => S.some(j => h[j]))) continue;
+      if (out.some(o => o.S.every(j => S.includes(j)))) continue;     // 只留最小的覆盖
+      const s = sum(S.map(j => 1 / block.bets[j].d));
+      const partition = block.hits.every(h => S.filter(j => h[j]).length === 1);
+      out.push({ S, s, partition });
+    }
+    return out.filter(o => o.s < 1).sort((a, b) => a.s - b.s);
+  }
+  function flatBets(round) {
+    const list = [];
+    round.blocks.forEach((b, bi) => b.bets.forEach((x, j) => list.push({ ...x, bi, j, block: b.name })));
+    return list;
+  }
+  function betReturn(round, f) {
+    const atoms = round.blocks.map((b, bi) => atomOfOutcome(b, round.outcomes[bi]));
+    let w = 1 - sum(f), o = 0;
+    round.blocks.forEach((b, bi) => { b.bets.forEach((x, j) => { if (b.hits[atoms[bi]][j]) w += x.d * f[o + j]; }); o += b.bets.length; });
+    return w;
+  }
+
+  // 逐项点评（规则照搬 betting_game.py 的 comments）
+  function betComments(list, fy, fk) {
+    const out = [];
+    list.forEach((x, k) => {
+      const pd = x.p * x.d, y = fy[k], kk = fk[k];
+      const tag = `[${x.block}] ${x.name}（p = ${x.p.toFixed(3)}，p×d = ${pd.toFixed(2)}）`;
+      let t = null, kind = null;
+      if (kk < 0.005 && y >= 0.01) {
+        kind = pd < 1 ? '负期望' : '不值得';
+        t = `${tag}：你押 ${pct(y)}，Kelly 不押（${pd < 1 ? '负期望' : '它自己是正期望，但和别的项一起看不值得押'}）`;
+      } else if (kk >= 0.01 && y < 0.002) {
+        kind = '漏押';
+        t = `${tag}：漏了，Kelly 押 ${pct(kk)}` + (pd < 1 ? '（它自己是负期望，Kelly 押它是为了和别的项对冲）' : '');
+      } else if (kk >= 0.01 && y > 2 * kk) {
+        kind = '押过头';
+        t = `${tag}：押过头，你 ${pct(y)}，Kelly ${pct(kk)}（超过两倍）`;
+      } else if (kk >= 0.01 && y < 0.4 * kk) {
+        kind = '太保守';
+        t = `${tag}：太保守，你 ${pct(y)}，Kelly ${pct(kk)}`;
+      }
+      if (t) out.push({ k, kind, text: t, gap: Math.abs(y - kk) });
+    });
+    return out;
+  }
+  function arbComments(round, fy) {
+    const out = [];
+    let o = 0;
+    round.blocks.forEach(b => {
+      for (const a of b.arbs.slice(0, 1)) {
+        const names = a.S.map(j => b.bets[j].name).join('、');
+        const covered = a.S.every(j => fy[o + j] > 0);
+        const tot = sum(a.S.map(j => fy[o + j]));
+        const lock = 1 / a.s - 1;
+        const tail = !covered ? '，你没有把每一项都押上' : tot < 0.05 ? `，你都押了，但合计只有 ${pct(tot)}` : '，你都押了';
+        out.push({
+          kind: covered ? '套利已做' : '漏了套利', missed: !covered,
+          text: `[${b.name}] ${names} 的隐含概率和 ${a.s.toFixed(3)} < 1，能套利：按 1/赔率 的比例押这几项，${a.partition ? '锁定' : '至少锁定'}押注额的 ${pct(lock)}` + tail,
+        });
+      }
+      o += b.bets.length;
+    });
+    return out;
+  }
+  const pct = x => (100 * x).toFixed(1) + '%';
+
+  function evalBets(P_or_round, fy, fk, opts) {
+    // opts: {list, gYou, gK, gH}
+    const { list, gYou, gK } = opts;
+    const cm = betComments(list, fy, fk);
+    const sy = sum(fy), sk = sum(fk);
+    const ny = fy.filter(x => x >= 0.002).length, nk = fk.filter(x => x >= 0.005).length;
+    const eff = gK > 1e-9 ? 100 * gYou / gK : (Math.abs(gYou) < 1e-9 ? 100 : 0);
+    const notes = [];
+    if (gYou < 0) notes.push(gYou === -Infinity ? '这样押有可能输光（某个结果下资金归零），期望对数增长是负无穷' : '这一轮的押法期望对数增长是负的，比一分不下还差');
+    if (sk > 0.02 && sy < 0.4 * sk) notes.push('整体太保守：你只用了 Kelly 建议总额的 ' + (sy / sk * 100).toFixed(0) + '%（面经：过分保守会被刷）');
+    return { cm, sy, sk, ny, nk, eff, notes };
+  }
+  function oneLine(ev, arb) {
+    const you = ev.ny ? `你押了 ${ev.ny} 项、共 ${pct(ev.sy)} 资金` : '你这一轮没下';
+    const k = ev.nk ? `Kelly 押 ${ev.nk} 项、共 ${pct(ev.sk)}` : 'Kelly 也不下';
+    let gap;
+    const missedArb = arb.find(a => a.missed);
+    if (missedArb) gap = '漏了套利';
+    else if (ev.notes.length) gap = ev.notes[0].split('：')[0];
+    else if (ev.cm.length) { const c = ev.cm.slice().sort((a, b) => b.gap - a.gap)[0]; gap = c.kind + '：' + list_name(c.text); }
+    else gap = '和 Kelly 很接近';
+    const effTxt = ev.sk < 0.002 ? '没有效率分（只看你押的是不是负期望）' : `效率 ${ev.eff > -1000 ? effStr(ev.eff) : '远低于 0'} 分`;
+    return `${you}；${k}；${effTxt}；差在：${gap}。`;
+  }
+  const effStr = x => (Math.round(x) < 0 ? '−' + Math.abs(Math.round(x)) : String(Math.round(x)));
+  const list_name = t => t.split('（p =')[0];
+
+  // ------------------------------------------------------------ 赛马（照搬 betting_game.py 的 Horse，马数改成 4 到 8）
+  function genHorse(rng) {
+    const n = rng.randint(4, 8);
+    const ab = []; for (let i = 0; i < n; i++) ab.push(rng.randint(1, 6));
+    const tot = sum(ab), P = ab.map(a => a / tot);
+    const margin = rng.uniform(0.97, 1.18);
+    const d = P.map(p => Math.max(1.05, Math.round(1 / (p * margin * rng.uniform(0.88, 1.12)) / 0.05) * 0.05));
+    const win = rng.weighted(ab);
+    const R = P.map((_, i) => d.map((x, j) => (i === j ? x : 0)));
+    return { n, ab, tot, P, d, R, win, implied: sum(d.map(x => 1 / x)) };
+  }
+
+  // ------------------------------------------------------------ 三张牌之和做市（照搬 trading_game.py 的 CardGame，加一个狙击机器人）
+  const LIMIT = 10, TURNS = 2;
+  const FULL = []; for (let r = 1; r <= 13; r++) for (let k = 0; k < 4; k++) FULL.push(r);
+  function restDeck(known) { const rest = FULL.slice(); for (const c of known) rest.splice(rest.indexOf(c), 1); return rest; }
+  function publicEV(shown) { const rest = restDeck(shown); return sum(shown) + (3 - shown.length) * sum(rest) / rest.length; }
+  function sdLeft(shown) {
+    const rest = restDeck(shown), k = 3 - shown.length, N = rest.length;
+    if (k === 0) return 0;
+    const mu = sum(rest) / N, v = sum(rest.map(c => (c - mu) ** 2)) / N;
+    return k > 1 ? Math.sqrt(k * v * (N - k) / (N - 1)) : Math.sqrt(v * k);
+  }
+  function informedEV(shown, third) {
+    const known = shown.concat([third]);
+    const rest = restDeck(known), k = 3 - known.length;
+    return sum(known) + (k ? k * sum(rest) / rest.length : 0);
+  }
+
+  function mkBot(name, desc, edge, width, size, kind) {
+    return { name, desc, edge, width, size, kind, fair: 0, shade: null, quotes: kind !== 'sniper' };
+  }
+  function botQuote(b) {
+    const mid = b.kind === 'informed' && b.shade !== null ? b.shade : b.fair;
+    return [mid - b.width, mid + b.width];
+  }
+  function botSetMid(b, mid) { if (b.kind === 'informed') b.shade = mid; else b.fair = mid; }
+  function botReact(b, bid, ask) {
+    if (ask !== null && b.fair - ask > b.edge) return +1;   // 机器人买你的卖价
+    if (bid !== null && bid - b.fair > b.edge) return -1;   // 机器人卖给你的买价
+    return 0;
+  }
+
+  function newMarket(seed) {
+    const rng = makeRng(seed + ':mm');
+    const deck = rng.shuffle(FULL.slice());
+    const g = {
+      rng, cards: deck.slice(0, 3), shown: [], rnd: 1, step: 0, done: false,
+      pos: 0, cash: 0, trades: [], lastTrade: null, quote: null, marks: [0], log: [], actions: [],
+    };
+    g.truth = sum(g.cards);
+    const spec = [
+      ['稳健', '按公开期望报价，宽度随剩余不确定性收窄', 1.0, 3.0, 2, 'steady'],
+      ['知情', '偷看到了第三张牌；报价只露一半信息', 1.0, 2.0, 3, 'informed'],
+      ['噪声', '估值带随机误差（标准差 3），有时乱成交', 0.0, 2.5, 2, 'noisy'],
+      ['跟风', '把中间价挪到最近一笔成交价', 1.5, 2.5, 2, 'follow'],
+      ['狙击', '不报价，只按最新公开期望打你挂着的价；翻牌那一刻最先出手', 0.5, 0, 3, 'sniper'],
+    ];
+    g.bots = spec.map(s => mkBot(...s));
+    botsUpdate(g, true);
+    g.log.push({ t: 'info', text: `第 1 轮开始。公开期望 ${publicEV([]).toFixed(2)}，剩余标准差 ${sdLeft([]).toFixed(2)}。` });
+    uncross(g);
+    return g;
+  }
+  function botsUpdate(g, first) {
+    const ev = publicEV(g.shown), sd = sdLeft(g.shown);
+    const [steady, informed, noisy, follow, sniper] = g.bots;
+    steady.fair = ev; steady.width = Math.max(1.0, 0.5 * sd);
+    informed.fair = informedEV(g.shown, g.cards[2]); informed.width = 2.0;
+    informed.shade = 0.5 * (ev + informed.fair);
+    noisy.fair = ev + g.rng.gauss(0, 3);
+    follow.fair = (g.lastTrade !== null && !first) ? g.lastTrade : ev;
+    sniper.fair = ev;
+  }
+  function quoting(g) { return g.bots.filter(b => b.quotes); }
+  function best(g) {
+    const qs = quoting(g).map(b => ({ b, q: botQuote(b) }));
+    const bb = qs.reduce((m, x) => (x.q[0] > m.q[0] ? x : m));
+    const ba = qs.reduce((m, x) => (x.q[1] < m.q[1] ? x : m));
+    return { bid: bb.q[0], bidBot: bb.b, ask: ba.q[1], askBot: ba.b };
+  }
+  function uncross(g) {
+    for (let k = 0; k < 10; k++) {
+      const m = best(g);
+      if (m.bid <= m.ask || m.bidBot === m.askBot) return;
+      const px = (m.bid + m.ask) / 2;
+      g.log.push({ t: 'bots', text: `机器人之间成交：${m.askBot.name} 卖给 ${m.bidBot.name} @ ${px.toFixed(2)}` });
+      botSetMid(m.bidBot, px - 0.5 + m.bidBot.width);
+      botSetMid(m.askBot, px + 0.5 - m.askBot.width);
+    }
+  }
+  const room = (g, side) => (side > 0 ? LIMIT - g.pos : LIMIT + g.pos);
+  function fill(g, who, side, px, n, tag) {
+    g.pos += side * n; g.cash -= side * px * n;
+    g.trades.push({ rnd: g.rnd, step: g.step, who, side, px, n, tag: tag || '' });
+    g.lastTrade = px;
+  }
+  function take(g, side, n) {
+    n = Math.min(n, room(g, side));
+    if (n <= 0) { g.log.push({ t: 'warn', text: '超过仓位上限 ±10，没有成交。' }); return; }
+    const book = quoting(g).map(b => ({ b, px: botQuote(b)[side > 0 ? 1 : 0] }))
+      .sort((x, y) => (side > 0 ? x.px - y.px : y.px - x.px));
+    for (const { b, px } of book) {
+      if (n === 0) break;
+      const k = Math.min(2, n);
+      fill(g, b.name, side, px, k, 'take');
+      n -= k;
+      g.log.push({ t: 'you', text: `你${side > 0 ? '买' : '卖'} ${k} 份 @ ${px.toFixed(2)}，对手 ${b.name}` });
+    }
+  }
+  // 机器人看你挂着的报价（随机顺序；bots 不传就是全体）
+  function reactToQuote(g, bots, tag) {
+    const q = g.quote;
+    if (!q) return 0;
+    const order = g.rng.shuffle(bots.slice());
+    let hits = 0;
+    for (const b of order) {
+      const dd = botReact(b, q.bidLeft > 0 ? q.bid : null, q.askLeft > 0 ? q.ask : null);
+      if (dd === 0) continue;
+      const side = -dd;
+      const left = side > 0 ? q.bidLeft : q.askLeft;
+      const k = Math.min(left, b.size, room(g, side));
+      if (k <= 0) continue;
+      const px = side > 0 ? q.bid : q.ask;
+      fill(g, b.name, side, px, k, tag);
+      if (side > 0) q.bidLeft -= k; else q.askLeft -= k;
+      hits++;
+      g.log.push({ t: tag === 'flip' ? 'snipe' : 'fill', text: `${b.name} ${side < 0 ? '买走' : '卖给你'} ${k} 份 @ ${px.toFixed(2)}（你${side < 0 ? '卖' : '买'}）` + (tag === 'flip' ? '：翻牌后你的旧报价被打' : '') });
+    }
+    if (q.bidLeft <= 0 && q.askLeft <= 0) g.quote = null;
+    return hits;
+  }
+  // 你的一步。a = {type: 'quote', bid, ask, n, ioc} | {type: 'buy'|'sell', n} | {type: 'keep'} | {type: 'cancel'}
+  function act(g, a) {
+    if (g.done) return;
+    const ev = publicEV(g.shown), sd = sdLeft(g.shown);
+    const before = g.trades.length;
+    const m0 = best(g);
+    const rec = { rnd: g.rnd, step: g.step, a: { ...a }, ev, sd, hadQuote: g.quote ? { ...g.quote } : null, best: { bid: m0.bid, ask: m0.ask } };
+    if (a.type === 'quote') {
+      g.quote = { bid: a.bid, ask: a.ask, n: a.n, bidLeft: a.n, askLeft: a.n, ioc: !!a.ioc, at: [g.rnd, g.step] };
+      g.log.push({ t: 'you', text: `你报价 ${a.bid} 买 / ${a.ask} 卖，各 ${a.n} 份${a.ioc ? '（只成交一次，不挂单）' : '（挂着，直到你改价或撤价）'}` });
+    } else if (a.type === 'buy' || a.type === 'sell') {
+      take(g, a.type === 'buy' ? 1 : -1, a.n);
+    } else if (a.type === 'cancel') {
+      if (g.quote) g.log.push({ t: 'you', text: '你撤掉了挂着的报价' });
+      g.quote = null;
+    } else {
+      g.log.push({ t: 'you', text: g.quote ? '你这一步不动，报价继续挂着' : '你这一步不动' });
+    }
+    const hits = reactToQuote(g, g.bots, 'step');
+    if (g.quote && a.type === 'quote' && hits === 0) g.log.push({ t: 'info', text: '这一步没人和你的报价成交。' });
+    if (g.quote && g.quote.ioc) g.quote = null;
+    rec.fills = g.trades.slice(before);
+    g.actions.push(rec);
+    botsUpdate(g, false);
+    g.step++;
+    if (g.step >= TURNS) endRound(g);
+    else uncross(g);
+  }
+  function endRound(g) {
+    const nxt = g.rnd < 3 ? g.shown.concat([g.cards[g.rnd - 1]]) : g.cards;
+    const mark = g.rnd < 3 ? publicEV(nxt) : g.truth;
+    g.marks.push(g.cash + g.pos * mark);
+    const pnl = g.marks[g.marks.length - 1] - g.marks[g.marks.length - 2];
+    g.log.push({ t: 'round', text: `第 ${g.rnd} 轮结束：仓位 ${sgn(g.pos)}，按 ${mark.toFixed(1)} 估值，本轮 PnL ${sgnf(pnl)}，累计 ${sgnf(g.marks[g.marks.length - 1])}` });
+    if (g.rnd >= 3) { g.done = true; g.log.push({ t: 'round', text: `翻开第 3 张牌：${g.cards[2]}。三张牌 ${g.cards.join('、')}，结算值 ${g.truth}。` }); return; }
+    g.rnd++; g.step = 0;
+    const c = g.cards[g.rnd - 2];
+    g.shown.push(c);
+    g.log.push({ t: 'flip', text: `翻开第 ${g.rnd - 1} 张牌：${c}。已翻开 ${g.shown.join('、')}，公开期望变成 ${publicEV(g.shown).toFixed(2)}，剩余标准差 ${sdLeft(g.shown).toFixed(2)}` });
+    const sniper = g.bots[4];
+    sniper.fair = publicEV(g.shown);
+    const before = g.trades.length;
+    reactToQuote(g, [sniper], 'flip');
+    if (g.actions.length) g.actions[g.actions.length - 1].flipFills = g.trades.slice(before);
+    botsUpdate(g, true);
+    g.log.push({ t: 'info', text: `第 ${g.rnd} 轮开始。` });
+    uncross(g);
+  }
+  const sgn = x => (x > 0 ? '+' : '') + x;
+  const sgnf = x => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(1);
+  function avgPrice(trades) {
+    let pos = 0, avg = 0;
+    for (const t of trades) {
+      const q = t.side * t.n;
+      if (pos === 0 || Math.sign(pos) === Math.sign(q)) { avg = (avg * Math.abs(pos) + t.px * t.n) / (Math.abs(pos) + t.n); pos += q; }
+      else if (Math.abs(q) <= Math.abs(pos)) { pos += q; if (pos === 0) avg = 0; }
+      else { pos += q; avg = t.px; }
+    }
+    return pos === 0 ? null : avg;
+  }
+  function marketRecap(g) {
+    const v = g.truth, total = g.cash + g.pos * v;
+    const by = {};
+    for (const t of g.trades) by[t.who] = (by[t.who] || 0) + t.side * (v - t.px) * t.n;
+    const flip = g.trades.filter(t => t.tag === 'flip');
+    const flipPnl = sum(flip.map(t => t.side * (v - t.px) * t.n));
+    const flipN = sum(flip.map(t => t.n));
+    return { total, by, flipPnl, flipN, n: sum(g.trades.map(t => t.n)) };
+  }
+  // 参照做法：每步按最新公开期望 ± 2 报 1 份，只成交一次（和 trading_game.py 的 --auto 一样）
+  function marketBenchmark(seed) {
+    const g = newMarket(seed);
+    while (!g.done) { const ev = publicEV(g.shown); act(g, { type: 'quote', bid: +(ev - 2).toFixed(1), ask: +(ev + 2).toFixed(1), n: 1, ioc: true }); }
+    return marketRecap(g).total;
+  }
+
+  // ------------------------------------------------------------ 区间估算（照搬 estimation_drill.py 的 lu 规则和校准报告）
+  const SUFFIX = { k: 1e3, m: 1e6, b: 1e9, t: 1e12, '千': 1e3, '万': 1e4, '亿': 1e8 };
+  function parseNum(s) {
+    s = s.trim().toLowerCase().replace(/,/g, '').replace(/_/g, '');
+    const m = s.match(/^([0-9]*\.?[0-9]+(?:e[+-]?[0-9]+)?)\s*([kmbt千万亿]*)$/);
+    if (!m) throw new Error(s);
+    let v = parseFloat(m[1]);
+    for (const ch of m[2]) v *= SUFFIX[ch];
+    return v;
+  }
+  function parsePair(line) {
+    line = line.replace(/(\d),(?=\d{3}(?:\D|$))/g, '$1');
+    const parts = line.trim().split(/[\s,，;；~到]+/).filter(Boolean);
+    if (parts.length !== 2) throw new Error('要两个数');
+    const a = parseNum(parts[0]), b = parseNum(parts[1]);
+    if (!(a > 0 && b > 0)) throw new Error('要正数');
+    return [Math.min(a, b), Math.max(a, b)];
+  }
+  const luScore = (lo, hi, x) => (lo <= x && x <= hi ? lo / hi : 0);
+  function erf(x) {   // Abramowitz-Stegun 7.1.26 精度不够，这里用级数加连分式
+    const s = Math.sign(x); x = Math.abs(x);
+    if (x < 3) { let t = x, tot = x; for (let n = 1; n < 60; n++) { t *= -x * x / n; tot += t / (2 * n + 1); } return s * 2 / Math.sqrt(Math.PI) * tot; }
+    let f = 0; for (let n = 60; n >= 1; n--) f = n / 2 / (x + f);
+    return s * (1 - Math.exp(-x * x) / Math.sqrt(Math.PI) / (x + f));
+  }
+  const normCdf = z => 0.5 * (1 + erf(z / Math.SQRT2));
+  function normPpf(p) { let lo = -10, hi = 10; for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; if (normCdf(m) < p) lo = m; else hi = m; } return (lo + hi) / 2; }
+  function fmtNum(x) {
+    const ax = Math.abs(x), g4 = v => String(+v.toPrecision(4));
+    if (ax >= 1e16) return x.toPrecision(4);
+    if (ax >= 1e12) return g4(x / 1e12) + ' 万亿';
+    if (ax >= 1e8) return g4(x / 1e8) + ' 亿';
+    if (ax >= 1e4) return g4(x / 1e4) + ' 万';
+    return g4(x);
+  }
+  function bestUL(s) {
+    s = Math.max(s, 0.05);
+    let best = [-1, 0];
+    for (let i = 1; i < 4000; i++) { const k = i / 1000, v = Math.exp(-2 * k * s) * (2 * normCdf(k) - 1); if (v > best[0]) best = [v, k]; }
+    const k = best[1];
+    return { ratio: Math.exp(2 * k * s), hit: 2 * normCdf(k) - 1, exp: best[0], s };
+  }
+  function calib(rows, conf = 90) {
+    const n = rows.length;
+    const z90 = normPpf(0.5 + conf / 200);
+    const hits = rows.filter(r => r.hit).length;
+    const errs = [], zs = [];
+    for (const r of rows) {
+      const c = (Math.log(r.lo) + Math.log(r.hi)) / 2, h = (Math.log(r.hi) - Math.log(r.lo)) / 2, e = Math.log(r.x) - c;
+      errs.push(e); zs.push(h > 0 ? e / (h / z90) : Infinity);
+    }
+    const bias = sum(errs) / n, rmse = Math.sqrt(sum(errs.map(e => e * e)) / n);
+    const fin = zs.filter(Number.isFinite);
+    const mult = fin.length ? Math.sqrt(sum(fin.map(z => z * z)) / fin.length) : NaN;
+    const se = Math.sqrt(conf / 100 * (1 - conf / 100) / n);
+    return { n, hits, bias, rmse, mult, se, best: bestUL(rmse) };
+  }
+
+  // ============================================================ 以下是策略手册配套的新增部分
+  const fmt1 = x => (Math.round(x * 10) / 10).toFixed(1);
+  const half = x => Math.round(x * 2) / 2;
+
+  // ------------------------------------------------------------ 区间估算：单轮期望分和逐轮最优宽度（动态规划，和 gamestrat/tables.py 一样）
+  const escore = (r, s) => (1 / r) * (2 * normCdf(Math.log(r) / (2 * s)) - 1);
+  const PLAN_G = 1200, planCache = {};
+  function planTable(s) {
+    const key = s.toFixed(3);
+    if (planCache[key]) return planCache[key];
+    const G = PLAN_G, X = 2 * G, N = 5;
+    const ps = new Float64Array(G + 1);
+    for (let j = 1; j <= G; j++) ps[j] = 2 * normCdf(-Math.log(j / G) / (2 * s)) - 1;
+    const V = [new Float64Array(X + 1)]; V[0][0] = 1;
+    const A = [null];
+    for (let n = 1; n <= N; n++) {
+      const v = new Float64Array(X + 1), a = new Int32Array(X + 1), prev = V[n - 1];
+      v[0] = 1;
+      for (let x = 1; x <= X; x++) {
+        let best = -1, bj = 0;
+        const px = prev[x];
+        for (let j = 1; j <= G; j++) {
+          const val = ps[j] * prev[x > j ? x - j : 0] + (1 - ps[j]) * px;
+          if (val > best) { best = val; bj = j; }
+        }
+        v[x] = best; a[x] = bj;
+      }
+      V.push(v); A.push(a);
+    }
+    return (planCache[key] = { V, A });
+  }
+  // 还剩 n 轮、还差 need 分：最优 U/L、套住率、过关概率。need ≤ 0 返回 {done}；过关概率为 0 返回 {impossible}
+  function estPlan(n, need, s) {
+    if (need <= 1e-9) return { done: true };
+    n = Math.min(5, Math.max(1, n));
+    const T = planTable(s), x = Math.min(2 * PLAN_G, Math.ceil(need * PLAN_G - 1e-6));
+    const v = T.V[n][x];
+    if (v < 1e-9) return { impossible: true };
+    const j = T.A[n][x];
+    return { r: PLAN_G / j, hit: 2 * normCdf(-Math.log(j / PLAN_G) / (2 * s)) - 1, v };
+  }
+
+  // ------------------------------------------------------------ 下注：单项 Kelly、逐项理由、短局打分（QuantVault 的做法）、交易员追问
+  const kellySingle = (p, d) => Math.max(0, (p * d - 1) / (d - 1));
+  const xto1 = d => { const x = d - 1; return (Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : x.toFixed(2)) + ' to 1'; };
+  // 每项是否在某个套利组里（取每块最便宜的那组）
+  function arbLegs(round) {
+    const legs = new Set();
+    let o = 0;
+    round.blocks.forEach(b => { if (b.arbs.length) for (const j of b.arbs[0].S) legs.add(o + j); o += b.bets.length; });
+    return legs;
+  }
+  // 逐项理由：x = {p, d}；fk = 联合 Kelly 比例；leg = 是否套利腿
+  function betAdvice(x, fk, leg) {
+    const pd = x.p * x.d, fs = kellySingle(x.p, x.d);
+    const base = `p = ${x.p.toFixed(3)}，p×d = ${pd.toFixed(2)}`;
+    if (leg && fk > 0.002) return `${base}。它是套利组合的一条腿（几项分完所有结果、1/赔率加起来小于 1），联合 Kelly 押 ${pct(fk)}。`;
+    if (fk < 0.002) {
+      if (pd < 1) return `${base} < 1，负期望，不押。`;
+      return `${base} > 1，单项 Kelly ${pct(fs)}；但和同一块里已经押的项重叠（一起赢一起输），联合算不值得再押。`;
+    }
+    if (pd < 1) return `${base} < 1，单看是负期望；联合 Kelly 押 ${pct(fk)}，因为它赢的时候正好是同块别的押注输的时候，起对冲作用。`;
+    const rel = fk > fs * 1.15 ? '比单项多，因为和同块别的押注负相关、能对冲' : fk < fs * 0.85 ? '比单项少，因为和同块别的押注重叠' : '和单项差不多';
+    return `${base} > 1，单项 Kelly (pd − 1)/(d − 1) = ${pct(fs)}；三块一起算押 ${pct(fk)}，${rel}。`;
+  }
+  // 短局打分：按 QuantVault「Probability Market-Taking」公布的规则实现；各项怎么折算成分数是这里定的
+  const SHORT = { lo: 1.5, hi: 2, cap: 0.10, arbRef: 0.15, hard: 0.25 };
+  function shortScore(round, list, fy, fk, opts) {
+    opts = opts || {};
+    const legs = arbLegs(round), notes = [];
+    const pos = list.map((x, k) => x.p * x.d > 1 + 1e-12 && !legs.has(k));
+    const band = list.map(x => { const fs = kellySingle(x.p, x.d); return [Math.min(SHORT.lo * fs, SHORT.cap), Math.min(SHORT.hi * fs, SHORT.cap)]; });
+    const bet = fy.map(v => v > 1e-9);
+    const comp = {};
+    const nPos = pos.filter(Boolean).length;
+    if (nPos && !opts.skipOk) comp.edge = pos.filter((v, k) => v && bet[k]).length / nPos;
+    const sz = [];
+    list.forEach((x, k) => {
+      if (!pos[k]) return;
+      if (!bet[k]) { if (!opts.skipOk) sz.push(0); return; }
+      const [lo, hi] = band[k], y = fy[k];
+      sz.push(y < lo ? y / lo : y <= hi + 1e-9 ? 1 : Math.max(0, 1 - (y - hi) / hi));
+    });
+    if (sz.length) comp.size = sum(sz) / sz.length;
+    // 套利：每条腿都押、押注额按 1/d 分（每个结果拿回一样多）、合计接近本金的 15%
+    const arbS = [];
+    let o = 0;
+    round.blocks.forEach(b => {
+      if (b.arbs.length) {
+        const S = b.arbs[0].S.map(j => o + j);
+        const all = S.every(k => fy[k] > 0);
+        if (!all) { arbS.push(0); notes.push(`[${b.name}] 漏了套利`); }
+        else {
+          const pay = S.map(k => fy[k] * list[k].d), even = Math.min(...pay) / Math.max(...pay), tot = sum(S.map(k => fy[k]));
+          arbS.push(0.5 * even + 0.5 * Math.min(1, tot / SHORT.arbRef));
+          if (even < 0.9) notes.push(`[${b.name}] 套利各腿拿回的钱不一样多（最少的是最多的 ${pct(even)}），赔率低的那边要多押`);
+          if (tot < SHORT.arbRef * 0.6) notes.push(`[${b.name}] 套利只押了 ${pct(tot)}，参考规模是本金的 15%`);
+        }
+      }
+      o += b.bets.length;
+    });
+    if (arbS.length) comp.arb = sum(arbS) / arbS.length;
+    // 纪律：押负期望、押过头、单项超过 25% 扣分
+    let disc = 1;
+    list.forEach((x, k) => {
+      const y = fy[k];
+      if (!bet[k]) return;
+      if (!legs.has(k) && x.p * x.d < 1 - 1e-12 && fk[k] < 0.002) { disc -= 0.2; notes.push(`押了负期望：${x.name}（p×d = ${(x.p * x.d).toFixed(2)}）`); }
+      else if (!legs.has(k) && y > Math.min(SHORT.cap, 2 * band[k][1]) + 1e-9) { disc -= 0.15; notes.push(`押过头：${x.name} 押 ${pct(y)}，上限 ${pct(Math.min(SHORT.cap, 2 * band[k][1]))}`); }
+      if (y > SHORT.hard + 1e-9) { disc -= 0.4; notes.push(`单项超过本金 25%：${x.name} 押 ${pct(y)}`); }
+    });
+    comp.disc = Math.max(0, disc);
+    if (opts.answer !== undefined && opts.answer !== null) comp.ask = opts.answer ? 1 : 0;
+    const vals = Object.values(comp);
+    return { comp, total: 100 * sum(vals) / vals.length, notes, band };
+  }
+  // 交易员追问：挑一项问「为什么押它 / 为什么押这么多 / 为什么不押」，给 4 个理由选一个
+  function traderQuestion(round, list, fy, fk, rng) {
+    const legs = arbLegs(round);
+    const pdS = k => (list[k].p * list[k].d).toFixed(2);
+    const betK = list.map((_, k) => k).filter(k => fy[k] >= 0.002);
+    const negK = betK.filter(k => list[k].p * list[k].d <= 1 + 1e-9 && !legs.has(k) && fk[k] < 0.002);
+    let k, q, opts;
+    const nm = k => `[${list[k].block}] ${list[k].name}`;
+    if (negK.length) {
+      k = negK[0];
+      q = `你为什么押 ${nm(k)}？`;
+      opts = [[`其实不该押：p × d = ${pdS(k)}，不大于 1，不是正期望（负期望或零期望）`, true], ['赔率高，中了赚得多', false], ['感觉这一轮会中', false], ['和别的项对冲', false]];
+    } else if (betK.length) {
+      k = betK.slice().sort((a, b) => fy[b] - fy[a])[0];
+      if (rng.random() < 0.5) {
+        q = `你为什么押 ${nm(k)}？`;
+        const right = legs.has(k) ? '它是套利组合的一条腿：几项分完所有结果，1/赔率加起来小于 1'
+          : list[k].p * list[k].d > 1 ? `p × d = ${pdS(k)} > 1，每押 1 美元期望赚 ${(list[k].p * list[k].d - 1).toFixed(2)}`
+            : '单看是负期望，但它和同块已押的项负相关，起对冲作用';
+        opts = [[right, true], ['赔率高，中了赚得多', false], ['感觉这一轮会中', false], ['前几轮它都没中，该轮到它了', false]];
+      } else {
+        q = `${nm(k)} 你押了 ${pct(fy[k])}，为什么押这么多？`;
+        const fs = kellySingle(list[k].p, list[k].d);
+        opts = [[`按优势定：单项 Kelly (pd − 1)/(d − 1) = ${pct(fs)}，再看计分方式和上限调整`, true], ['优势最大的一项就多押，押一半资金', false], ['每项押一样多，分散风险', false], ['上一轮亏了，这轮多押扳回来', false]];
+      }
+    } else {
+      const pos = list.map((_, i) => i).filter(i => list[i].p * list[i].d > 1).sort((a, b) => list[b].p * list[b].d - list[a].p * list[a].d);
+      if (pos.length) {
+        k = pos[0];
+        q = `${nm(k)} 的 p × d 是 ${pdS(k)}，你为什么不押？`;
+        opts = fk[k] >= 0.002 ? [['应该押，我漏了：p × d > 1，Kelly 也押', true], ['赔率太低，不值得', false], ['怕输', false], ['和别的项重叠，联合算不值得押', false]]
+          : [['它和同块别的项重叠，联合 Kelly 不押', true], ['应该押，我漏了', false], ['赔率太低', false], ['怕输', false]];
+      } else {
+        k = -1;
+        q = '这一轮你为什么一项都不押？';
+        opts = [['每项 p × d 都不超过 1，也没有分完所有结果、1/赔率加起来小于 1 的组合', true], ['怕输', false], ['上一轮亏了，先歇一轮', false], ['赔率都太低', false]];
+      }
+    }
+    return { k, q, opts: rng.shuffle(opts.map(([text, right]) => ({ text, right }))) };
+  }
+
+  // ------------------------------------------------------------ 做市：建议动作（规则化的参考做法）
+  function mmAdvice(g) {
+    const ev = publicEV(g.shown), sd = sdLeft(g.shown);
+    const inf = g.bots[1], q = botQuote(inf), mi = (q[0] + q[1]) / 2;
+    let v = 2 * mi - ev;                                   // 知情机器人只露一半：中间价 = (公开期望 + 它的估值) / 2
+    v = Math.min(ev + 2.5 * sd, Math.max(ev - 2.5 * sd, v));
+    const m = best(g), flipNext = g.step === TURNS - 1 && g.rnd < 3;
+    const why = [`公开期望 ${ev.toFixed(2)}；知情机器人报价中点 ${mi.toFixed(2)}，它只露一半，反推它的估值 ≈ 2 × ${mi.toFixed(2)} − ${ev.toFixed(2)} = ${v.toFixed(2)}，用它当公允价`];
+    const roomB = LIMIT - g.pos, roomS = LIMIT + g.pos;
+    if (v - m.ask > 1 && roomB > 0) return { a: { type: 'buy', n: Math.min(2, roomB) }, v, why: why.concat(`最低卖价 ${m.ask.toFixed(2)} 比公允价低 ${(v - m.ask).toFixed(2)}，直接买`).join('；') };
+    if (m.bid - v > 1 && roomS > 0) return { a: { type: 'sell', n: Math.min(2, roomS) }, v, why: why.concat(`最高买价 ${m.bid.toFixed(2)} 比公允价高 ${(m.bid - v).toFixed(2)}，直接卖`).join('；') };
+    const hw = Math.max(1, half(0.5 * sd)), c = half(v - 0.2 * g.pos);
+    why.push(`没有明显错价，报双边；半宽 max(1, 0.5 × 剩余标准差 ${sd.toFixed(2)}) ≈ ${hw}`);
+    if (g.pos) why.push(`仓位 ${g.pos > 0 ? '+' : ''}${g.pos}，中心往减仓方向挪 0.2 × 仓位`);
+    if (flipNext) why.push('下一步就翻牌，勾「只成交一次」，免得旧价被狙击');
+    return { a: { type: 'quote', bid: c - hw, ask: c + hw, n: 2, ioc: flipNext }, v, why: why.join('；') };
+  }
+  function describeMM(a) {
+    if (a.type === 'quote') return `报 ${a.bid} / ${a.ask} 各 ${a.n} 份${a.ioc ? '（只成交一次）' : ''}`;
+    return { buy: `买入 ${a.n} 份`, sell: `卖出 ${a.n} 份`, keep: '不动', cancel: '撤价' }[a.type];
+  }
+  function mmAdvicePnl(seed) {   // 每步照建议做，同一副牌的 PnL
+    const g = newMarket(seed);
+    while (!g.done) act(g, mmAdvice(g).a);
+    return marketRecap(g).total;
+  }
+
+  // ------------------------------------------------------------ 多人估算市场
+  // 5 个匿名机器人对一个未知数报价；按真值线性结算。机器人：懂行 1 个、一般 2 个、乱报 1 个、跟风 1 个
+  const EMK = { rounds: 6, limit: 6, maxN: 3 };
+  function newEstMarket(seed, qs) {
+    const rng = makeRng(seed + ':emk');
+    const q = qs[rng.randint(0, qs.length - 1)], x = q.truth, lx = Math.log(x);
+    const names = rng.shuffle(['甲', '乙', '丙', '丁', '戊']);
+    const spec = [
+      { kind: 'expert', label: '懂行', desc: '估计的对数误差标准差 0.1；报得窄（×1.13）；你的价比它的估计差 6% 以上就来成交', err: 0.10, hw: 0.12, edge: 0.06, size: 2 },
+      { kind: 'avg', label: '一般', desc: '和另一个「一般」犯同一个错：共同的对数误差 0.45，各自再加 0.15；会往成交价学 30%；差 20% 以上才成交', err: 0.45, hw: 0.4, edge: 0.2, size: 1 },
+      { kind: 'avg', label: '一般', desc: '和另一个「一般」犯同一个错：共同的对数误差 0.45，各自再加 0.15；会往成交价学 30%；差 20% 以上才成交', err: 0.45, hw: 0.35, edge: 0.2, size: 1 },
+      { kind: 'noisy', label: '乱报', desc: '每回合重新瞎猜（对数误差 1.0），宽度随机，和准不准无关；差 30% 以上才成交', err: 1.0, hw: 0.3, edge: 0.3, size: 1 },
+      { kind: 'follow', label: '跟风', desc: '中间价跟着最近一笔成交走（开局用其他人的平均）；差 15% 以上成交', err: 0, hw: 0.3, edge: 0.15, size: 1 },
+    ];
+    // 两个「一般」的人犯同一个错（共同误差，标准差 0.45），各自再加一点（0.15）：大家互相印证不等于对
+    const common = rng.gauss(0, 0.45);
+    const bots = spec.map((s, i) => ({ ...s, name: names[i], mu: lx + (s.kind === 'avg' ? common + rng.gauss(0, 0.15) : rng.gauss(0, s.err || 0.0001)), hist: [] }));
+    const g = { rng, q, x, bots, rnd: 1, done: false, pos: 0, cash: 0, trades: [], last: null, log: [], actions: [] };
+    const others = bots.filter(b => b.kind !== 'follow');
+    bots[4].mu = sum(others.map(b => b.mu)) / others.length;
+    emkRefresh(g, true);
+    g.log.push({ t: 'info', text: `题目：${q.q}（合约按真值结算，单位：${q.unit || '无'}）。共 ${EMK.rounds} 回合，仓位上限 ±${EMK.limit} 份。` });
+    return g;
+  }
+  function emkQuote(b) { const c = b.qmu === undefined ? b.mu : b.qmu; return [Math.exp(c - b.hw), Math.exp(c + b.hw)]; }
+  function emkRefresh(g, first) {
+    for (const b of g.bots) {
+      if (b.kind === 'noisy') { b.mu = Math.log(g.x) + g.rng.gauss(0, 1.0); b.hw = g.rng.uniform(0.15, 0.6); }
+      if (!first && g.last !== null) {
+        if (b.kind === 'avg') b.mu += 0.3 * (Math.log(g.last) - b.mu);
+        if (b.kind === 'follow') b.mu = Math.log(g.last);
+      }
+      b.qmu = b.mu;
+    }
+    emkUncross(g);
+    for (const b of g.bots) b.hist.push({ mu: b.qmu, hw: b.hw });
+  }
+  function emkUncross(g) {
+    for (let k = 0; k < 12; k++) {
+      const qs = g.bots.map(b => ({ b, q: emkQuote(b) }));
+      const bb = qs.reduce((m, y) => (y.q[0] > m.q[0] ? y : m)), ba = qs.reduce((m, y) => (y.q[1] < m.q[1] ? y : m));
+      if (bb.q[0] <= ba.q[1] || bb.b === ba.b) return;
+      const px = Math.sqrt(bb.q[0] * ba.q[1]);
+      g.log.push({ t: 'bots', text: `${ba.b.name} 卖给 ${bb.b.name} 1 份 @ ${fmtNum(px)}` });
+      g.last = px;
+      bb.b.qmu = Math.log(px) - 0.01 + bb.b.hw;    // 只挪报价，不改它心里的估计：买方的买价退到成交价下面
+      ba.b.qmu = Math.log(px) + 0.01 - ba.b.hw;
+    }
+  }
+  function emkBest(g) {
+    const qs = g.bots.map(b => ({ b, q: emkQuote(b) }));
+    const bb = qs.reduce((m, y) => (y.q[0] > m.q[0] ? y : m)), ba = qs.reduce((m, y) => (y.q[1] < m.q[1] ? y : m));
+    return { bid: bb.q[0], bidBot: bb.b, ask: ba.q[1], askBot: ba.b };
+  }
+  // 只用看得到的东西合并：每个机器人的对数中间价，按 1 /（半宽² + 它历次中间价的方差）加权
+  function emkConsensus(g) {
+    let sw = 0, sm = 0;
+    const ws = g.bots.map(b => {
+      const h = b.hist.map(z => z.mu), n = h.length;
+      const mean = sum(h) / n, v = n > 1 ? sum(h.map(z => (z - mean) ** 2)) / (n - 1) : 0;
+      const w = 1 / (b.hw * b.hw + v + 0.0025);
+      sw += w; sm += w * b.qmu;
+      return { b, w };
+    });
+    const disp = Math.sqrt(sum(ws.map(z => z.w * (z.b.qmu - sm / sw) ** 2)) / sw);   // 加权后各人中心的离散程度
+    return { c: sm / sw, sd: 1 / Math.sqrt(sw), disp, ws: ws.map(z => ({ name: z.b.name, w: z.w / sw })) };
+  }
+  function emkFill(g, who, side, px, n, tag) {
+    g.pos += side * n; g.cash -= side * px * n;
+    g.trades.push({ rnd: g.rnd, who, side, px, n, tag });
+    g.last = px;
+  }
+  // a = {type: 'quote', bid, ask, n} | {type: 'buy'|'sell', n} | {type: 'pass'}
+  function emkAct(g, a) {
+    if (g.done) return;
+    const cons = emkConsensus(g), m = emkBest(g), before = g.trades.length;
+    const rec = { rnd: g.rnd, a: { ...a }, cons: Math.exp(cons.c), disp: cons.disp, best: { bid: m.bid, ask: m.ask, bidBot: m.bidBot, askBot: m.askBot } };
+    const room = s => (s > 0 ? EMK.limit - g.pos : EMK.limit + g.pos);
+    if (a.type === 'quote') {
+      g.log.push({ t: 'you', text: `你报 ${fmtNum(a.bid)} 买 / ${fmtNum(a.ask)} 卖，各 ${a.n} 份` });
+      let bl = a.n, al = a.n;
+      for (const b of g.rng.shuffle(g.bots.slice())) {
+        if (al > 0 && b.mu - Math.log(a.ask) > b.edge) {
+          const k = Math.min(al, b.size, room(-1));
+          if (k > 0) { emkFill(g, b.name, -1, a.ask, k, 'quote'); al -= k; g.log.push({ t: 'fill', text: `${b.name} 买走 ${k} 份 @ ${fmtNum(a.ask)}（你卖）` }); }
+        } else if (bl > 0 && Math.log(a.bid) - b.mu > b.edge) {
+          const k = Math.min(bl, b.size, room(1));
+          if (k > 0) { emkFill(g, b.name, 1, a.bid, k, 'quote'); bl -= k; g.log.push({ t: 'fill', text: `${b.name} 卖给你 ${k} 份 @ ${fmtNum(a.bid)}（你买）` }); }
+        }
+      }
+      if (g.trades.length === before) g.log.push({ t: 'info', text: '没人和你的报价成交。' });
+    } else if (a.type === 'buy' || a.type === 'sell') {
+      const side = a.type === 'buy' ? 1 : -1;
+      let n = Math.min(a.n, room(side));
+      if (n <= 0) g.log.push({ t: 'warn', text: `超过仓位上限 ±${EMK.limit}，没有成交。` });
+      const book = g.bots.map(b => ({ b, px: emkQuote(b)[side > 0 ? 1 : 0] })).sort((u, w) => (side > 0 ? u.px - w.px : w.px - u.px));
+      for (const { b, px } of book) {
+        if (n <= 0) break;
+        const k = Math.min(n, b.size);
+        emkFill(g, b.name, side, px, k, 'take'); n -= k;
+        g.log.push({ t: 'you', text: `你${side > 0 ? '买' : '卖'} ${k} 份 @ ${fmtNum(px)}，对手 ${b.name}` });
+      }
+    } else g.log.push({ t: 'you', text: '你这一回合不动' });
+    rec.fills = g.trades.slice(before);
+    g.actions.push(rec);
+    if (g.rnd >= EMK.rounds) {
+      g.done = true;
+      g.log.push({ t: 'round', text: `结算：真值 ${fmtNum(g.x)}。` });
+      return;
+    }
+    g.rnd++;
+    emkRefresh(g, false);
+    g.log.push({ t: 'info', text: `第 ${g.rnd} 回合。` });
+  }
+  function emkAdvice(g) {
+    const cons = emkConsensus(g), m = emkBest(g), c = cons.c;
+    const top = cons.ws.slice().sort((u, w) => w.w - u.w)[0];
+    const why = [`按「1 /（半宽² + 它中间价的波动）」给 5 个报价加权，权重最大的是 ${top.name}（${pct(top.w)}）；加权的对数中心是 ${fmtNum(Math.exp(c))}`];
+    if (g.rnd === 1) why.push('第 1 回合还看不出谁乱报（乱报的人中间价每回合都跳），窄报价暂时权重高');
+    const t = 0.45;   // 偏离加权中心超过 45%（对数 0.45）才直接吃：和下面报价的半宽一样
+    const roomB = EMK.limit - g.pos, roomS = EMK.limit + g.pos;
+    if (Math.log(m.bid) - c > t && roomS > 0) return { a: { type: 'sell', n: Math.min(2, roomS) }, c: Math.exp(c), why: why.concat(`最高买价 ${fmtNum(m.bid)}（${m.bidBot.name}）比中心高 ${pct(Math.exp(Math.log(m.bid) - c) - 1)}，直接卖`).join('；') };
+    if (c - Math.log(m.ask) > t && roomB > 0) return { a: { type: 'buy', n: Math.min(2, roomB) }, c: Math.exp(c), why: why.concat(`最低卖价 ${fmtNum(m.ask)}（${m.askBot.name}）比中心低 ${pct(1 - Math.exp(Math.log(m.ask) - c))}，直接买`).join('；') };
+    const h = 0.45, cc = c - 0.03 * g.pos;
+    why.push('没有明显错价，围绕中心报 ÷1.57 和 ×1.57（对数 ±0.45）各 2 份：报得窄会被懂行的人按它的估计吃掉，报宽一点只和估错很多的人成交（这个宽度是在本模拟器里试出来的，不是通用的数）');
+    if (g.pos) why.push(`仓位 ${g.pos > 0 ? '+' : ''}${g.pos}，中心往减仓方向挪 3% × 仓位`);
+    return { a: { type: 'quote', bid: +Math.exp(cc - h).toPrecision(3), ask: +Math.exp(cc + h).toPrecision(3), n: 2 }, c: Math.exp(c), why: why.join('；') };
+  }
+  function emkRecap(g) {
+    const total = g.cash + g.pos * g.x, by = {};
+    for (const t of g.trades) by[t.who] = (by[t.who] || 0) + t.side * (g.x - t.px) * t.n;
+    return { total, rel: total / g.x, by, n: sum(g.trades.map(t => t.n)) };
+  }
+  function emkAdvicePnl(seed, qs) { const g = newEstMarket(seed, qs); while (!g.done) emkAct(g, emkAdvice(g).a); return emkRecap(g); }
+  function describeEmk(a) {
+    if (a.type === 'quote') return `报 ${fmtNum(a.bid)} / ${fmtNum(a.ask)} 各 ${a.n} 份`;
+    return { buy: `买入 ${a.n} 份`, sell: `卖出 ${a.n} 份`, pass: '不动' }[a.type];
+  }
+
+  // ------------------------------------------------------------ 牌桌做市（照 QuantVault「Card Table」公布的规则做的近似版）
+  // 规则：A 当 1 或 14；黑色花色（黑桃、梅花）算负，或红心算负。标的 = 全场所有牌之和（每人两张 + 三张公共牌）
+  const CT = { spread: 5, maxN: 10, limit: 15, botSize: 3, quoteSize: 5, edge: 1 };
+  function ctValue(card, rule) {
+    const r = card.r === 1 ? rule.ace : card.r;
+    const neg = rule.neg === 'black' ? (card.s === 0 || card.s === 3) : card.s === 1;
+    return neg ? -r : r;
+  }
+  function ctRuleText(rule) { return `A 当 ${rule.ace}；${rule.neg === 'black' ? '黑桃、梅花算负' : '红心算负'}`; }
+  function ctDeckStats(rule, known) {   // 去掉已知的牌后，单张暗牌的均值和标准差
+    const ks = new Set(known || []);
+    const vals = CARD52.filter((_, i) => !ks.has(i)).map(c => ctValue(c, rule));
+    const mu = sum(vals) / vals.length, v = sum(vals.map(z => (z - mu) ** 2)) / vals.length;
+    return { mu, sd: Math.sqrt(v), n: vals.length, min: Math.min(...vals), max: Math.max(...vals) };
+  }
+  function newCardTable(seed) {
+    const rng = makeRng(seed + ':ct');
+    const nb = rng.randint(3, 5);
+    const rule = { ace: rng.random() < 0.5 ? 1 : 14, neg: rng.random() < 0.5 ? 'black' : 'hearts' };
+    const idx = rng.shuffle(CARD52.map((_, i) => i));
+    const val = i => ctValue(CARD52[i], rule);
+    const you = idx.slice(0, 2), comm = idx.slice(2, 5);
+    const names = ['A 座', 'B 座', 'C 座', 'D 座', 'E 座'];
+    const bots = [];
+    for (let i = 0; i < nb; i++) bots.push({ name: names[i], cards: idx.slice(5 + 2 * i, 7 + 2 * i), w: rng.uniform(1.5, 2.5) });
+    const all = you.concat(comm, ...bots.map(b => b.cards));
+    const g = { rng, rule, val, you, comm, bots, nCards: all.length, total: sum(all.map(val)), rnd: 1, phase: 'quote', done: false,
+      pos: 0, cash: 0, trades: [], log: [], recs: [], maxAbsPos: 0, bq: null };
+    g.log.push({ t: 'info', text: `本局规则：${ctRuleText(rule)}。${nb} 个机器人，场上共 ${g.nCards} 张牌；标的 = 所有牌之和。` });
+    ctFlip(g);
+    return g;
+  }
+  const ctShown = g => g.comm.slice(0, g.rnd);
+  function ctFair(g, knownIdx) {
+    const st = ctDeckStats(g.rule, knownIdx);
+    return { ev: sum(knownIdx.map(g.val)) + (g.nCards - knownIdx.length) * st.mu, st, hidden: g.nCards - knownIdx.length };
+  }
+  const ctYouFair = g => ctFair(g, g.you.concat(ctShown(g)));
+  const ctBotFair = (g, b) => ctFair(g, b.cards.concat(ctShown(g))).ev;
+  function ctFlip(g) {
+    const c = g.comm[g.rnd - 1];
+    g.log.push({ t: 'flip', text: `第 ${g.rnd} 轮：翻开公共牌 ${SUITS[CARD52[c].s]}${RANKNAME(CARD52[c].r)}（记 ${g.val(c) > 0 ? '+' : ''}${g.val(c)}）。` });
+    g.phase = 'quote';
+    const yf = ctYouFair(g), Nd = yf.st.n, hh = yf.hidden;
+    g.rec = { rnd: g.rnd, youEV: yf.ev, ref: ctInfer(g).F, sdh: yf.st.sd * Math.sqrt(hh * Math.max(0, Nd - hh) / Math.max(1, Nd - 1)), quote: null, qFills: [], takes: [], errs: [], atLimit: Math.abs(g.pos) >= CT.limit - 1 };
+  }
+  // 机器人的估值 = B + C + h × (T − B − C) / (50 − k)：B 它两张之和，C 当时翻开的公共牌之和，h 它看不到的张数，
+  // T 整副 52 张之和，k 当时翻开的张数。由报价中点解出 B
+  function ctImplied(g, q) {
+    const T = sum(CARD52.map((_, i) => g.val(i))), k = q.rnd, C = sum(g.comm.slice(0, k).map(g.val));
+    const h = g.nCards - 2 - k, M = 50 - k, mid = (q.bid + q.ask) / 2;
+    return (mid - C - h * (T - C) / M) / (1 - h / M);
+  }
+  // 从机器人上一轮（或这一轮）的报价中点反推它两张牌的和：中点 ≈ 它的两张 + 公共牌 + 它看不到的张数 × 平均
+  function ctInfer(g, useCurrent) {
+    const yf = ctYouFair(g), mu = yf.st.mu, C = sum(ctShown(g).map(g.val)), Y = sum(g.you.map(g.val));
+    const st = ctDeckStats(g.rule, []), lo2 = 2 * st.min, hi2 = 2 * st.max;
+    const hiddenBot = g.nCards - 2 - g.rnd;
+    let F = Y + C, unknown = g.nCards - 2 - g.rnd;   // 先只算自己知道的
+    const imp = g.bots.map((b, i) => {
+      const src = useCurrent && g.bq ? g.bq[i] : (g.recs.length ? g.recs[g.recs.length - 1].bq[i] : null);
+      if (!src) return null;
+      const B = ctImplied(g, src);
+      const prev = g.recs.filter(r => r.bq).map(r => r.bq[i]).filter(z => z && z.rnd < (useCurrent ? g.rnd : src.rnd));
+      const prevB = prev.length ? ctImplied(g, prev[prev.length - 1]) : null;
+      const odd = B < lo2 - 1 || B > hi2 + 1 || (prevB !== null && Math.abs(B - prevB) > 3);
+      return { B, odd, prevB };
+    });
+    void hiddenBot;
+    imp.forEach(z => { if (z && !z.odd) { F += z.B; unknown -= 2; } });
+    F += unknown * mu;
+    return { F, imp, youEV: yf.ev, mu };
+  }
+  // 你报价：机器人看自己的牌，价对它有利就来成交
+  function ctQuote(g, bid, ask, n) {
+    if (g.phase !== 'quote') return 'not-quote';
+    if (!(bid < ask) || ask - bid > CT.spread + 1e-9) return 'spread';
+    if (!(n >= 1 && n <= CT.maxN)) return 'size';
+    g.rec.quote = { bid, ask, n };
+    g.log.push({ t: 'you', text: `你报 ${bid} 买 / ${ask} 卖，各 ${n} 份` });
+    let bl = n, al = n;
+    for (const b of g.rng.shuffle(g.bots.slice())) {
+      const f = ctBotFair(g, b);
+      if (al > 0 && f - ask > CT.edge) { const k = Math.min(al, CT.botSize); ctFill(g, b.name, -1, ask, k, 'quote'); al -= k; g.log.push({ t: 'fill', text: `${b.name} 买走 ${k} 份 @ ${ask}（你卖）` }); }
+      else if (bl > 0 && bid - f > CT.edge) { const k = Math.min(bl, CT.botSize); ctFill(g, b.name, 1, bid, k, 'quote'); bl -= k; g.log.push({ t: 'fill', text: `${b.name} 卖给你 ${k} 份 @ ${bid}（你买）` }); }
+    }
+    if (bl === n && al === n) g.log.push({ t: 'info', text: '没有机器人和你的报价成交。' });
+    ctBotQuotes(g);
+    return null;
+  }
+  function ctSkipQuote(g) { if (g.phase !== 'quote') return; g.log.push({ t: 'warn', text: '你这一轮没报价。' }); ctBotQuotes(g); }
+  function ctBotQuotes(g) {
+    g.phase = 'trade';
+    // 约 40% 的轮次有一个机器人报错价（偏离它自己的估值 4 到 7）
+    const errBot = g.rng.random() < 0.4 ? g.rng.randint(0, g.bots.length - 1) : -1;
+    g.bq = g.bots.map((b, i) => {
+      let mid = ctBotFair(g, b), err = 0;
+      if (i === errBot) { err = (g.rng.random() < 0.5 ? -1 : 1) * g.rng.uniform(4, 7); mid += err; }
+      return { bid: half(mid - b.w), ask: half(mid + b.w), left: CT.quoteSize, err, rnd: g.rnd };
+    });
+    g.rec.bq = g.bq.map(z => ({ ...z }));
+    g.rec.errs = g.bq.map((z, i) => (z.err ? i : -1)).filter(i => i >= 0);
+    g.rec.inferTrade = ctInfer(g, true).F;
+  }
+  function ctFill(g, who, side, px, n, tag) {
+    g.pos += side * n; g.cash -= side * px * n;
+    g.maxAbsPos = Math.max(g.maxAbsPos, Math.abs(g.pos));
+    const t = { rnd: g.rnd, who, side, px, n, tag };
+    g.trades.push(t);
+    if (tag === 'quote') g.rec.qFills.push(t);
+    return t;
+  }
+  // 你按机器人 i 的价成交：side = +1 买它的卖价，−1 卖给它的买价
+  function ctTake(g, i, side, n) {
+    if (g.phase !== 'trade') return 'phase';
+    const q = g.bq[i];
+    n = Math.min(n, q.left);
+    if (n <= 0) return 'empty';
+    const px = side > 0 ? q.ask : q.bid;
+    const t = ctFill(g, g.bots[i].name, side, px, n, 'take');
+    t.bot = i; t.ref = g.rec.inferTrade; t.err = q.err;
+    g.rec.takes.push(t);
+    q.left -= n;
+    g.log.push({ t: 'you', text: `你${side > 0 ? '买' : '卖'} ${n} 份 @ ${px}，对手 ${g.bots[i].name}` });
+    return null;
+  }
+  // 成交窗口结束（或计时模式下过了 2 秒）：机器人之间按各自的估值互相成交，觉得对方的价差 2 以上就吃掉
+  function ctBotSweep(g) {
+    if (g.phase !== 'trade' || g.swept) return;
+    g.swept = true;
+    g.bq.forEach((q, i) => {
+      if (q.left <= 0) return;
+      for (const [j, b] of g.bots.entries()) {
+        if (j === i) continue;
+        const f = ctBotFair(g, b);
+        if (f - q.ask > 2 * CT.edge || q.bid - f > 2 * CT.edge) { g.log.push({ t: 'bots', text: `${b.name} 吃掉了 ${g.bots[i].name} 的报价（${f - q.ask > 0 ? '买' : '卖'} @ ${f - q.ask > 0 ? q.ask : q.bid}）` }); q.left = 0; break; }
+      }
+    });
+  }
+  function ctEndTrade(g) {
+    if (g.phase !== 'trade') return;
+    ctBotSweep(g);
+    g.rec.pos = g.pos;
+    g.recs.push(g.rec);
+    g.swept = false;
+    if (g.rnd >= 3) {
+      g.done = true; g.phase = 'done';
+      g.log.push({ t: 'round', text: `结算：所有牌之和 = ${g.total}。` });
+      return;
+    }
+    g.rnd++;
+    ctFlip(g);
+  }
+  function ctAdvice(g) {
+    if (g.phase === 'quote') {
+      if (Math.abs(g.pos) >= CT.limit - 1) { const F0 = ctInfer(g).F; return { kind: 'quote', a: null, F: F0, why: `仓位 ${g.pos > 0 ? '+' : ''}${g.pos} 已经贴着 ±${CT.limit}，这一轮不报价，等机器人报价时只做减仓那一边` }; }
+      const inf = ctInfer(g), F = inf.F, c = half(F - 0.15 * g.pos), n = Math.max(1, Math.min(g.rnd === 1 ? 2 : 3, CT.limit - Math.abs(g.pos)));
+      const why = [`你看得到的：自己两张 + 公共牌 = ${sum(g.you.map(g.val)) + sum(ctShown(g).map(g.val))}；暗牌每张平均 ${inf.mu.toFixed(2)}，按你看得到的算公允价 ${inf.youEV.toFixed(1)}`];
+      const used = inf.imp.filter(z => z && !z.odd).length;
+      if (used) why.push(`用上一轮 ${used} 个机器人的报价中点反推它们两张牌的和，代替猜测，调整后公允价 ${F.toFixed(1)}`);
+      why.push('报 ±2.5（价差 5，规则允许的最宽）：机器人只在你的价对它有利时才来，报宽一点少被打；' + (g.rnd === 1 ? '第一轮信息少，只报 2 份' : '报 3 份') + '，并且不让仓位超过 ±' + CT.limit);
+      if (g.pos) why.push(`仓位 ${g.pos > 0 ? '+' : ''}${g.pos}，中心往减仓方向挪 0.15 × 仓位`);
+      return { kind: 'quote', a: { bid: c - 2.5, ask: c + 2.5, n }, F, why: why.join('；') };
+    }
+    const inf = ctInfer(g, true), F = inf.F, list = [];
+    let p = g.pos;
+    const order = g.bq.map((q, i) => i).sort((u, w) => Math.max(g.bq[w].bid - F, F - g.bq[w].ask) - Math.max(g.bq[u].bid - F, F - g.bq[u].ask));
+    order.forEach(i => {
+      const q = g.bq[i], z = inf.imp[i];
+      const nS = Math.max(0, Math.min(3, q.left, CT.limit + p)), nB = Math.max(0, Math.min(3, q.left, CT.limit - p));
+      if (q.bid - F > 1.5 && nS > 0) { p -= nS; list.push({ i, side: -1, n: nS, why: `${g.bots[i].name} 买价 ${q.bid} 比公允价 ${F.toFixed(1)} 高 ${(q.bid - F).toFixed(1)}${z && z.odd ? '，而且它暗示的两张牌和不可能或和上一轮对不上，像是错价' : ''}：卖给它` }); }
+      else if (F - q.ask > 1.5 && nB > 0) { p += nB; list.push({ i, side: 1, n: nB, why: `${g.bots[i].name} 卖价 ${q.ask} 比公允价 ${F.toFixed(1)} 低 ${(F - q.ask).toFixed(1)}${z && z.odd ? '，而且它暗示的两张牌和不可能或和上一轮对不上，像是错价' : ''}：买它` }); }
+    });
+    return { kind: 'trade', list, F, why: list.length ? list.map(z => z.why).join('；') + `（单笔最多 3 份，仓位不超过 ±${CT.limit}）` : `没有机器人的价偏离公允价 ${F.toFixed(1)} 超过 1.5（或仓位已到上限），不成交` };
+  }
+  // 打分（三项平均，PnL 只显示）：定价、抓错价、纪律
+  function ctScore(g) {
+    // 仓位贴着上限时不报价是对的，那一轮不计定价分；其他轮不报价记 0
+    const pr = g.recs.map(r => (r.quote ? Math.max(0, 1 - Math.abs((r.quote.bid + r.quote.ask) / 2 - r.ref) / 5) : r.atLimit ? null : 0));
+    const prv = pr.filter(v => v !== null);
+    const pricing = prv.length ? sum(prv) / prv.length : 1;
+    let nErr = 0, caught = 0;
+    for (const r of g.recs) for (const i of r.errs) {
+      nErr++;
+      const e = r.bq[i].err;
+      if (r.takes.some(t => t.bot === i && t.side === (e > 0 ? -1 : 1))) caught++;
+    }
+    const notes = [];
+    let disc = 1;
+    for (const r of g.recs) for (const t of r.takes) {
+      const bad = t.side > 0 ? t.px > t.ref + 1 : t.px < t.ref - 1;
+      if (bad) { disc -= 0.15; notes.push(`第 ${t.rnd} 轮${t.side > 0 ? '买' : '卖'} ${t.n} 份 @ ${t.px}：比当时的公允价 ${t.ref.toFixed(1)} 差，是坏交易`); }
+    }
+    const picked = g.trades.filter(t => t.tag === 'quote' && t.side * (g.total - t.px) < 0);
+    if (picked.length) { disc -= Math.min(0.3, 0.1 * picked.length); notes.push(`你的报价被打了 ${picked.length} 次，按结算值算是亏的`); }
+    if (g.maxAbsPos > CT.limit) { disc -= 0.3; notes.push(`仓位最多到 ${g.maxAbsPos}，超过了 ±${CT.limit}`); }
+    const comp = { pricing, disc: Math.max(0, disc) };
+    if (nErr) comp.catch = caught / nErr;
+    const vals = Object.values(comp);
+    const pnl = g.cash + g.pos * g.total;
+    return { comp, total: 100 * sum(vals) / vals.length, nErr, caught, notes, pnl, pr };
+  }
+  function ctAdvicePlay(seed) {   // 每一步照建议做
+    const g = newCardTable(seed);
+    while (!g.done) {
+      const a = ctAdvice(g);
+      if (a.kind === 'quote') { if (a.a) ctQuote(g, a.a.bid, a.a.ask, a.a.n); else ctSkipQuote(g); }
+      else { for (const z of a.list) ctTake(g, z.i, z.side, z.n); ctEndTrade(g); }
+    }
+    return g;
+  }
+
+  const api = {
+    sum, makeRng, hashSeed, project, growth, kelly, growthBlocks, kellyBlocks, kellyExclusive, odds,
+    CATS, compress, makeBlock, pickBets, genBetRound, findCovers, flatBets, betReturn, betComments, arbComments, evalBets, oneLine, pct,
+    genHorse, LIMIT, TURNS, publicEV, sdLeft, informedEV, newMarket, act, best, botQuote, avgPrice, marketRecap, marketBenchmark, sgnf,
+    effStr, parseNum, parsePair, luScore, normCdf, normPpf, fmtNum, bestUL, calib,
+    escore, estPlan, kellySingle, xto1, arbLegs, betAdvice, SHORT, shortScore, traderQuestion, mmAdvice, describeMM, mmAdvicePnl,
+    EMK, newEstMarket, emkQuote, emkBest, emkConsensus, emkAct, emkAdvice, emkRecap, emkAdvicePnl, describeEmk,
+    CT, CARD52, SUITS, RANKNAME, ctValue, ctRuleText, ctDeckStats, newCardTable, ctShown, ctYouFair, ctBotFair, ctInfer, ctQuote, ctSkipQuote, ctTake, ctBotSweep, ctEndTrade, ctAdvice, ctScore, ctAdvicePlay,
+  };
+  return api;
+})();
+if (typeof module !== 'undefined') module.exports = Core;
+
+// CORE-END
+const QUESTIONS = [
+{
+"cat": "生活",
+"q": "芝加哥 CTA（公交加 L 线）2025 年一共多少人次乘车？",
+"unit": "人次",
+"truth": 319200000.0,
+"src": "RTA 2026 年 1 月新闻稿：CTA 2025 年 3.192 亿人次（公交 1.84 亿，L 线 1.352 亿）",
+"how": "270 万人，约四分之一每个工作日坐两趟：270 万 × 0.25 × 2 × 250 ≈ 3.4 亿，周末和游客补一点、通勤减少扣一点，约 3 亿",
+"lo": 150000000.0,
+"hi": 600000000.0
+},
+{
+"cat": "生活",
+"q": "芝加哥 O'Hare 机场 2025 年旅客吞吐量？",
+"unit": "人次",
+"truth": 84800000.0,
+"src": "ACI（国际机场协会）2026 年初步排名：8480 万人次，比 2024 年多 6%；芝加哥航空局的全年终值未查到",
+"how": "每天约 2500 架次起降，每架次平均约 100 名旅客：25 万人次一天 × 365 ≈ 9000 万",
+"lo": 40000000.0,
+"hi": 150000000.0
+},
+{
+"cat": "生活",
+"q": "Willis Tower（原 Sears Tower）屋顶高度多少米？",
+"unit": "米",
+"truth": 442,
+"src": "Willis Tower 官网：1451 英尺，约 442 米",
+"how": "108 层，每层约 4 米：约 430 米",
+"lo": 300,
+"hi": 600
+},
+{
+"cat": "生活",
+"q": "密歇根湖的水面面积多少平方公里？",
+"unit": "平方公里",
+"truth": 57800,
+"src": "美国环保署 EPA「Great Lakes Facts and Figures」：22,300 平方英里，约 57,800 平方公里",
+"how": "南北长约 500 公里，东西平均宽约 120 公里：约 6 万平方公里",
+"lo": 30000.0,
+"hi": 120000.0
+},
+{
+"cat": "生活",
+"q": "美国一共有多少个县（county，不含华盛顿特区）？",
+"unit": "个",
+"truth": 3143,
+"src": "美国人口普查局 Vintage 2025 县级估计（2026 年 3 月发布）：3143 个县加华盛顿特区",
+"how": "50 个州，每州平均约 60 个县（得州 254 个，特拉华 3 个）：约 3000",
+"lo": 1500,
+"hi": 6000
+},
+{
+"cat": "生活",
+"q": "美国 2024 年出生了多少婴儿？",
+"unit": "人",
+"truth": 3628934,
+"src": "美国疾控中心 NCHS Data Brief No. 535（2025 年 7 月）：3,628,934",
+"how": "3.4 亿人，如果人口不增不减，每年出生约 人口 ÷ 寿命 = 3.4 亿 ÷ 79 ≈ 430 万；美国生育率低于更替水平，打个八五折：约 360 万",
+"lo": 2500000.0,
+"hi": 5500000.0
+},
+{
+"cat": "生活",
+"q": "美国 2024 年平均每天出生多少婴儿？",
+"unit": "人",
+"truth": 9915.120218579235,
+"src": "由上一题的 3,628,934 除以 366 天（2024 是闰年）：约 9915",
+"how": "一年约 360 万，除以 365：约 1 万",
+"lo": 7000,
+"hi": 14000
+},
+{
+"cat": "生活",
+"q": "芝加哥到纽约的直线（大圆）距离多少公里？",
+"unit": "公里",
+"truth": 1144,
+"src": "用两地市政厅坐标（41.878, −87.630）和（40.713, −74.006）按大圆公式自己算，地球半径取 6371 公里：约 1144",
+"how": "飞机约 2 小时，起降去掉半小时，巡航约 800 公里每小时：约 1200 公里",
+"lo": 800,
+"hi": 1800
+},
+{
+"cat": "生活",
+"q": "2025 年芝加哥马拉松有多少人完赛？",
+"unit": "人",
+"truth": 54000,
+"src": "美国银行（赛事冠名方）2025 年 10 月新闻稿：超过 54,000 人完赛，创纪录；取 54,000",
+"how": "世界最大的几场马拉松之一，纽约马拉松约 5 万；2025 年抽签报名 16 万人，中签约三分之一：约 5 万",
+"lo": 25000,
+"hi": 80000
+},
+{
+"cat": "生活",
+"q": "芝加哥 L 线（高架和地铁）一共有多少个车站？",
+"unit": "个",
+"truth": 146,
+"src": "CTA 官网 About 页：8 条线，146 个车站，约 224 英里轨道",
+"how": "8 条线，每条约 20 站，市中心环线的站几条线共用：约 140",
+"lo": 90,
+"hi": 220
+},
+{
+"cat": "金融",
+"q": "标普 500 指数 2025 年 12 月 31 日收盘多少点？",
+"unit": "点",
+"truth": 6845.5,
+"src": "S&P 道琼斯指数公司：2025 年价格涨 16.39%，从 5881.63 点到 6845.50 点",
+"how": "记得 2024 年底约 5900 点，2025 年涨了一成多：约 6700",
+"lo": 5500,
+"hi": 8000
+},
+{
+"cat": "金融",
+"q": "按 2025 年底的点位，一张 E-mini 标普 500 期货合约的名义价值多少美元？",
+"unit": "美元",
+"truth": 342275.0,
+"src": "CME 合约规格：每点 50 美元；乘上一题的 6845.50 点，约 34.2 万美元",
+"how": "乘数 50 美元一点 × 约 6800 点：约 34 万",
+"lo": 200000.0,
+"hi": 600000.0
+},
+{
+"cat": "金融",
+"q": "苹果公司 2025 财年（到 2025 年 9 月）总营收多少美元？",
+"unit": "美元",
+"truth": 416161000000.0,
+"src": "苹果 2025 财年 10-K：净销售额 4161.61 亿美元",
+"how": "iPhone 一年约 2.3 亿部 × 均价约 900 美元 ≈ 2000 亿，iPhone 约占一半：约 4000 亿",
+"lo": 250000000000.0,
+"hi": 600000000000.0
+},
+{
+"cat": "金融",
+"q": "苹果公司 2025 财年净利润多少美元？",
+"unit": "美元",
+"truth": 112010000000.0,
+"src": "苹果 2025 财年 10-K：净利润 1120.10 亿美元",
+"how": "营收约 4000 亿，净利率约 25%：约 1000 亿",
+"lo": 60000000000.0,
+"hi": 180000000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年美股平均每天成交多少美元（名义金额）？",
+"unit": "美元",
+"truth": 1100000000000.0,
+"src": "Cboe「2025 U.S. Equities Year in Review」：日均名义成交 1.1 万亿美元，比 2024 年多 43.3%",
+"how": "每天约 176 亿股，平均每股成交价约 60 美元：约 1 万亿",
+"lo": 500000000000.0,
+"hi": 2500000000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年美股成交量最大的那一天成交了多少股？",
+"unit": "股",
+"truth": 30980000000.0,
+"src": "Cboe「2025 U.S. Equities Year in Review」：2025 年 4 月 9 日，309.8 亿股",
+"how": "平常每天约 176 亿股，恐慌或大消息的日子放大 1.5 到 2 倍：约 300 亿",
+"lo": 20000000000.0,
+"hi": 50000000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年美国一共成交多少张 ETF 期权合约？",
+"unit": "张",
+"truth": 5679730264,
+"src": "OCC（期权清算公司）2025 年年度成交量新闻稿（2026 年 1 月）：ETF 期权 5,679,730,264 张",
+"how": "全年期权约 152 亿张，SPY、QQQ 这些 ETF 期权约占三分之一多：约 55 亿",
+"lo": 3000000000.0,
+"hi": 10000000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年美国一共成交多少张个股期权合约？",
+"unit": "张",
+"truth": 8269693680,
+"src": "OCC 2025 年年度成交量新闻稿（2026 年 1 月）：个股期权 8,269,693,680 张",
+"how": "全年期权约 152 亿张，个股期权占一半多：约 80 亿",
+"lo": 5000000000.0,
+"hi": 13000000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年 CME 美国国债期货和期权平均每天成交多少张？",
+"unit": "张",
+"truth": 8300000.0,
+"src": "CME 集团 2026 年 1 月 5 日新闻稿：美国国债期货和期权全年日均 830 万张，创纪录",
+"how": "CME 日均约 2800 万张，利率类约一半，其中国债约六成：约 800 万",
+"lo": 4000000.0,
+"hi": 15000000.0
+},
+{
+"cat": "金融",
+"q": "2025 年 CME 加密货币期货和期权平均每天成交多少张？",
+"unit": "张",
+"truth": 278000,
+"src": "CME 集团 2026 年 1 月 5 日新闻稿：加密货币产品日均 27.8 万张，比 2024 年多 139%",
+"how": "加密在 CME 是小众品种，占 2800 万张的 0.3% 到 3%：中间取 1%，约 28 万",
+"lo": 80000.0,
+"hi": 800000.0
+},
+{
+"cat": "物理",
+"q": "地球赤道一圈多少公里？",
+"unit": "公里",
+"truth": 40075,
+"src": "NASA Earth Fact Sheet：赤道半径 6378.137 公里，2π × 6378.137 ≈ 40,075",
+"how": "米最初定义成北极到赤道的千万分之一，所以一圈约 4 万公里",
+"lo": 30000.0,
+"hi": 50000.0
+},
+{
+"cat": "物理",
+"q": "太阳光到地球要多少秒？",
+"unit": "秒",
+"truth": 499.0,
+"src": "国际天文学联合会 2012 年定义天文单位 149,597,870,700 米，除以光速 299,792,458 米每秒：499.0 秒",
+"how": "1.5 亿公里 ÷ 30 万公里每秒 = 500 秒，约 8 分钟",
+"lo": 300,
+"hi": 800
+},
+{
+"cat": "物理",
+"q": "地球到月球的平均距离多少公里？",
+"unit": "公里",
+"truth": 384400,
+"src": "NASA Moon Fact Sheet：半长轴 384,400 公里",
+"how": "光从月球到地球约 1.3 秒：1.3 × 30 万 ≈ 39 万公里；或者约 30 个地球直径：30 × 12,700 ≈ 38 万",
+"lo": 250000.0,
+"hi": 600000.0
+},
+{
+"cat": "物理",
+"q": "一年有多少秒（按 365.25 天）？",
+"unit": "秒",
+"truth": 31557600,
+"src": "国际天文学联合会的儒略年：365.25 × 86,400 = 31,557,600 秒",
+"how": "365 × 24 × 3600 ≈ 3.15 × 10⁷，好记的说法是「π × 10⁷」",
+"lo": 25000000.0,
+"hi": 40000000.0
+},
+{
+"cat": "物理",
+"q": "20°C 时声音走 1 公里要几秒？",
+"unit": "秒",
+"truth": 2.9154518950437316,
+"src": "20°C 干燥空气中声速约 343 米每秒（物理常用值），1000 ÷ 343 ≈ 2.92 秒",
+"how": "看到闪电后数秒，「3 秒 1 公里」",
+"lo": 2,
+"hi": 5
+},
+{
+"cat": "物理",
+"q": "按长 50 米、宽 25 米、深 2 米算，一个奥运标准泳池装满要多少升水？",
+"unit": "升",
+"truth": 2500000.0,
+"src": "长宽按 World Aquatics 设施规则 FR 2（50 米 × 25 米），深度按题目给的 2 米；50 × 25 × 2 = 2500 立方米 = 250 万升",
+"how": "体积 2500 立方米，1 立方米 = 1000 升",
+"lo": 1500000.0,
+"hi": 4000000.0
+},
+{
+"cat": "物理",
+"q": "一张 0.1 毫米厚的纸，对折几次厚度超过地月距离？",
+"unit": "次",
+"truth": 42,
+"src": "自己算：384,400 公里 ÷ 0.1 毫米 = 3.844 × 10¹²，log₂ 约 41.8，所以要 42 次",
+"how": "2¹⁰ ≈ 10³：10¹² 约 2⁴⁰，再乘 3.8 约多 2 次：42",
+"lo": 30,
+"hi": 60
+},
+{
+"cat": "物理",
+"q": "一个 7 号篮球里随机塞乒乓球，能塞多少个（忽略球壁厚度）？",
+"unit": "个",
+"truth": 136,
+"src": "自己算：7 号球周长 29.5 英寸（NBA 规格），直径约 23.85 厘米；乒乓球直径 40 毫米（ITTF 规格）；体积比 (23.85 ÷ 4)³ ≈ 212，乘随机堆积率约 0.64：约 136",
+"how": "直径比约 6，体积比 6³ ≈ 216，球之间有空隙打六折多：约 130",
+"lo": 80,
+"hi": 250
+},
+{
+"cat": "物理",
+"q": "地球表面积多少平方公里？",
+"unit": "平方公里",
+"truth": 510064471.90978825,
+"src": "NASA Earth Fact Sheet 平均半径 6371.0 公里，4π × 6371² ≈ 5.10 亿平方公里",
+"how": "4π r²，r ≈ 6400：12.6 × 4100 万 ≈ 5.1 亿",
+"lo": 300000000.0,
+"hi": 800000000.0
+},
+{
+"cat": "物理",
+"q": "珠穆朗玛峰海拔多少米？",
+"unit": "米",
+"truth": 8848.86,
+"src": "中国和尼泊尔 2020 年 12 月联合公布：8848.86 米",
+"how": "民航飞机巡航约 1 万米，珠峰比它低一点：约 8800",
+"lo": 7000,
+"hi": 10000
+},
+{
+"cat": "科技",
+"q": "GPT-3 最大的模型有多少参数？",
+"unit": "个",
+"truth": 175000000000.0,
+"src": "Brown et al. 2020「Language Models are Few-Shot Learners」：1750 亿",
+"how": "记得是「千亿级」，GPT-2 是 15 亿，GPT-3 大了约 100 倍：约 1500 亿",
+"lo": 50000000000.0,
+"hi": 500000000000.0
+},
+{
+"cat": "科技",
+"q": "一块 NVIDIA H100 SXM 的 BF16 稠密算力是多少 TFLOPS？",
+"unit": "TFLOPS",
+"truth": 989,
+"src": "NVIDIA H100 数据手册：BF16 Tensor Core 1979 TFLOPS（带稀疏），稠密是一半，约 989",
+"how": "A100 是 312，H100 约 3 倍：约 1000",
+"lo": 500,
+"hi": 2000
+},
+{
+"cat": "科技",
+"q": "一块 NVIDIA H100 SXM 的显存带宽是多少 TB/s？",
+"unit": "TB/s",
+"truth": 3.35,
+"src": "NVIDIA H100 数据手册：HBM3，3.35 TB/s",
+"how": "A100 80GB 约 2 TB/s，H100 换成 HBM3 提高六七成：约 3.3",
+"lo": 2,
+"hi": 6
+},
+{
+"cat": "科技",
+"q": "IPv4 一共有多少个地址？",
+"unit": "个",
+"truth": 4294967296,
+"src": "IPv4 地址是 32 位（RFC 791）：2³² = 4,294,967,296",
+"how": "2³² = 4 × 2³⁰ ≈ 4 × 10⁹，约 43 亿",
+"lo": 3000000000.0,
+"hi": 6000000000.0
+},
+{
+"cat": "科技",
+"q": "Llama 3 预训练用了多少 token？",
+"unit": "个",
+"truth": 15000000000000.0,
+"src": "Meta 2024 年 4 月 Llama 3 发布博客：超过 15 万亿 token",
+"how": "Llama 2 是 2 万亿，Llama 3 说数据多了约 7 倍：约 14 万亿",
+"lo": 5000000000000.0,
+"hi": 40000000000000.0
+},
+{
+"cat": "科技",
+"q": "光在真空中从芝加哥到纽约（直线 1144 公里）单程要多少毫秒？",
+"unit": "毫秒",
+"truth": 3.8159732490668596,
+"src": "自己算：1144 公里 ÷ 299,792 公里每秒 ≈ 3.82 毫秒（光纤里慢约 1.47 倍，约 5.6 毫秒；微波接近真空）",
+"how": "约 1200 公里 ÷ 30 万公里每秒 = 4 毫秒",
+"lo": 2,
+"hi": 7
+},
+{
+"cat": "科技",
+"q": "双精度浮点数（float64）能精确表示的最大连续整数是多少？",
+"unit": "",
+"truth": 9007199254740992,
+"src": "IEEE 754 双精度尾数 52 位加隐含的 1 位：2⁵³ = 9,007,199,254,740,992",
+"how": "53 位二进制：2⁵³ = 8 × 2⁵⁰ ≈ 8 × 10¹⁵ 多一点，约 9 × 10¹⁵",
+"lo": 5000000000000000.0,
+"hi": 2e+16
+},
+{
+"cat": "科技",
+"q": "比特币的总量上限是多少枚？",
+"unit": "枚",
+"truth": 21000000.0,
+"src": "比特币协议（Bitcoin Core 源码里 MAX_MONEY = 2100 万 BTC）：每 21 万个区块奖励减半，初始 50 枚，21 万 × 50 × 2 = 2100 万",
+"how": "等比数列：21 万 × 50 ×（1 + 1/2 + 1/4 + …）= 21 万 × 100 = 2100 万",
+"lo": 10000000.0,
+"hi": 40000000.0
+},
+{
+"cat": "科技",
+"q": "ImageNet-1k 训练集有多少张图片？",
+"unit": "张",
+"truth": 1281167,
+"src": "Russakovsky et al. 2015（IJCV）ImageNet 挑战赛论文：训练集 1,281,167 张",
+"how": "1000 类，每类约 1300 张：约 130 万",
+"lo": 800000.0,
+"hi": 2000000.0
+},
+{
+"cat": "科技",
+"q": "原始 Transformer 的 base 模型有多少参数？",
+"unit": "个",
+"truth": 65000000.0,
+"src": "Vaswani et al. 2017「Attention Is All You Need」表 3：base 模型 6500 万",
+"how": "d = 512：每层注意力 4d² ≈ 100 万，前馈 2 × 512 × 2048 ≈ 200 万；编码器 6 × 300 万，解码器 6 × 400 万，词表 3.7 万 × 512 ≈ 1900 万：约 6000 万",
+"lo": 30000000.0,
+"hi": 150000000.0
+}
+];
+
+// ------------------------------------------------------------ 界面
+const $ = s => document.querySelector(s);
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === false || v == null) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(Infinity)) { if (c == null || c === false) continue; e.append(c instanceof Node ? c : document.createTextNode(String(c))); }
+  return e;
+}
+const money = x => (x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
+const signed = x => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x).toFixed(2);
+const pct = Core.pct;
+const num = v => { const x = parseFloat(String(v).trim()); return Number.isFinite(x) ? x : NaN; };
+
+let SEED = String(100000 + Math.floor(Math.random() * 900000));
+const practice = () => { const el = $('#practice'); return !!(el && el.checked); };
+const HB_URL = '/p/qr/Optiver游戏策略手册.html';
+const hb = (anchor, text) => h('a', { href: `${HB_URL}#${anchor}`, target: '_top' }, text);
+// 复盘末尾的「对照策略手册」一行：决策流程和常见错误两个链接
+const hbLine = (sec, err, name) => h('p', { class: 'hbline' }, '对照策略手册：', hb(sec, `${name}的决策流程和速查表`), '，', hb(err, `${name}的常见错误`), '。');
+// 练习模式：每一步做完立刻给出建议动作和理由
+function pracBox(title, you, adv, why, verdict) {
+  return h('div', { class: 'prac' }, h('div', { class: 'ptitle' }, '练习模式 · ' + title),
+    you ? h('div', null, h('b', null, '你：'), you) : null,
+    h('div', null, h('b', null, '建议：'), adv), verdict ? h('div', { class: 'pverdict' }, verdict) : null,
+    h('div', { class: 'muted' }, h('b', null, '理由：'), why));
+}
+const started = {};
+let current = 'bet';
+
+// 资金曲线（纯 SVG）。颜色不表达好坏：你 = 实线深色，Kelly = 虚线，半 Kelly = 点线
+function curveSVG(series, title) {
+  const W = 400, H = 210, L = 44, Rr = 10, T = 12, B = 26;
+  const all = series.flatMap(s => s.data);
+  let lo = Math.min(...all), hi = Math.max(...all);
+  if (hi - lo < 1) { hi += 1; lo -= 1; }
+  const pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+  const n = Math.max(...series.map(s => s.data.length));
+  const X = i => L + (W - L - Rr) * (n <= 1 ? 0 : i / (n - 1));
+  const Y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${title || '资金曲线'}">`;
+  for (let k = 0; k <= 4; k++) {
+    const v = lo + (hi - lo) * k / 4;
+    s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/><text x="${L - 5}" y="${Y(v) + 4}" text-anchor="end" class="ax">${v.toFixed(0)}</text>`;
+  }
+  for (let i = 0; i < n; i++) s += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle" class="ax">${i === 0 ? '起点' : i}</text>`;
+  if (lo < 1000 && hi > 1000) s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(1000)}" y2="${Y(1000)}" class="base"/>`;
+  for (const se of series) {
+    s += `<polyline fill="none" class="ln ${se.cls}" points="${se.data.map((v, i) => `${X(i)},${Y(v)}`).join(' ')}"/>`;
+    se.data.forEach((v, i) => { s += `<circle cx="${X(i)}" cy="${Y(v)}" r="2.6" class="pt ${se.cls}"/>`; });
+  }
+  s += '</svg>';
+  const legend = h('div', { class: 'legend' }, series.map(se => h('span', null, h('i', { class: 'lg ' + se.cls }), `${se.name} ${se.data[se.data.length - 1].toFixed(2)}`)));
+  return h('figure', { class: 'fig' }, title ? h('figcaption', null, title) : null, h('div', { html: s }), legend);
+}
+// 横向柱状图（纯 SVG）。rows: [{label, vals: [数, …]}]；series: [{name, cls}]；
+// opts.sign = true 时柱子按正负上色（正绿负红：只在「赚还是亏」时用），opts.fmt 格式化数值
+function barsSVG(rows, series, opts) {
+  opts = opts || {};
+  const fmt = opts.fmt || (v => v.toFixed(2));
+  const nS = series.length, W = 440, LW = 156, VW = 56, bh = nS === 1 ? 18 : 12, gap = 3, gG = nS === 1 ? 8 : 10, T = 6;
+  const rowH = nS * bh + (nS - 1) * gap + gG;
+  const H = T + rows.length * rowH + 4;
+  const all = rows.flatMap(r => r.vals).concat([0]);
+  const lo = Math.min(...all), hi = Math.max(...all), span = (hi - lo) || 1;
+  const X0 = LW + 4, X1 = W - VW;
+  const X = v => X0 + (X1 - X0) * (v - lo) / span;
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${opts.title || '柱状图'}">`;
+  s += `<line x1="${X(0)}" x2="${X(0)}" y1="${T - 2}" y2="${H - 2}" class="axis0"/>`;
+  rows.forEach((r, i) => {
+    const y0 = T + i * rowH;
+    const cut = window.innerWidth < 600 ? 9 : 12, lab = r.label.length > cut ? r.label.slice(0, cut) + '…' : r.label;
+    s += `<text x="${LW}" y="${y0 + (nS * bh + (nS - 1) * gap) / 2 + 4}" text-anchor="end" class="lab"><title>${r.label}</title>${lab}</text>`;
+    r.vals.forEach((v, j) => {
+      const y = y0 + j * (bh + gap), xa = Math.min(X(0), X(v)), w = Math.max(1, Math.abs(X(v) - X(0)));
+      const cls = opts.sign ? (v > 1e-9 ? 'pos' : v < -1e-9 ? 'neg' : 'zero') : series[j].cls;
+      s += `<rect x="${xa}" y="${y}" width="${w}" height="${bh}" rx="2" class="bar ${cls}"/>`;
+      s += `<text x="${X1 + 4}" y="${y + bh - 2}" class="val">${fmt(v)}</text>`;
+    });
+  });
+  s += '</svg>';
+  const legend = nS > 1 ? h('div', { class: 'legend' }, series.map(se => h('span', null, h('i', { class: 'lg bar ' + se.cls }), se.name))) : null;
+  return h('figure', { class: 'fig' }, opts.title ? h('figcaption', null, opts.title) : null, h('div', { html: s }), legend);
+}
+// 市场走势图（纯 SVG）：每列一步。灰带 = 公允价的不确定范围；实线 = 公允价；虚线短横 = 市场最好买卖价；
+// 粗短横 = 你的报价；细竖线 = 机器人各自的报价；▲ 你买 ▽ 你卖；点线 = 真值。最新一列的灰带从上一列的宽度动画收窄。
+function timelineSVG(cols, opts) {
+  opts = opts || {};
+  const lg = !!opts.log, tf = v => (lg ? Math.log(v) : v), fmt = opts.fmt || (v => (Math.abs(v) >= 100 ? v.toFixed(0) : v.toFixed(1)));
+  const vals = [];
+  for (const c of cols) {
+    vals.push(c.mid, c.lo, c.hi);
+    if (c.bbid != null) vals.push(c.bbid, c.bask);
+    if (c.qbid != null) vals.push(c.qbid, c.qask);
+    (c.others || []).forEach(o => vals.push(o[0], o[1]));
+    (c.fills || []).forEach(f => vals.push(f.px));
+  }
+  if (opts.truth != null) vals.push(opts.truth);
+  const tv = vals.filter(v => v != null && Number.isFinite(tf(v))).map(tf);
+  let lo = Math.min(...tv), hi = Math.max(...tv);
+  if (hi - lo < 1e-6) { hi += 1; lo -= 1; }
+  const pad = (hi - lo) * 0.06; lo -= pad; hi += pad;
+  const W = 440, H = 250, L = lg ? 66 : 46, Rr = 12, T = 12, B = 34;
+  const n = cols.length, cw = (W - L - Rr) / Math.max(n, 1);
+  const X = i => L + cw * (i + 0.5), Y = v => T + (H - T - B) * (1 - (tf(v) - lo) / (hi - lo));
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="chart tl" role="img" aria-label="${opts.title || '市场走势'}">`;
+  for (let k = 0; k <= 4; k++) {
+    const tvk = lo + (hi - lo) * k / 4, v = lg ? Math.exp(tvk) : tvk, y = T + (H - T - B) * (1 - k / 4);
+    s += `<line x1="${L}" x2="${W - Rr}" y1="${y}" y2="${y}" class="grid"/><text x="${L - 4}" y="${y + 4}" text-anchor="end" class="ax">${lg ? Core.fmtNum(v).replace(' ', '') : fmt(v)}</text>`;
+  }
+  cols.forEach((c, i) => {
+    const x = X(i), bw = cw * 0.62;
+    if (c.flip) s += `<line x1="${x - cw / 2}" x2="${x - cw / 2}" y1="${T}" y2="${H - B}" class="flip"/><text x="${x - cw / 2 + 3}" y="${T + 11}" class="fliplab">${c.flip}</text>`;
+    const yb = Y(c.hi), hb = Math.max(1, Y(c.lo) - Y(c.hi));
+    const last = i === n - 1 && i > 0, prev = last ? cols[i - 1] : null;
+    s += `<rect x="${x - bw / 2}" y="${yb}" width="${bw}" height="${hb}" rx="3" class="band${last ? ' anim' : ''}"` + (last ? ` data-y0="${Y(prev.hi)}" data-h0="${Math.max(1, Y(prev.lo) - Y(prev.hi))}" data-y1="${yb}" data-h1="${hb}"` : '') + '/>';
+    (c.others || []).forEach((o, j) => { const xo = x - bw / 2 + 4 + j * Math.min(6, (bw - 8) / Math.max(1, c.others.length)); s += `<line x1="${xo}" x2="${xo}" y1="${Y(o[1])}" y2="${Y(o[0])}" class="other"/>`; });
+    if (c.bbid != null) s += `<line x1="${x - bw / 2}" x2="${x + bw / 2}" y1="${Y(c.bbid)}" y2="${Y(c.bbid)}" class="mkt"/><line x1="${x - bw / 2}" x2="${x + bw / 2}" y1="${Y(c.bask)}" y2="${Y(c.bask)}" class="mkt"/>`;
+    if (c.qbid != null) s += `<line x1="${x}" x2="${x}" y1="${Y(c.qask)}" y2="${Y(c.qbid)}" class="qlink"/><line x1="${x - bw * 0.35}" x2="${x + bw * 0.35}" y1="${Y(c.qbid)}" y2="${Y(c.qbid)}" class="yourq"/><line x1="${x - bw * 0.35}" x2="${x + bw * 0.35}" y1="${Y(c.qask)}" y2="${Y(c.qask)}" class="yourq"/>`;
+    (c.fills || []).forEach((f, j) => {
+      const fx = x + bw / 2 - 5 - j * 7, fy = Y(f.px);
+      s += f.side > 0 ? `<path d="M${fx},${fy - 5} L${fx + 5},${fy + 4} L${fx - 5},${fy + 4} Z" class="fill buy${last ? ' pop' : ''}"/>` : `<path d="M${fx},${fy + 5} L${fx + 5},${fy - 4} L${fx - 5},${fy - 4} Z" class="fill sell${last ? ' pop' : ''}"/>`;
+    });
+    s += `<text x="${x}" y="${H - 18}" text-anchor="middle" class="ax">${c.label}</text>`;
+  });
+  s += `<polyline fill="none" class="midln" points="${cols.map((c, i) => `${X(i)},${Y(c.mid)}`).join(' ')}"/>`;
+  cols.forEach((c, i) => { s += `<circle cx="${X(i)}" cy="${Y(c.mid)}" r="3" class="midpt"/>`; });
+  if (opts.truth != null) s += `<line x1="${L}" x2="${W - Rr}" y1="${Y(opts.truth)}" y2="${Y(opts.truth)}" class="truth"/><text x="${W - Rr}" y="${Y(opts.truth) - 4}" text-anchor="end" class="truthlab">真值 ${lg ? Core.fmtNum(opts.truth) : fmt(opts.truth)}</text>`;
+  s += `<text x="${L}" y="${H - 3}" class="ax">${opts.xlab || ''}</text></svg>`;
+  const items = [['midln', opts.midName || '公允价'], ['band', opts.bandName || '不确定范围'], ['yourq', '你的报价']].concat(cols.some(c => c.bbid != null) ? [['mkt', opts.mktName || '市场最好价']] : [])
+    .concat(opts.others ? [['other', '机器人各自的报价']] : []).concat([['buy', '你买'], ['sell', '你卖']]).concat(opts.truth != null ? [['truth', '真值']] : []);
+  const legend = h('div', { class: 'legend tlleg' }, items.map(([c, t]) => h('span', null, h('i', { class: 'tli ' + c }), t)));
+  const fig = h('figure', { class: 'fig' }, opts.title ? h('figcaption', null, opts.title) : null, h('div', { html: s }), legend);
+  setTimeout(() => animateBands(fig), 0);
+  return fig;
+}
+// 最新一列的不确定范围：从上一列的高度过渡到这一列（requestAnimationFrame，约 0.6 秒）
+function animateBands(root) {
+  const els = root.querySelectorAll('rect.band.anim');
+  if (!els.length || !window.requestAnimationFrame) return;
+  const t0 = performance.now(), D = 600;
+  const step = t => {
+    const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3);
+    els.forEach(el => {
+      const y0 = +el.dataset.y0, h0 = +el.dataset.h0, y1 = +el.dataset.y1, h1 = +el.dataset.h1;
+      el.setAttribute('y', y0 + (y1 - y0) * e); el.setAttribute('height', h0 + (h1 - h0) * e);
+    });
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+// 区间估算的累计得分条：每题一段，竖线标 2.0 目标
+function scoreBarSVG(scores, n) {
+  const tot = Core.sum(scores), max = Math.max(2.5, tot + 0.1), W = 440, H = 64, L = 8, Rr = 12;
+  const X = v => L + (W - L - Rr) * v / max;
+  let s = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="累计得分">`;
+  s += `<rect x="${X(0)}" y="14" width="${X(max) - X(0)}" height="22" rx="4" class="track"/>`;
+  let acc = 0;
+  scores.forEach((v, i) => {
+    if (v > 0) s += `<rect x="${X(acc)}" y="14" width="${Math.max(0.5, X(acc + v) - X(acc))}" height="22" class="seg s${i % 2}${i === scores.length - 1 ? ' grow' : ''}"/>`;
+    acc += v;
+  });
+  s += `<line x1="${X(2)}" x2="${X(2)}" y1="6" y2="44" class="goal"/><text x="${X(2)}" y="58" text-anchor="middle" class="ax">目标 2.0</text>`;
+  s += `<text x="${X(0)}" y="58" class="ax">0</text><text x="${Math.min(X(acc) + 4, W - 120)}" y="10" class="ax">累计 ${acc.toFixed(3)}（${scores.length} / ${n} 题）</text></svg>`;
+  return h('figure', { class: 'fig' }, h('div', { html: s }));
+}
+
+// 每轮效率（你的 g ÷ Kelly 的 g × 100）；太大的负数在图上截到 −100，数字照写
+function effBars(hist) {
+  const rows = hist.map(x => ({ label: `第 ${x.k} 轮`, vals: [x.gY === -Infinity ? -100 : x.gK > 1e-9 ? Math.max(-100, Math.min(150, x.eff)) : 0], raw: x }));
+  return barsSVG(rows, [{ name: '效率', cls: 'you' }], { title: '每轮效率（100 = 和 Kelly 一样，0 = 和不下一样；低于 −100 的画到 −100）', fmt: v => (v <= -100 ? '≤ −100' : Core.effStr(v)) });
+}
+function mmTimeline(g) {
+  const cols = g.actions.map(a => {
+    const q = a.a.type === 'quote' ? a.a : a.a.type === 'keep' && a.hadQuote ? a.hadQuote : null;
+    return { label: `${a.rnd}-${a.step + 1}`, mid: a.ev, lo: a.ev - a.sd, hi: a.ev + a.sd, bbid: a.best.bid, bask: a.best.ask, qbid: q ? q.bid : null, qask: q ? q.ask : null,
+      fills: (a.fills || []).concat(a.flipFills || []).map(t => ({ px: t.px, side: t.side })), flip: a.step === 0 && a.rnd > 1 ? `翻 ${g.cards[a.rnd - 2]}` : null };
+  });
+  if (!g.done) {
+    const ev = Core.publicEV(g.shown), sd = Core.sdLeft(g.shown), m = Core.best(g);
+    cols.push({ label: `${g.rnd}-${g.step + 1} 现在`, mid: ev, lo: ev - sd, hi: ev + sd, bbid: m.bid, bask: m.ask, qbid: g.quote ? g.quote.bid : null, qask: g.quote ? g.quote.ask : null, fills: [], flip: g.step === 0 && g.rnd > 1 ? `翻 ${g.cards[g.rnd - 2]}` : null });
+  }
+  return timelineSVG(cols, { title: '走势：公开期望、±1 个标准差的范围、市场最好价、你的报价和成交（横轴：轮-步）', truth: g.done ? g.truth : null, midName: '公开期望', bandName: '± 1 个标准差', xlab: '' });
+}
+function ctTimeline(g) {
+  const recs = g.recs.concat(g.done ? [] : [g.rec]);
+  const cols = recs.map((r, i) => ({
+    label: `${r.rnd}${!g.done && i === recs.length - 1 ? ' 现在' : ''}`, mid: r.ref, lo: r.ref - r.sdh, hi: r.ref + r.sdh,
+    qbid: r.quote ? r.quote.bid : null, qask: r.quote ? r.quote.ask : null, others: r.bq ? r.bq.map(z => [z.bid, z.ask]) : [],
+    fills: r.qFills.concat(r.takes).map(t => ({ px: t.px, side: t.side })), flip: `翻 ${g.val(g.comm[r.rnd - 1]) > 0 ? '+' : ''}${g.val(g.comm[r.rnd - 1])}`,
+  }));
+  return timelineSVG(cols, { title: '走势（横轴：轮）：参考公允价、暗牌之和的 ±1 个标准差、你的报价、机器人报价和成交', truth: g.done ? g.total : null, midName: '参考公允价', bandName: '± 1 个标准差（暗牌之和）', others: true });
+}
+function emTimeline(g) {
+  const cols = g.actions.map(a => ({ label: String(a.rnd), mid: a.cons, lo: a.cons * Math.exp(-1.645 * a.disp), hi: a.cons * Math.exp(1.645 * a.disp), bbid: a.best.bid, bask: a.best.ask,
+    qbid: a.a.type === 'quote' ? a.a.bid : null, qask: a.a.type === 'quote' ? a.a.ask : null, fills: a.fills.map(t => ({ px: t.px, side: t.side })) }));
+  if (!g.done) {
+    const c = Core.emkConsensus(g), m = Core.emkBest(g), mid = Math.exp(c.c);
+    cols.push({ label: `${g.rnd} 现在`, mid, lo: mid * Math.exp(-1.645 * c.disp), hi: mid * Math.exp(1.645 * c.disp), bbid: m.bid, bask: m.ask, fills: [] });
+  }
+  return timelineSVG(cols, { log: true, title: '走势（对数刻度，横轴：回合）：加权共识、报价人之间的分歧范围、市场最好价、你的报价和成交', truth: g.done ? g.x : null, midName: '加权共识', bandName: '共识区间（各人中心的加权离散 × 1.645）' });
+}
+// 每个游戏顶部的状态栏：几个关键数字放大加粗；tone = 'pos' | 'neg' 只给盈亏用
+function statusBar(items, seed) {
+  return h('div', { class: 'sbar' }, items.map(it => h('div', { class: 'sitem' }, h('div', { class: 'sk' }, it.k), h('div', { class: 'sv' + (it.tone ? ' ' + it.tone : '') }, it.v))),
+    seed ? h('div', { class: 'sseed' }, '种子 ' + seed) : null);
+}
+const tone = x => (x > 1e-9 ? 'pos' : x < -1e-9 ? 'neg' : null);
+// 「怎么玩」三步卡片：默认展开；这个游戏玩完一局以后，下次打开默认收起
+function markSeen(tab) { try { localStorage.setItem('optiver-sim-seen-' + tab, '1'); } catch (e) { /* 不记 */ } }
+
+// ============================================================ 1. 下注游戏
+const Bet = {};
+const shortOn = () => $('#bet-short').checked;
+const oddsTxt = d => ($('#bet-xto1').checked ? Core.xto1(d) : d.toFixed(2));
+function betStart() {
+  Object.assign(Bet, { seed: SEED, rng: Core.makeRng(SEED + ':bet'), qrng: Core.makeRng(SEED + ':ask'), N: +$('#bet-rounds').value, k: 0, w: 1000, wk: 1000, wh: 1000, hist: [], curve: [[1000, 1000, 1000]], over: false });
+  betNext();
+}
+function betNext() {
+  Bet.k++;
+  Bet.rd = Core.genBetRound(Bet.rng);
+  Bet.list = Core.flatBets(Bet.rd);
+  Bet.blocks = Bet.rd.blocks.map(b => ({ P: b.P, R: b.R }));
+  Bet.fk = Core.kellyBlocks(Bet.blocks);
+  Bet.legs = Core.arbLegs(Bet.rd);
+  Bet.stakes = Bet.list.map(() => '');
+  Bet.touched = Bet.list.map(() => false);
+  Bet.res = null; Bet.ask = null;
+  betRender();
+}
+function betStakes() {
+  const st = Bet.stakes.map(v => (String(v).trim() === '' ? 0 : num(v)));
+  const err = $('#bet-err');
+  if (st.some(x => !(x >= 0))) { err.textContent = '金额要是不小于 0 的数字。'; return null; }
+  if (Core.sum(st) > Bet.w + 1e-9) { err.textContent = `合计 ${money(Core.sum(st))} 超过了你的资金 ${money(Bet.w)}。`; return null; }
+  return st;
+}
+// 点「结算」先出交易员追问，答完才揭晓
+function betAsk() {
+  const st = betStakes();
+  if (!st) return;
+  const fy = st.map(x => x / Bet.w);
+  Bet.ask = { st, q: Core.traderQuestion(Bet.rd, Bet.list, fy, Bet.fk, Bet.qrng), pick: null, text: '' };
+  betRender();
+}
+function betSettle() {
+  const A = Bet.ask;
+  if (A.pick === null) { $('#bet-err').textContent = '先选一个理由（也可以在框里写你自己的）。'; return; }
+  const st = A.st;
+  const w = Bet.w, fy = st.map(x => x / w), fk = Bet.fk, fh = fk.map(x => x / 2);
+  const gY = Core.growthBlocks(Bet.blocks, fy), gK = Core.growthBlocks(Bet.blocks, fk), gH = Core.growthBlocks(Bet.blocks, fh);
+  const ret = Core.betReturn(Bet.rd, fy), retK = Core.betReturn(Bet.rd, fk), retH = Core.betReturn(Bet.rd, fh);
+  const ev = Core.evalBets(null, fy, fk, { list: Bet.list, gYou: gY, gK });
+  const arb = Core.arbComments(Bet.rd, fy);
+  const line = Core.oneLine(ev, arb);
+  const right = A.q.opts[A.pick].right;
+  const sh = Core.shortScore(Bet.rd, Bet.list, fy, fk, { skipOk: $('#bet-skipok').checked, answer: right });
+  const res = { st, fy, gY, gK, gH, ret, ev, arb, line, w0: w, sh, ask: { q: A.q, pick: A.pick, text: A.text, right } };
+  Bet.w = w * ret; Bet.wk *= retK; Bet.wh *= retH;
+  Bet.curve.push([Bet.w, Bet.wk, Bet.wh]);
+  Bet.hist.push({ k: Bet.k, gY, gK, gH, line, eff: ev.eff, sh: sh.total, right });
+  Bet.res = res;
+  if (Bet.k >= Bet.N || Bet.w < 1) Bet.over = true;
+  betRender();
+}
+function betFeedback(k) {
+  const el = document.getElementById('bet-fb-' + k);
+  if (!el) return;
+  if (!practice() || !Bet.touched[k]) { el.textContent = ''; el.hidden = true; return; }
+  const x = Bet.list[k], fk = Bet.fk[k], y = (num(Bet.stakes[k]) || 0);
+  const fs = Core.kellySingle(x.p, x.d);
+  let t = `你押 ${money(y)}（${pct(y / Bet.w)}）；Kelly（三块一起算）押 ${pct(fk)}，约 ${(fk * Bet.w).toFixed(0)} 美元。` + Core.betAdvice(x, fk, Bet.legs.has(k));
+  if (shortOn() && x.p * x.d > 1 && !Bet.legs.has(k)) t += ` 短局打分的目标：单项 Kelly 的 1.5 到 2 倍、不超过 10%，即 ${pct(Math.min(1.5 * fs, 0.1))} 到 ${pct(Math.min(2 * fs, 0.1))}。`;
+  el.textContent = t; el.hidden = false;
+}
+function betRender() {
+  const root = $('#bet-body');
+  root.innerHTML = '';
+  const hint = $('#bet-hint').checked;
+  root.append(statusBar([{ k: '轮', v: `${Bet.k} / ${Bet.N}` }, { k: '资金（美元）', v: money(Bet.w) }, { k: '本局盈亏', v: signed(Bet.w - 1000), tone: tone(Bet.w - 1000) },
+    { k: '这一轮押了', v: Bet.res ? pct(Core.sum(Bet.res.fy)) : pct(Core.sum(Bet.stakes.map(v => num(v) || 0)) / Bet.w) }], Bet.seed));
+  const settled = !!Bet.res, asking = !!Bet.ask && !settled;
+  const atoms = settled ? Bet.rd.blocks.map((b, bi) => b.map.get(b.preds.map(fn => (fn(Bet.rd.outcomes[bi]) ? 1 : 0)).join(''))) : null;
+  let o = 0;
+  Bet.rd.blocks.forEach((b, bi) => {
+    const rows = [];
+    b.bets.forEach((x, j) => {
+      const k = o + j, fk = Bet.fk[k];
+      const inp = h('input', { type: 'number', min: '0', step: '1', inputmode: 'decimal', value: Bet.stakes[k], placeholder: '0', disabled: settled || asking, 'aria-label': `${b.name} ${x.name} 下注金额`,
+        oninput: e => { Bet.stakes[k] = e.target.value; betSum(); },
+        onchange: () => { Bet.touched[k] = true; betFeedback(k); } });
+      const tip = hint ? h('div', { class: 'tip' },
+        `真实 p ${x.p.toFixed(3)} · 门槛赔率 ${$('#bet-xto1').checked ? Core.xto1(1 / x.p) : (1 / x.p).toFixed(2)} · `, h('b', { class: Bet.legs.has(k) ? 'arbt' : tone(x.p * x.d - 1) || '' }, `${Bet.legs.has(k) ? '押（套利腿）' : x.p * x.d <= 1 ? '赔率没过门槛 → 不押' : fk > 0.0005 ? '赔率高过门槛 → 押' : '只高一点，钱先给了更划算的项 → 不押'}`), ` · Kelly ${pct(fk)}${fk > 0.0005 ? `（${(fk * Bet.w).toFixed(0)} 美元）` : ''}`) : null;
+      let resCell = null;
+      if (settled) {
+        const hit = b.hits[atoms[bi]][j], s = Bet.res.st[k];
+        resCell = h('div', { class: 'res ' + (hit ? 'hit' : 'miss') }, hit ? '中' : '没中', s > 0 ? `  ${signed(hit ? s * (x.d - 1) : -s)}` : '',
+          h('span', { class: 'muted' }, `  Kelly ${pct(fk)}`));
+      }
+      rows.push(h('div', { class: 'betrow' + (settled && b.hits[atoms[bi]][j] ? ' won' : '') },
+        h('div', { class: 'bname' }, x.name, tip, h('div', { class: 'tip pfb', id: 'bet-fb-' + k, hidden: true })), h('div', { class: 'odds' }, oddsTxt(x.d)), h('div', { class: 'stake' }, inp), resCell));
+    });
+    const arbTip = hint && b.arbs.length ? h('div', { class: 'tip arb' }, `提示：${b.arbs[0].S.map(j => b.bets[j].name).join('、')} 覆盖全部结果，隐含概率和 ${b.arbs[0].s.toFixed(3)} < 1，可以套利`) : null;
+    root.append(h('div', { class: 'block' },
+      h('div', { class: 'bhead' }, h('b', null, b.name), h('span', { class: 'muted' }, b.intro)),
+      h('div', { class: 'betrow head' }, h('div', null, '赌注'), h('div', { class: 'odds' }, $('#bet-xto1').checked ? '净赔率' : '赔率'), h('div', { class: 'stake' }, '押多少'), settled ? h('div', null, '结果') : null),
+      rows, arbTip,
+      settled ? h('div', { class: 'outcome' }, '结果：' + b.cat.show(Bet.rd.outcomes[bi])) : null));
+    o += b.bets.length;
+  });
+  Bet.list.forEach((_, k) => betFeedback(k));
+  root.append(h('div', { class: 'sumline', id: 'bet-sum' }));
+  if (asking) root.append(askBlock());
+  root.append(h('div', { class: 'err', id: 'bet-err' }));
+  if (!settled && !asking) {
+    root.append(h('div', { class: 'btns' },
+      h('button', { class: 'primary', onclick: betAsk }, '结算这一轮'),
+      h('button', { onclick: () => { Bet.stakes = Bet.stakes.map(() => ''); Bet.touched = Bet.touched.map(() => false); betRender(); } }, '清空')));
+    betSum();
+  } else if (asking) {
+    root.append(h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: betSettle }, '回答并结算'), h('button', { onclick: () => { Bet.ask = null; betRender(); } }, '回去改押注')));
+    betSum();
+  } else {
+    const r = Bet.res, sh = r.sh;
+    const A = r.ask, ans = A.q.opts[A.pick];
+    const compName = { edge: '正 EV 都押了', size: '定仓', arb: '套利', disc: '纪律', ask: '交易员追问' };
+    const cmp = Bet.list.map((x, k) => ({ label: `${x.block}·${x.name}`, vals: [r.fy[k], Bet.fk[k]] })).filter(z => z.vals[0] > 0.0005 || z.vals[1] > 0.0005);
+    root.append(h('div', { class: 'recap' },
+      h('div', { class: 'big' }, `本轮盈亏 ${signed(Bet.w - r.w0)}，资金 ${money(Bet.w)} 美元。`),
+      cmp.length ? barsSVG(cmp, [{ name: '你押的比例', cls: 'you' }, { name: 'Kelly（三块一起算）', cls: 'kelly' }], { title: '这一轮每项押多少：你和 Kelly', fmt: v => pct(v) }) : null,
+      Bet.over ? null : curveSVG([{ name: '你', cls: 'you', data: Bet.curve.map(x => x[0]) }, { name: 'Kelly', cls: 'kelly', data: Bet.curve.map(x => x[1]) }, { name: '半 Kelly', cls: 'half', data: Bet.curve.map(x => x[2]) }], '资金曲线（到这一轮为止）'),
+      Bet.over ? null : effBars(Bet.hist),
+      h('p', { class: 'one' }, '复盘：' + r.line),
+      h('p', null, h('b', null, '交易员问：'), A.q.q, ' 你选：', ans.text, A.right ? '（对）' : `（参考答案：${A.q.opts.find(z => z.right).text}）`, A.text ? h('span', { class: 'muted' }, ` 你写的：${A.text}`) : null),
+      shortOn() ? h('p', null, h('b', null, `短局打分 ${Math.round(sh.total)} 分`), '（QuantVault 的做法，各项 0 到 1 再平均）：',
+        Object.entries(sh.comp).map(([k, v]) => `${compName[k]} ${(100 * v).toFixed(0)}`).join('，'), '。', sh.notes.length ? ' ' + sh.notes.join('；') + '。' : '') : null,
+      h('p', { class: 'muted' }, `期望对数增长 g：你 ${fmtG(r.gY)}，Kelly ${r.gK.toFixed(4)}，半 Kelly ${r.gH.toFixed(4)}。g 按真实概率算，和这一轮的实际结果无关。`),
+      (r.ev.notes.length || r.arb.length || r.ev.cm.length) ? h('ul', null, r.ev.notes.map(t => h('li', null, t)), r.arb.map(a => h('li', null, a.text)), r.ev.cm.map(c => h('li', null, c.text))) : h('p', null, '逐项看和 Kelly 没有明显差别。')));
+    root.append(h('div', { class: 'btns' }, Bet.over ? h('b', null, Bet.w < 1 ? '资金归零，游戏结束。' : '最后一轮结束。') : h('button', { class: 'primary', onclick: betNext }, '下一轮')));
+    if (Bet.over) betFinal(root);
+  }
+}
+function askBlock() {
+  const A = Bet.ask;
+  return h('div', { class: 'ask' }, h('div', { class: 'ptitle' }, '交易员追问'), h('p', { class: 'one' }, A.q.q),
+    A.q.opts.map((op, i) => h('label', { class: 'opt' }, h('input', { type: 'radio', name: 'bet-ask', checked: A.pick === i, onchange: () => { A.pick = i; } }), ' ', op.text)),
+    h('label', { class: 'opt' }, '或者用你自己的话说（出声讲的练习，不计分）：', h('textarea', { rows: 2, oninput: e => { A.text = e.target.value; } }, A.text)));
+}
+const fmtG = g => (g === -Infinity ? '负无穷' : (g < -5e-5 ? '−' : '') + Math.abs(g).toFixed(4));
+function betSum() {
+  const st = Bet.stakes.map(v => (String(v).trim() === '' ? 0 : num(v)) || 0);
+  const s = Core.sum(st);
+  const el = $('#bet-sum');
+  if (el) el.textContent = `合计押注 ${money(s)}（资金的 ${pct(s / Bet.w)}），留现金 ${money(Bet.w - s)}。`;
+}
+function betFinal(root) {
+  markSeen('bet');
+  const gy = Core.sum(Bet.hist.map(x => x.gY)), gk = Core.sum(Bet.hist.map(x => x.gK)), gh = Core.sum(Bet.hist.map(x => x.gH));
+  const score = gk > 1e-9 ? 100 * gy / gk : 0, half = gk > 1e-9 ? 100 * gh / gk : 100;
+  const shAvg = Core.sum(Bet.hist.map(x => x.sh)) / Bet.hist.length, nRight = Bet.hist.filter(x => x.right).length;
+  root.append(h('div', { class: 'final' },
+    h('h3', null, '总结'),
+    h('p', { class: 'big' }, `Kelly 效率 ${gy === -Infinity ? '负无穷' : Core.effStr(score)} 分（你的期望对数增长合计 ${fmtG(gy)}，Kelly ${gk.toFixed(4)}）；短局打分平均 ${Math.round(shAvg)} 分（QuantVault 的做法）。`),
+    h('p', null, `两个分数看的东西不同：Kelly 效率衡量长期资金增长，押到 Kelly 最好；短局打分按期望利润，目标是 1.5 到 2 倍 Kelly、单项不超过 10%。现场先问清怎么计分。交易员追问答对 ${nRight} / ${Bet.hist.length} 轮。`),
+    gk < 0.01 ? h('p', { class: 'muted' }, '这一局 Kelly 的期望对数增长合计很小（不到 0.01），效率分是两个小数相除，会被放大，看每轮点评更有用。') : null,
+    h('p', null, `参照：同一局按半 Kelly 下的效率是 ${Core.effStr(half)} 分。100 分 = 和 Kelly 一样；0 分 = 和一分不下一样；负分 = 比不下还差。`),
+    h('p', null, `同样的骰子、硬币和牌下，最终资金：你 ${money(Bet.w)}，Kelly 机器人 ${money(Bet.wk)}，半 Kelly 机器人 ${money(Bet.wh)}（起点 1000）。最终资金有运气成分，打分只看每轮的决策。`),
+    curveSVG([{ name: '你', cls: 'you', data: Bet.curve.map(x => x[0]) }, { name: 'Kelly', cls: 'kelly', data: Bet.curve.map(x => x[1]) }, { name: '半 Kelly', cls: 'half', data: Bet.curve.map(x => x[2]) }], '资金曲线（同样的骰子、硬币和牌）'),
+    effBars(Bet.hist),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '轮'), h('th', null, '你的 g'), h('th', null, 'Kelly g'), h('th', null, '效率'), h('th', null, '短局分'), h('th', null, '追问'), h('th', null, '一句话复盘')),
+      Bet.hist.map(x => h('tr', null, h('td', null, x.k), h('td', null, fmtG(x.gY)), h('td', null, fmtG(x.gK)), h('td', null, x.gY === -Infinity ? '负无穷' : Core.effStr(x.eff)), h('td', null, Math.round(x.sh)), h('td', null, x.right ? '对' : '错'), h('td', { class: 'left' }, x.line))))),
+    hbLine('bet', 'bet-err', '下注游戏'),
+    h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: betStart }, '用同一个种子再玩一遍'), h('button', { onclick: () => { newSeed(); } }, '换新种子再来'))));
+}
+
+// ============================================================ 2. 三张牌之和做市
+const MM = {};
+function mmStart() { MM.seed = SEED; MM.g = Core.newMarket(SEED); MM.bench = null; MM.prac = null; MM.advPnl = null; mmRender(); }
+function mmAct(type) {
+  const g = MM.g, err = $('#mm-err');
+  const adv = Core.mmAdvice(g), at = `第 ${g.rnd} 轮第 ${g.step + 1} 步`;
+  const flipNext = g.step === Core.TURNS - 1 && g.rnd < 3;
+  const n = Math.round(num($('#mm-n').value));
+  if (type === 'quote') {
+    const bid = num($('#mm-bid').value), ask = num($('#mm-ask').value);
+    if (!(bid < ask)) { err.textContent = '买价要低于卖价，两个都要填数字。'; return; }
+    if (!(n >= 1 && n <= 10)) { err.textContent = '数量填 1 到 10 的整数。'; return; }
+    MM.last = { bid, ask, n, ioc: $('#mm-ioc').checked };
+    Core.act(g, { type: 'quote', bid, ask, n, ioc: MM.last.ioc });
+  } else if (type === 'buy' || type === 'sell') {
+    if (!(n >= 1 && n <= 10)) { err.textContent = '数量填 1 到 10 的整数。'; return; }
+    MM.lastN = n;
+    Core.act(g, { type, n });
+  } else Core.act(g, { type });
+  const you = g.actions[g.actions.length - 1].a;
+  let verdict = '';
+  if (you.type === adv.a.type && you.type === 'quote') {
+    const dc = (you.bid + you.ask) / 2 - (adv.a.bid + adv.a.ask) / 2;
+    verdict = Math.abs(dc) <= 0.75 ? '中心和建议一致' : `你的报价中心比建议${dc > 0 ? '高' : '低'} ${Math.abs(dc).toFixed(1)}`;
+    if (flipNext && !you.ioc) verdict += '；下一步翻牌，你的报价会挂过翻牌';
+  } else if (you.type === adv.a.type) verdict = '和建议一致';
+  else verdict = '和建议不同';
+  MM.prac = { at, you: Core.describeMM(you), adv: Core.describeMM(adv.a), why: adv.why, verdict };
+  if (g.done) { MM.bench = Core.marketBenchmark(MM.seed); MM.advPnl = Core.mmAdvicePnl(MM.seed); }
+  mmRender();
+}
+function mmRender() {
+  const g = MM.g, root = $('#mm-body');
+  root.innerHTML = '';
+  const ev = Core.publicEV(g.shown), sd = Core.sdLeft(g.shown);
+  const avg = Core.avgPrice(g.trades);
+  const mark = g.done ? g.truth : ev;
+  const pnlNow = g.cash + g.pos * (g.done ? g.truth : ev);
+  root.append(statusBar([{ k: g.done ? '状态' : '轮 · 步', v: g.done ? '已结算' : `${g.rnd} / 3 · ${g.step + 1} / ${Core.TURNS}` }, { k: '仓位（上限 ±10）', v: (g.pos > 0 ? '+' : '') + g.pos },
+    { k: g.done ? '总 PnL' : 'PnL（按公开期望）', v: signed(pnlNow), tone: tone(pnlNow) }, { k: g.done ? '结算值' : '公开期望', v: g.done ? String(g.truth) : ev.toFixed(2) }], MM.seed));
+  const chips = [0, 1, 2].map(i => { const open = g.done || i < g.shown.length; return h('span', { class: 'card' + (open ? '' : ' down') }, open ? String(g.cards[i]) : '?'); });
+  root.append(h('div', { class: 'cards' }, chips, h('span', { class: 'muted' }, '  合约按三张之和结算')));
+  root.append(h('div', { class: 'stats' }, stat('剩余标准差', sd.toFixed(2)), stat('持仓均价', avg === null ? '无' : avg.toFixed(2))));
+  void mark;
+  if (practice() && MM.prac) root.append(pracBox(MM.prac.at + '刚做完', MM.prac.you, MM.prac.adv, MM.prac.why, MM.prac.verdict));
+  root.append(mmTimeline(g));
+  if (!g.done) {
+    const m = Core.best(g);
+    root.append(h('div', { class: 'scroll' }, h('table', { class: 'book' },
+      h('tr', null, h('th', null, '机器人'), h('th', null, '买价'), h('th', null, '卖价'), h('th', { class: 'left' }, '它是谁')),
+      g.bots.map(b => { const q = Core.botQuote(b); return h('tr', null, h('td', null, b.name), h('td', null, b.quotes ? q[0].toFixed(2) : '不报价'), h('td', null, b.quotes ? q[1].toFixed(2) : ''), h('td', { class: 'left muted' }, b.desc)); }))));
+    root.append(h('p', null, `市场最好价：${m.bid.toFixed(2)} 买（${m.bidBot.name}） / ${m.ask.toFixed(2)} 卖（${m.askBot.name}）。`,
+      g.quote ? h('b', null, ` 你挂着：${g.quote.bid} 买（剩 ${g.quote.bidLeft} 份） / ${g.quote.ask} 卖（剩 ${g.quote.askLeft} 份）。`) : ' 你现在没有挂单。'));
+    const L = MM.last || { bid: (ev - 2).toFixed(1), ask: (ev + 2).toFixed(1), n: 1, ioc: false };
+    root.append(h('div', { class: 'form' },
+      h('label', null, '买价 ', h('input', { id: 'mm-bid', type: 'number', step: '0.5', inputmode: 'decimal', value: L.bid })),
+      h('label', null, '卖价 ', h('input', { id: 'mm-ask', type: 'number', step: '0.5', inputmode: 'decimal', value: L.ask })),
+      h('label', null, '数量 ', h('input', { id: 'mm-n', type: 'number', min: '1', max: '10', step: '1', value: MM.lastN || L.n })),
+      h('label', { class: 'chk' }, h('input', { id: 'mm-ioc', type: 'checkbox', checked: L.ioc }), ' 只成交一次（不挂单）')));
+    root.append(h('div', { class: 'btns' },
+      h('button', { class: 'primary', onclick: () => mmAct('quote') }, '报价'),
+      h('button', { onclick: () => mmAct('buy') }, '买入（吃最低卖价）'),
+      h('button', { onclick: () => mmAct('sell') }, '卖出（打最高买价）'),
+      h('button', { onclick: () => mmAct('keep') }, '这一步不动'),
+      h('button', { onclick: () => mmAct('cancel'), disabled: !g.quote }, '撤价')));
+    root.append(h('div', { class: 'err', id: 'mm-err' }));
+  }
+  const log = h('div', { class: 'log' }, g.log.map(x => h('div', { class: 'l-' + x.t }, x.text)));
+  root.append(h('h4', null, '市场记录'), log);
+  setTimeout(() => { log.scrollTop = log.scrollHeight; }, 0);
+  if (g.done) mmRecap(root);
+}
+function stat(k, v) { return h('div', { class: 'stat' }, h('div', { class: 'k' }, k), h('div', { class: 'v' }, v)); }
+function mmRecap(root) {
+  const g = MM.g, r = Core.marketRecap(g);
+  markSeen('mm');
+  const inf = r.by['知情'] || 0, sn = r.by['狙击'] || 0;
+  // 每一步：你的报价中心离当时的公开期望多远
+  const steps = g.actions.map(a => {
+    let what, dev = null;
+    if (a.a.type === 'quote') { const c = (a.a.bid + a.a.ask) / 2; dev = c - a.ev; what = `报 ${a.a.bid} / ${a.a.ask} 各 ${a.a.n} 份${a.a.ioc ? '（只成交一次）' : ''}`; }
+    else if (a.a.type === 'buy') what = `买入 ${a.a.n} 份`;
+    else if (a.a.type === 'sell') what = `卖出 ${a.a.n} 份`;
+    else if (a.a.type === 'cancel') what = '撤价';
+    else what = a.hadQuote ? `不动（挂着 ${a.hadQuote.bid} / ${a.hadQuote.ask}）` : '不动';
+    if (dev === null && a.hadQuote && a.a.type === 'keep') dev = (a.hadQuote.bid + a.hadQuote.ask) / 2 - a.ev;
+    const fills = (a.fills || []).map(t => `${t.side > 0 ? '买' : '卖'} ${t.n} @ ${t.px.toFixed(2)}（${t.who}）`).join('，');
+    const flip = (a.flipFills || []).map(t => `${t.side > 0 ? '买' : '卖'} ${t.n} @ ${t.px.toFixed(2)}（狙击）`).join('，');
+    return { a, what, dev, fills, flip };
+  });
+  const devs = steps.filter(s => s.dev !== null).map(s => Math.abs(s.dev));
+  const meanDev = devs.length ? Core.sum(devs) / devs.length : 0;
+  let gap;
+  if (r.n === 0) gap = '一笔都没成交；做市要给出别人愿意成交的价，什么都不做在面试里会被当作太保守';
+  else if (r.flipN > 0 && r.flipPnl < 0) gap = `报价挂过翻牌，被狙击打了 ${r.flipN} 份、亏 ${(-r.flipPnl).toFixed(1)}；翻牌前那一步应该撤价或勾「只成交一次」`;
+  else if (inf < -3) gap = `和知情机器人成交亏了 ${(-inf).toFixed(1)}，这是逆向选择；它急着成交时，往它成交的方向挪中间价、把对它那一边报宽`;
+  else if (meanDev > 1.5) gap = `报价中心平均偏离当时的公开期望 ${meanDev.toFixed(1)}，先把中心放在公开期望上`;
+  else if (Math.abs(g.pos) >= 8) gap = `最后仓位 ${g.pos} 份，接近上限 ±10，风险集中在最后一张牌上`;
+  else gap = '中心贴着公开期望、没有被狙击，做法合理';
+  const line = `你总 PnL ${signed(r.total)}，共成交 ${r.n} 份；参照做法（每步按最新公开期望 ± 2 报 1 份、只成交一次）同一副牌 ${signed(MM.bench)}；每步照练习模式的建议做 ${signed(MM.advPnl)}；差在：${gap}。`;
+  root.append(h('div', { class: 'recap' },
+    h('div', { class: 'big' }, `三张牌 ${g.cards.join('、')}，结算值 ${g.truth}。总 PnL ${signed(r.total)}。`),
+    barsSVG([{ label: '你', vals: [r.total] }, { label: '参照做法', vals: [MM.bench] }, { label: '照建议做', vals: [MM.advPnl] }], [{ name: 'PnL', cls: 'you' }], { title: '同一副牌的总 PnL（绿 = 赚，红 = 亏）', sign: true }),
+    Object.keys(r.by).length ? barsSVG(g.bots.filter(b => b.name in r.by).map(b => ({ label: '对手：' + b.name, vals: [r.by[b.name]] })), [{ name: 'PnL', cls: 'you' }], { title: '和每个机器人成交的 PnL', sign: true }) : null,
+    h('p', { class: 'one' }, '复盘：' + line),
+    h('p', null, '和每个机器人的成交，按结算值算你赚（+）或亏（−）：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '对手'), h('th', null, '你的 PnL'), h('th', { class: 'left' }, '说明')),
+      g.bots.filter(b => b.name in r.by).map(b => h('tr', null, h('td', null, b.name), h('td', null, signed(r.by[b.name])), h('td', { class: 'left muted' }, b.desc))),
+      )),
+    h('p', { class: 'muted' }, `知情机器人一开始就知道第三张是 ${g.cards[2]}。和它成交亏钱是逆向选择：它只在你的价对它有利时才成交。翻牌那一刻被狙击打掉的部分：${r.flipN} 份，PnL ${signed(r.flipPnl)}。`),
+    h('p', null, '每一步回看（偏离 = 你的报价中心 − 当时的公开期望）：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '轮 / 步'), h('th', { class: 'left' }, '你的操作'), h('th', null, '公开期望'), h('th', null, '偏离'), h('th', { class: 'left' }, '成交')),
+      steps.map(s => h('tr', null, h('td', null, `${s.a.rnd} / ${s.a.step + 1}`), h('td', { class: 'left' }, s.what), h('td', null, s.a.ev.toFixed(2)), h('td', null, s.dev === null ? '' : (s.dev >= 0 ? '+' : '−') + Math.abs(s.dev).toFixed(2)),
+        h('td', { class: 'left' }, [s.fills, s.flip ? '翻牌后 ' + s.flip : ''].filter(Boolean).join('；') || '无')))))),
+  hbLine('mm', 'mm-err', '牌面之和做市'),
+  h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: mmStart }, '同一副牌再玩一遍'), h('button', { onclick: newSeed }, '换新种子再来')));
+}
+
+// ============================================================ 3. 区间估算
+const EST = {};
+function estStart() {
+  const cat = $('#est-cat').value;
+  const pool = QUESTIONS.filter(q => cat === '全部' || q.cat === cat);
+  const rng = Core.makeRng(SEED + ':est');
+  Object.assign(EST, { seed: SEED, qs: rng.sample(pool, Math.min(5, pool.length)), i: 0, rows: [], cur: null });
+  estRender();
+}
+function estSubmit() {
+  const err = $('#est-err');
+  let lo, hi;
+  try { lo = Core.parseNum($('#est-lo').value); hi = Core.parseNum($('#est-hi').value); }
+  catch (e) { err.textContent = '没看懂。填正数，例如 2e6、200万、2.5亿、40k、3m。'; return; }
+  if (!(lo > 0 && hi > 0)) { err.textContent = '要正数。'; return; }
+  if (lo > hi) [lo, hi] = [hi, lo];
+  const q = EST.qs[EST.i], x = q.truth, hit = lo <= x && x <= hi, sc = Core.luScore(lo, hi, x);
+  const left = EST.qs.length - EST.i, need = 2 - Core.sum(EST.rows.map(r => r.score));
+  const plan = [0.25, 0.5].map(s => ({ s, p: Core.estPlan(left, need, s) }));
+  EST.rows.push({ q, lo, hi, x, hit, score: sc, cat: q.cat, plan, left, need });
+  EST.cur = EST.rows[EST.rows.length - 1];
+  estRender();
+}
+function estRender() {
+  const root = $('#est-body');
+  root.innerHTML = '';
+  const tot = Core.sum(EST.rows.map(r => r.score));
+  const n = EST.qs.length;
+  root.append(statusBar([{ k: '轮', v: `${Math.min(EST.i + 1, n)} / ${n}` }, { k: '累计分', v: tot.toFixed(3) }, { k: '离 2.0 还差', v: Math.max(0, 2 - tot).toFixed(3), tone: tot >= 2 - 1e-12 ? 'pos' : null }], EST.seed));
+  root.append(scoreBarSVG(EST.rows.map(r => r.score), n));
+  const q = EST.qs[EST.i];
+  if (!EST.cur) {
+    root.append(h('div', { class: 'question' }, h('span', { class: 'tag' }, q.cat), q.q, q.unit ? h('span', { class: 'muted' }, `（单位：${q.unit}）`) : null));
+    const done = Core.sum(EST.rows.map(r => r.score)), left = n - EST.i;
+    root.append(h('p', { class: 'muted' }, `还剩 ${left} 轮，离 2.0 还差 ${Math.max(0, 2 - done).toFixed(3)}，平均每轮要 ${(Math.max(0, 2 - done) / left).toFixed(3)} 分。一轮最多 1 分。`));
+    root.append(h('div', { class: 'form' },
+      h('label', null, '下界 L ', h('input', { id: 'est-lo', type: 'text', inputmode: 'text', placeholder: '例如 200万' })),
+      h('label', null, '上界 U ', h('input', { id: 'est-hi', type: 'text', inputmode: 'text', placeholder: '例如 800万', onkeydown: e => { if (e.key === 'Enter') estSubmit(); } }))));
+    root.append(h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: estSubmit }, '提交区间')), h('div', { class: 'err', id: 'est-err' }));
+  } else {
+    const r = EST.cur;
+    const where = r.hit ? '套住了' : r.x > r.hi ? `没套住，真值是你上界的 ${(r.x / r.hi).toPrecision(3)} 倍` : `没套住，你的下界是真值的 ${(r.lo / r.x).toPrecision(3)} 倍`;
+    const refHit = r.q.lo <= r.x && r.x <= r.q.hi;
+    const line = r.hit
+      ? `你报 [${Core.fmtNum(r.lo)}, ${Core.fmtNum(r.hi)}]，U/L = ${(r.hi / r.lo).toPrecision(3)}，套住得 ${r.score.toFixed(3)} 分；同样套住时区间越窄分越高，参考区间 U/L = ${(r.q.hi / r.q.lo).toFixed(1)}${refHit ? `，报它得 ${(r.q.lo / r.q.hi).toFixed(3)} 分` : ''}。`
+      : `你报 [${Core.fmtNum(r.lo)}, ${Core.fmtNum(r.hi)}]，${where}，这一轮 0 分；差在区间${r.hi / r.lo < 2 ? '太窄' : '中心偏了'}：没把握时宁可报宽一点，套住才有分。`;
+    root.append(h('div', { class: 'question' }, h('span', { class: 'tag' }, r.q.cat), r.q.q));
+    root.append(h('div', { class: 'recap' },
+      h('div', { class: 'big' }, `真值 ${Core.fmtNum(r.x)}${r.q.unit ? ' ' + r.q.unit : ''}：${where}。本轮 ${r.score.toFixed(3)} 分，累计 ${tot.toFixed(3)}。`),
+      h('p', { class: 'one' }, '复盘：' + line),
+      h('p', null, h('b', null, '拆解：'), r.q.how),
+      h('p', null, h('b', null, '参考区间：'), `${Core.fmtNum(r.q.lo)} 到 ${Core.fmtNum(r.q.hi)}（U/L = ${(r.q.hi / r.q.lo).toFixed(1)}）`),
+      h('p', { class: 'muted' }, h('b', null, '出处：'), r.q.src)));
+    if (practice()) {
+      const pl = r.plan.map(({ s, p }) => p.done ? `σ = ${s}：已经够 2.0 分，报宽求稳` : p.impossible ? `σ = ${s}：剩下的轮数已经凑不够` : `σ = ${s}（${s === 0.25 ? '熟题' : '生题'}）报 U/L ≈ ${p.r.toFixed(2)}，套住率 ${pct(p.hit)}，照这样打到底过关概率 ${pct(p.v)}`).join('；');
+      const gc = Math.sqrt(r.q.lo * r.q.hi), yc = Math.sqrt(r.lo * r.hi);
+      root.append(pracBox(`第 ${EST.rows.length} 题刚交`, `U/L = ${(r.hi / r.lo).toPrecision(3)}，几何中心 ${Core.fmtNum(yc)}`,
+        `宽度按动态规划（还剩 ${r.left} 轮、还差 ${Math.max(0, r.need).toFixed(3)} 分）：${pl}。中心放在点估计上：参考区间的几何中心是 ${Core.fmtNum(gc)}，你的中心是它的 ${(yc / gc).toPrecision(3)} 倍`,
+        '分数只看 U/L，所以中心用几何平均（对数上对称）；宽度看两样：你对这题有多大把握（σ），以及还剩几轮、还差几分（领先放宽、落后收窄）。σ 是你点估计在自然对数上的误差，熟题约 0.25，生题约 0.5。'));
+    }
+    if (EST.rows.length < n) root.append(h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: () => { EST.i++; EST.cur = null; estRender(); } }, '下一题')));
+    else estFinal(root);
+  }
+}
+function estFinal(root) {
+  markSeen('est');
+  const rows = EST.rows, tot = Core.sum(rows.map(r => r.score)), c = Core.calib(rows, 90);
+  const lines = [];
+  lines.push(`你把每个区间当作 90% 区间。${c.n} 题里套住 ${c.hits} 题，实际命中率 ${(100 * c.hits / c.n).toFixed(0)}%（如果真的校准好了，命中率应在 90% 附近，${c.n} 题的随机波动约 ±${(100 * c.se).toFixed(0)}%；5 题样本很小，只作参考）。`);
+  lines.push(`真值相对区间中心（几何平均）的偏差：平均 ${c.bias >= 0 ? '+' : '−'}${Math.abs(c.bias).toFixed(2)}（自然对数），也就是你的中心系统性${c.bias > 0 ? '偏低' : '偏高'} ${Math.exp(Math.abs(c.bias)).toFixed(2)} 倍。`);
+  lines.push(`对数误差的均方根 σ ≈ ${c.rmse.toFixed(2)}：你的点估计一般差 ${Math.exp(c.rmse).toFixed(2)} 倍。`);
+  if (Number.isFinite(c.mult)) {
+    if (c.mult > 1.15) lines.push(`区间偏窄：真值离中心的距离平均是你自己宽度的 ${c.mult.toFixed(2)} 倍。要真达到 90%，U/L 应该取成现在的 ${c.mult.toFixed(2)} 次方（例如 3 倍 → ${(3 ** c.mult).toFixed(1)} 倍）。`);
+    else if (c.mult < 0.85) lines.push(`区间偏宽：可以把 U/L 取成现在的 ${c.mult.toFixed(2)} 次方，分数会更高。`);
+    else lines.push('宽度和把握大致相称。');
+  }
+  lines.push(`按你实际的 σ = ${c.best.s.toFixed(2)}：L/U 规则下单题期望分最高的是 U/L ≈ ${c.best.ratio.toFixed(2)}（套住率 ${(100 * c.best.hit).toFixed(0)}%，期望 ${c.best.exp.toFixed(2)} 分一题）；5 轮要凑 2.0 分，一题平均要 0.4。`);
+  const by = {};
+  for (const r of rows) (by[r.cat] = by[r.cat] || []).push(r.hit);
+  lines.push('分类命中：' + Object.entries(by).map(([k, v]) => `${k} ${v.filter(Boolean).length}/${v.length}`).join('，'));
+  root.append(h('div', { class: 'final' },
+    h('h3', null, '总结'),
+    h('p', { class: 'big' }, `总分 ${tot.toFixed(3)} / 目标 2.0：${tot >= 2 - 1e-12 ? '过关' : '没过'}。`),
+    barsSVG(rows.map((r, i) => ({ label: `第 ${i + 1} 题${r.hit ? '' : '（没套住）'}`, vals: [r.score] })), [{ name: '得分', cls: 'you' }], { title: '每题得分（套住得 L/U，平均每题要 0.4）', fmt: v => v.toFixed(3) }),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', { class: 'left' }, '题'), h('th', null, '你的区间'), h('th', null, '真值'), h('th', null, 'U/L'), h('th', null, '得分')),
+      rows.map(r => h('tr', null, h('td', { class: 'left' }, r.q.q), h('td', null, `${Core.fmtNum(r.lo)} 到 ${Core.fmtNum(r.hi)}`), h('td', null, Core.fmtNum(r.x)), h('td', null, (r.hi / r.lo).toPrecision(3)), h('td', null, r.score > 0 && r.score < 0.001 ? r.score.toPrecision(2) : r.score.toFixed(3)))))),
+    h('h4', null, '校准报告'),
+    h('ul', null, lines.map(t => h('li', null, t))),
+    hbLine('est', 'est-err', '区间估算'),
+    h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: estStart }, '同一组题再来'), h('button', { onclick: newSeed }, '换新种子再来'))));
+}
+
+// ============================================================ 4. 赛马
+const HR = {};
+function hrStart() {
+  Object.assign(HR, { seed: SEED, rng: Core.makeRng(SEED + ':horse'), N: +$('#hr-rounds').value, k: 0, w: 1000, wk: 1000, wh: 1000, hist: [], curve: [[1000, 1000, 1000]], over: false });
+  hrNext();
+}
+function hrNext() {
+  HR.k++;
+  HR.rd = Core.genHorse(HR.rng);
+  const ke = Core.kellyExclusive(HR.rd.P, HR.rd.d);
+  HR.fk = ke.f; HR.R = ke.R;
+  HR.stakes = HR.rd.P.map(() => '');
+  HR.touched = HR.rd.P.map(() => false);
+  HR.guess = '';
+  HR.res = null;
+  hrRender();
+}
+function hrSettle() {
+  const st = HR.stakes.map(v => (String(v).trim() === '' ? 0 : num(v)));
+  const err = $('#hr-err');
+  if (st.some(x => !(x >= 0))) { err.textContent = '金额要是不小于 0 的数字。'; return; }
+  if (Core.sum(st) > HR.w + 1e-9) { err.textContent = `合计 ${money(Core.sum(st))} 超过了你的资金 ${money(HR.w)}。`; return; }
+  const rd = HR.rd, w = HR.w, fy = st.map(x => x / w), fk = HR.fk, fh = fk.map(x => x / 2);
+  const gY = Core.growth(rd.P, rd.R, fy), gK = Core.growth(rd.P, rd.R, fk), gH = Core.growth(rd.P, rd.R, fh);
+  const ret = 1 - Core.sum(fy) + fy[rd.win] * rd.d[rd.win];
+  const retK = 1 - Core.sum(fk) + fk[rd.win] * rd.d[rd.win], retH = 1 - Core.sum(fh) + fh[rd.win] * rd.d[rd.win];
+  const list = rd.P.map((p, i) => ({ block: '赛马', name: `${i + 1} 号马`, p, d: rd.d[i] }));
+  const ev = Core.evalBets(null, fy, fk, { list, gYou: gY, gK });
+  const arb = [];
+  if (rd.implied < 1) {
+    const all = fy.every(x => x > 0);
+    arb.push({ missed: !all, text: `隐含概率和 ${rd.implied.toFixed(3)} < 1，能套利：按 1/赔率 的比例押每一匹，不管谁赢都锁定押注额的 ${pct(1 / rd.implied - 1)}` + (all ? '，你每一匹都押了' : '，你没有每一匹都押') });
+  }
+  const g = num(HR.guess);
+  const guessNote = Number.isFinite(g) ? `你估的隐含概率和 ${g}，实际 ${rd.implied.toFixed(3)}，差 ${Math.abs(g - rd.implied).toFixed(3)}${Math.abs(g - rd.implied) <= 0.03 ? '，估得准' : ''}。` : '';
+  const line = Core.oneLine(ev, arb);
+  HR.res = { st, fy, gY, gK, gH, ev, arb, line, guessNote, w0: w };
+  HR.w = w * ret; HR.wk *= retK; HR.wh *= retH;
+  HR.curve.push([HR.w, HR.wk, HR.wh]);
+  HR.hist.push({ k: HR.k, gY, gK, gH, line, eff: ev.eff });
+  if (HR.k >= HR.N || HR.w < 1) HR.over = true;
+  hrRender();
+}
+function hrRender() {
+  const root = $('#hr-body'), rd = HR.rd, hint = $('#hr-hint').checked, settled = !!HR.res;
+  root.innerHTML = '';
+  root.append(statusBar([{ k: '轮', v: `${HR.k} / ${HR.N}` }, { k: '资金（美元）', v: money(HR.w) }, { k: '本局盈亏', v: signed(HR.w - 1000), tone: tone(HR.w - 1000) }, { k: '隐含概率之和', v: hint || settled ? rd.implied.toFixed(3) : '自己算' }], HR.seed));
+  root.append(h('p', null, `${rd.n} 匹马，能力值合计 ${rd.tot}。某匹赢的概率 = 它的能力 ÷ ${rd.tot}。`));
+  const rows = rd.P.map((p, i) => {
+    const inp = h('input', { type: 'number', min: '0', step: '1', inputmode: 'decimal', value: HR.stakes[i], placeholder: '0', disabled: settled, 'aria-label': `${i + 1} 号马下注金额`, oninput: e => { HR.stakes[i] = e.target.value; hrSum(); }, onchange: () => { HR.touched[i] = true; hrFeedback(i); } });
+    const tip = hint ? h('div', { class: 'tip' }, `真实 p ${p.toFixed(3)} · 隐含 ${(1 / rd.d[i]).toFixed(3)} · p×d ${(p * rd.d[i]).toFixed(2)} · Kelly ${pct(HR.fk[i])}`) : null;
+    const res = settled ? h('div', { class: 'res ' + (i === rd.win ? 'hit' : 'miss') }, i === rd.win ? '赢了' : '', HR.res.st[i] > 0 ? `  ${signed(i === rd.win ? HR.res.st[i] * (rd.d[i] - 1) : -HR.res.st[i])}` : '', h('span', { class: 'muted' }, `  Kelly ${pct(HR.fk[i])}`)) : null;
+    return h('div', { class: 'betrow' + (settled && i === rd.win ? ' won' : '') }, h('div', { class: 'bname' }, `${i + 1} 号马（能力 ${rd.ab[i]}）`, tip, h('div', { class: 'tip pfb', id: 'hr-fb-' + i, hidden: true })), h('div', { class: 'odds' }, $('#hr-xto1').checked ? Core.xto1(rd.d[i]) : rd.d[i].toFixed(2)), h('div', { class: 'stake' }, inp), res);
+  });
+  root.append(h('div', { class: 'block' }, h('div', { class: 'betrow head' }, h('div', null, '马'), h('div', { class: 'odds' }, '赔率'), h('div', { class: 'stake' }, '押多少'), settled ? h('div', null, '结果') : null), rows,
+    hint ? h('div', { class: 'tip arb' }, `提示：隐含概率和 ${rd.implied.toFixed(3)}${rd.implied < 1 ? ' < 1，可以套利' : ' > 1，庄家有抽水'}；Kelly 留现金 ${pct(HR.R)}`) : null));
+  root.append(h('div', { class: 'form' }, h('label', null, '你估的隐含概率和 Σ(1/赔率) ', h('input', { type: 'number', step: '0.01', inputmode: 'decimal', value: HR.guess, disabled: settled, placeholder: '例如 1.08', oninput: e => { HR.guess = e.target.value; } }))));
+  root.append(h('div', { class: 'sumline', id: 'hr-sum' }), h('div', { class: 'err', id: 'hr-err' }));
+  rd.P.forEach((_, i) => hrFeedback(i));
+  if (!settled) {
+    root.append(h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: hrSettle }, '开跑并结算'), h('button', { onclick: () => { HR.stakes = HR.stakes.map(() => ''); hrRender(); } }, '清空')));
+    hrSum();
+    return;
+  }
+  const r = HR.res;
+  const S = HR.fk.map((f, i) => [f, i]).filter(x => x[0] > 1e-9).map(x => `${x[1] + 1} 号 ${pct(x[0])}`);
+  root.append(h('div', { class: 'recap' },
+    h('div', { class: 'big' }, `${rd.win + 1} 号马赢了。本轮盈亏 ${signed(HR.w - r.w0)}，资金 ${money(HR.w)} 美元。`),
+    barsSVG(rd.P.map((p, i) => ({ label: `${i + 1} 号马${i === rd.win ? '（赢）' : ''}`, vals: [r.fy[i], HR.fk[i]] })), [{ name: '你押的比例', cls: 'you' }, { name: '多结果 Kelly', cls: 'kelly' }], { title: '每匹马押多少：你和 Kelly', fmt: v => pct(v) }),
+    HR.over ? null : curveSVG([{ name: '你', cls: 'you', data: HR.curve.map(x => x[0]) }, { name: 'Kelly', cls: 'kelly', data: HR.curve.map(x => x[1]) }, { name: '半 Kelly', cls: 'half', data: HR.curve.map(x => x[2]) }], '资金曲线（到这一轮为止）'),
+    HR.over ? null : effBars(HR.hist),
+    h('p', { class: 'one' }, '复盘：' + r.line),
+    r.guessNote ? h('p', null, r.guessNote) : null,
+    h('p', null, `隐含概率和 ${rd.implied.toFixed(3)}：${rd.implied > 1 ? `大于 1，庄家抽水约 ${pct(rd.implied - 1)}，没有无风险套利，只押 p×d 够大的马` : '小于 1，有套利'}。`),
+    h('p', null, `多结果 Kelly：按 p×d 从大到小把马加进来，只要下一匹的 p×d 大于当前的 R 就加，R =（1 − 已选马的 p 之和）÷（1 − 已选马的 1/d 之和），起点 R = 1；每匹押 p − R/d，R 就是留在手里的现金比例。这一轮 R = ${HR.R.toFixed(3)}，Kelly 押：${S.length ? S.join('，') : '不押'}。`),
+    h('p', { class: 'muted' }, `期望对数增长 g：你 ${fmtG(r.gY)}，Kelly ${r.gK.toFixed(4)}，半 Kelly ${r.gH.toFixed(4)}。`),
+    h('ul', null, r.ev.notes.map(t => h('li', null, t)), r.arb.map(a => h('li', null, a.text)), r.ev.cm.map(c => h('li', null, c.text)))));
+  root.append(h('div', { class: 'btns' }, HR.over ? h('b', null, HR.w < 1 ? '资金归零，游戏结束。' : '最后一轮结束。') : h('button', { class: 'primary', onclick: hrNext }, '下一轮')));
+  if (HR.over) {
+    markSeen('hr');
+    const gy = Core.sum(HR.hist.map(x => x.gY)), gk = Core.sum(HR.hist.map(x => x.gK)), gh = Core.sum(HR.hist.map(x => x.gH));
+    root.append(h('div', { class: 'final' }, h('h3', null, '总结'),
+      h('p', { class: 'big' }, `效率 ${gy === -Infinity ? '负无穷' : gk > 1e-9 ? Core.effStr(100 * gy / gk) : '无法计算（Kelly 这几轮都不下）'} 分；半 Kelly 参照 ${gk > 1e-9 ? Core.effStr(100 * gh / gk) : '无'} 分。`),
+      gk < 0.01 ? h('p', { class: 'muted' }, '这一局 Kelly 的期望对数增长合计很小（不到 0.01），效率分是两个小数相除，会被放大，看每轮点评更有用。') : null,
+      h('p', null, `最终资金：你 ${money(HR.w)}，Kelly 机器人 ${money(HR.wk)}，半 Kelly 机器人 ${money(HR.wh)}（起点 1000，同样的比赛结果）。`),
+      curveSVG([{ name: '你', cls: 'you', data: HR.curve.map(x => x[0]) }, { name: 'Kelly', cls: 'kelly', data: HR.curve.map(x => x[1]) }, { name: '半 Kelly', cls: 'half', data: HR.curve.map(x => x[2]) }], '资金曲线（同样的比赛结果）'),
+      effBars(HR.hist),
+      h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '轮'), h('th', null, '你的 g'), h('th', null, 'Kelly g'), h('th', null, '效率'), h('th', null, '一句话复盘')),
+        HR.hist.map(x => h('tr', null, h('td', null, x.k), h('td', null, fmtG(x.gY)), h('td', null, fmtG(x.gK)), h('td', null, x.gY === -Infinity ? '负无穷' : x.gK > 1e-9 ? Core.effStr(x.eff) : '无'), h('td', { class: 'left' }, x.line))))),
+      hbLine('horse', 'horse-err', '赛马'),
+      h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: hrStart }, '用同一个种子再玩一遍'), h('button', { onclick: newSeed }, '换新种子再来'))));
+  }
+}
+function hrFeedback(i) {
+  const el = document.getElementById('hr-fb-' + i);
+  if (!el) return;
+  if (!practice() || !HR.touched[i]) { el.hidden = true; return; }
+  const rd = HR.rd, p = rd.P[i], d = rd.d[i], f = HR.fk[i], y = num(HR.stakes[i]) || 0;
+  let why;
+  if (rd.implied < 1) why = `隐含概率和 ${rd.implied.toFixed(3)} < 1，有套利：Kelly 每匹押 p，即 ${pct(p)}，全部押满、不留现金`;
+  else if (f > 1e-9) why = `p×d = ${(p * d).toFixed(3)} 大于留现金比例 R = ${HR.R.toFixed(3)}，入选；押 p − R/d = ${p.toFixed(3)} − ${HR.R.toFixed(3)}/${d.toFixed(2)} = ${pct(f)}`;
+  else why = `p×d = ${(p * d).toFixed(3)} 不超过 R = ${HR.R.toFixed(3)}，不押`;
+  el.textContent = `你押 ${money(y)}（${pct(y / HR.w)}）；多结果 Kelly 押 ${pct(f)}，约 ${(f * HR.w).toFixed(0)} 美元。${why}。`;
+  el.hidden = false;
+}
+function hrSum() {
+  const st = HR.stakes.map(v => (String(v).trim() === '' ? 0 : num(v)) || 0), s = Core.sum(st);
+  const el = $('#hr-sum');
+  if (el) el.textContent = `合计押注 ${money(s)}（资金的 ${pct(s / HR.w)}），留现金 ${money(HR.w - s)}。`;
+}
+
+// ============================================================ 5. 多人估算市场
+const EM = {};
+function emStart() { EM.seed = SEED; EM.g = Core.newEstMarket(SEED, QUESTIONS); EM.prac = null; EM.adv = null; emRender(); }
+function emAct(type) {
+  const g = EM.g, err = $('#em-err');
+  const n = Math.round(num($('#em-n').value));
+  if (!(n >= 1 && n <= Core.EMK.maxN)) { err.textContent = `数量填 1 到 ${Core.EMK.maxN} 的整数。`; return; }
+  const adv = Core.emkAdvice(g), rnd = g.rnd;
+  let a;
+  if (type === 'quote') {
+    let bid, ask;
+    try { bid = Core.parseNum($('#em-bid').value); ask = Core.parseNum($('#em-ask').value); } catch (e) { err.textContent = '没看懂。填正数，例如 3.2万、2.5亿、40k、3e6。'; return; }
+    if (!(bid > 0 && bid < ask)) { err.textContent = '买价要低于卖价，两个都要是正数。'; return; }
+    a = { type, bid, ask, n };
+  } else a = type === 'pass' ? { type } : { type, n };
+  EM.last = a;
+  Core.emkAct(g, a);
+  let verdict;
+  if (a.type === 'quote' && adv.a.type === 'quote') {
+    const r = Math.sqrt(a.bid * a.ask) / adv.c;
+    verdict = Math.abs(Math.log(r)) < 0.1 ? '中心和加权共识差不到 10%' : `你的报价中心是加权共识的 ${r.toPrecision(3)} 倍`;
+  } else verdict = a.type === adv.a.type ? '和建议一致' : '和建议不同';
+  EM.prac = { at: `第 ${rnd} 回合刚做完`, you: Core.describeEmk(a), adv: Core.describeEmk(adv.a), why: adv.why, verdict };
+  if (g.done) EM.adv = Core.emkAdvicePnl(EM.seed, QUESTIONS);
+  emRender();
+}
+function emRender() {
+  const g = EM.g, root = $('#em-body');
+  root.innerHTML = '';
+  const emP = g.done ? g.cash + g.pos * g.x : null;
+  root.append(statusBar([{ k: '回合', v: g.done ? '已结算' : `${g.rnd} / ${Core.EMK.rounds}` }, { k: `仓位（上限 ±${Core.EMK.limit}）`, v: (g.pos > 0 ? '+' : '') + g.pos },
+    g.done ? { k: 'PnL（几个真值）', v: (emP >= 0 ? '+' : '−') + Math.abs(emP / g.x).toFixed(2), tone: tone(emP) } : { k: '成交笔数', v: String(g.trades.length) }], EM.seed));
+  root.append(h('div', { class: 'question' }, h('span', { class: 'tag' }, g.q.cat), g.q.q, g.q.unit ? h('span', { class: 'muted' }, `（单位：${g.q.unit}）`) : null));
+  root.append(h('div', { class: 'stats' }, stat('现金', Core.fmtNum(Math.abs(g.cash)) + (g.cash < 0 ? '（付出）' : '（收入）')), g.done ? stat('真值', Core.fmtNum(g.x)) : null));
+  if (practice() && EM.prac) root.append(pracBox(EM.prac.at, EM.prac.you, EM.prac.adv, EM.prac.why, EM.prac.verdict));
+  root.append(emTimeline(g));
+  if (!g.done) {
+    const m = Core.emkBest(g);
+    root.append(h('div', { class: 'scroll' }, h('table', { class: 'book' },
+      h('tr', null, h('th', null, '报价人'), h('th', null, '买价'), h('th', null, '卖价'), h('th', null, '宽度（卖 ÷ 买）'), h('th', null, '上回合中间价')),
+      g.bots.map(b => { const q = Core.emkQuote(b), pr = b.hist.length > 1 ? b.hist[b.hist.length - 2] : null; return h('tr', null, h('td', null, b.name), h('td', null, Core.fmtNum(q[0])), h('td', null, Core.fmtNum(q[1])), h('td', null, '×' + (q[1] / q[0]).toFixed(2)), h('td', null, pr ? Core.fmtNum(Math.exp(pr.mu)) : '无')); }))));
+    root.append(h('p', null, `最好价：${Core.fmtNum(m.bid)} 买（${m.bidBot.name}） / ${Core.fmtNum(m.ask)} 卖（${m.askBot.name}）。报价人是匿名的：里面有懂行的、有乱报的，结算时揭晓。`));
+    const L = EM.last && EM.last.type === 'quote' ? EM.last : null;
+    root.append(h('div', { class: 'form' },
+      h('label', null, '买价 ', h('input', { id: 'em-bid', type: 'text', placeholder: '例如 3万', value: L ? Core.fmtNum(L.bid).replace(/ /g, '') : '' })),
+      h('label', null, '卖价 ', h('input', { id: 'em-ask', type: 'text', placeholder: '例如 4万', value: L ? Core.fmtNum(L.ask).replace(/ /g, '') : '' })),
+      h('label', null, '数量 ', h('input', { id: 'em-n', type: 'number', min: '1', max: String(Core.EMK.maxN), step: '1', value: '1' }))));
+    root.append(h('div', { class: 'btns' },
+      h('button', { class: 'primary', onclick: () => emAct('quote') }, '报价'),
+      h('button', { onclick: () => emAct('buy') }, '买入（吃最低卖价）'),
+      h('button', { onclick: () => emAct('sell') }, '卖出（打最高买价）'),
+      h('button', { onclick: () => emAct('pass') }, '这一回合不动')));
+    root.append(h('div', { class: 'err', id: 'em-err' }));
+  }
+  const log = h('div', { class: 'log' }, g.log.map(x => h('div', { class: 'l-' + x.t }, x.text)));
+  root.append(h('h4', null, '市场记录'), log);
+  setTimeout(() => { log.scrollTop = log.scrollHeight; }, 0);
+  if (g.done) emRecap(root);
+}
+function emRecap(root) {
+  const g = EM.g, r = Core.emkRecap(g), adv = EM.adv;
+  markSeen('emk');
+  const ex = g.bots.find(b => b.kind === 'expert'), lossEx = r.by[ex.name] || 0;
+  const devs = g.actions.filter(a => a.a.type === 'quote').map(a => Math.abs(Math.log(Math.sqrt(a.a.bid * a.a.ask) / a.cons)));
+  const md = devs.length ? Core.sum(devs) / devs.length : 0;
+  let gap;
+  if (r.n === 0) gap = '一笔都没成交；估算市场里要报出别人愿意成交的价';
+  else if (lossEx < -0.05 * g.x) gap = `和懂行的 ${ex.name} 成交亏了 ${pct(-lossEx / g.x)} 个真值：它报得最窄、方向总是对，你的价在它的估计错的一边`;
+  else if (md > 0.25) gap = `报价中心平均偏离加权共识 ${pct(Math.exp(md) - 1)}；先按「谁报得窄、谁稳定」给别人的报价加权`;
+  else if (Math.abs(g.pos) >= Core.EMK.limit) gap = `最后仓位 ${g.pos} 份，到了上限`;
+  else gap = '中心贴着加权共识、没被懂行的人狙，做法合理';
+  root.append(h('div', { class: 'recap' },
+    h('div', { class: 'big' }, `真值 ${Core.fmtNum(g.x)}${g.q.unit ? ' ' + g.q.unit : ''}。你的 PnL ${r.total >= 0 ? '+' : '−'}${Core.fmtNum(Math.abs(r.total))}，相当于 ${r.rel >= 0 ? '+' : '−'}${Math.abs(r.rel).toFixed(2)} 个真值。`),
+    h('p', { class: 'one' }, `复盘：共成交 ${r.n} 份；每回合照练习模式的建议做，同一局是 ${adv.rel >= 0 ? '+' : '−'}${Math.abs(adv.rel).toFixed(2)} 个真值；差在：${gap}。`),
+    barsSVG(g.bots.map(b => ({ label: `${b.name}（${b.label}）`, vals: [(r.by[b.name] || 0) / g.x] })).concat([{ label: '合计', vals: [r.rel] }, { label: '照建议做', vals: [adv.rel] }]), [{ name: 'PnL', cls: 'you' }], { title: '和每个报价人成交的 PnL（以真值为 1；绿 = 赚，红 = 亏）', sign: true }),
+    h('p', null, '谁是谁、和每个人成交的盈亏（以真值为 1）：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '报价人'), h('th', null, '类型'), h('th', null, '它最后的中间价'), h('th', null, '你的 PnL'), h('th', { class: 'left' }, '它怎么报价')),
+      g.bots.map(b => h('tr', null, h('td', null, b.name), h('td', null, b.label), h('td', null, Core.fmtNum(Math.exp(b.mu))), h('td', null, ((r.by[b.name] || 0) / g.x >= 0 ? '+' : '−') + Math.abs((r.by[b.name] || 0) / g.x).toFixed(2)), h('td', { class: 'left muted' }, b.desc))))),
+    h('p', null, '每回合回看（共识 = 按宽度和稳定性加权的对数中心）：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '回合'), h('th', { class: 'left' }, '你的操作'), h('th', null, '共识'), h('th', null, '共识 ÷ 真值'), h('th', { class: 'left' }, '成交')),
+      g.actions.map(a => h('tr', null, h('td', null, a.rnd), h('td', { class: 'left' }, Core.describeEmk(a.a)), h('td', null, Core.fmtNum(a.cons)), h('td', null, (a.cons / g.x).toPrecision(3)),
+        h('td', { class: 'left' }, a.fills.map(t => `${t.side > 0 ? '买' : '卖'} ${t.n} @ ${Core.fmtNum(t.px)}（${t.who}）`).join('，') || '无'))))),
+    h('p', { class: 'muted' }, h('b', null, '拆解：'), g.q.how, '。', h('b', null, ' 出处：'), g.q.src)),
+    hbLine('estmkt', 'estmkt-err', '估算市场'),
+    h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: emStart }, '同一题再玩一遍'), h('button', { onclick: newSeed }, '换新种子再来')));
+}
+
+// ============================================================ 6. 牌桌做市
+const CTG = {};
+let ctTimer = null;
+function ctStop() { if (ctTimer) { clearInterval(ctTimer); ctTimer = null; } }
+function ctStart() { ctStop(); CTG.seed = SEED; CTG.g = Core.newCardTable(SEED); CTG.prac = null; CTG.adv = null; CTG.lastQ = null; ctRender(); ctClock(20, () => ctDoQuote(true)); }
+const cardName = (g, i) => { const c = Core.CARD52[i], v = g.val(i); return `${Core.SUITS[c.s]}${Core.RANKNAME(c.r)}（${v > 0 ? '+' : ''}${v}）`; };
+function ctClock(sec, onEnd, onTick) {
+  ctStop();
+  if (!$('#ct-timer').checked) return;
+  const t0 = Date.now();
+  ctTimer = setInterval(() => {
+    const left = sec - (Date.now() - t0) / 1000, el = $('#ct-clock');
+    if (el) el.textContent = `剩 ${Math.max(0, left).toFixed(1)} 秒`;
+    if (onTick) onTick(sec - left);
+    if (left <= 0) { ctStop(); onEnd(); }
+  }, 200);
+}
+function ctDoQuote(skip) {
+  const g = CTG.g, err = $('#ct-err');
+  const adv = Core.ctAdvice(g);
+  if (skip) Core.ctSkipQuote(g);
+  else {
+    const bid = num($('#ct-bid').value), ask = num($('#ct-ask').value), n = Math.round(num($('#ct-n').value));
+    const e = Core.ctQuote(g, bid, ask, n);
+    if (e === 'spread') { err.textContent = `买价要低于卖价，价差最多 ${Core.CT.spread}。`; return; }
+    if (e === 'size') { err.textContent = `数量填 1 到 ${Core.CT.maxN}。`; return; }
+    CTG.lastQ = { bid, ask, n };
+  }
+  const q = g.rec.quote;
+  CTG.advTrade = Core.ctAdvice(g);   // 成交窗口一开始的建议，窗口结束时拿来对照
+  const advTxt = adv.a ? `报 ${adv.a.bid} / ${adv.a.ask} 各 ${adv.a.n} 份` : '不报价';
+  const verdict = q && adv.a ? (Math.abs((q.bid + q.ask) / 2 - adv.F) <= 1 ? '中心离建议的公允价不到 1' : `你的报价中心比建议的公允价 ${adv.F.toFixed(1)} ${(q.bid + q.ask) / 2 > adv.F ? '高' : '低'} ${Math.abs((q.bid + q.ask) / 2 - adv.F).toFixed(1)}`) : '';
+  CTG.prac = { at: `第 ${g.rnd} 轮报价刚做完`, you: q ? `报 ${q.bid} / ${q.ask} 各 ${q.n} 份` : '没报价', adv: advTxt, why: adv.why, verdict };
+  ctRender();
+  ctClock(8, () => ctEnd(), el => { if (el >= 2 && !g.swept) { Core.ctBotSweep(g); ctRender(true); } });
+}
+function ctTakeUI(i, side) {
+  const g = CTG.g, n = Math.round(num($('#ct-tn').value));
+  if (!(n >= 1 && n <= Core.CT.quoteSize)) { $('#ct-err').textContent = `成交数量填 1 到 ${Core.CT.quoteSize}。`; return; }
+  const e = Core.ctTake(g, i, side, n);
+  if (e === 'empty') $('#ct-err').textContent = '这个报价已经没量了。';
+  ctRender(true);
+}
+function ctEnd() {
+  const g = CTG.g;
+  if (g.phase !== 'trade') return;
+  ctStop();
+  const adv = CTG.advTrade || Core.ctAdvice(g), mine = g.rec.takes;
+  const you = mine.length ? mine.map(t => `${t.side > 0 ? '买' : '卖'} ${t.n} @ ${t.px}（${t.who}）`).join('，') : '没有成交';
+  const advTxt = adv.list.length ? adv.list.map(z => `${z.side > 0 ? '买' : '卖'} ${z.n}（${g.bots[z.i].name}）`).join('，') : '不成交';
+  CTG.prac = { at: `第 ${g.rnd} 轮成交窗口刚结束`, you, adv: advTxt, why: adv.why, verdict: '' };
+  Core.ctEndTrade(g);
+  if (g.done) CTG.adv = Core.ctScore(Core.ctAdvicePlay(CTG.seed));
+  ctRender();
+  if (!g.done) ctClock(20, () => ctDoQuote(true));
+}
+function ctRender(keepClock) {
+  const g = CTG.g, root = $('#ct-body');
+  root.innerHTML = '';
+  const st = Core.ctDeckStats(g.rule, []);
+  const yf0 = Core.ctYouFair(g), ctP = g.cash + g.pos * (g.done ? g.total : yf0.ev);
+  root.append(statusBar([{ k: '轮', v: g.done ? '已结算' : `${g.rnd} / 3 · ${g.phase === 'quote' ? '你报价' : '你成交'}` }, { k: `仓位（保持 ±${Core.CT.limit} 内）`, v: (g.pos > 0 ? '+' : '') + g.pos },
+    { k: g.done ? '总 PnL（不计分）' : 'PnL（按你的公允价）', v: signed(ctP), tone: tone(ctP) }, { k: g.done ? '结算值' : '你的公允价', v: g.done ? String(g.total) : yf0.ev.toFixed(1) }], CTG.seed),
+    h('div', { id: 'ct-clock', class: 'clock' }));
+  root.append(h('div', { class: 'rulebox' }, h('b', null, '本局规则：'), Core.ctRuleText(g.rule), `。单张牌（整副 52 张）平均 ${st.mu.toFixed(2)}、标准差 ${st.sd.toFixed(2)}。场上 ${g.nCards} 张：你和 ${g.bots.length} 个机器人各 2 张，加 3 张公共牌。`));
+  const yf = Core.ctYouFair(g);
+  root.append(h('div', { class: 'cards' }, h('span', null, '你的牌：'), g.you.map(i => h('span', { class: 'chip' }, cardName(g, i))),
+    h('span', null, '  公共牌：'), g.comm.map((i, k) => h('span', { class: 'chip' + (k < g.rnd || g.done ? '' : ' down') }, k < g.rnd || g.done ? cardName(g, i) : '?'))));
+  root.append(h('div', { class: 'stats' }, stat('暗牌', `${yf.hidden} 张，每张平均 ${yf.st.mu.toFixed(2)}`)));
+  if (practice() && CTG.prac) root.append(pracBox(CTG.prac.at, CTG.prac.you, CTG.prac.adv, CTG.prac.why, CTG.prac.verdict));
+  root.append(ctTimeline(g));
+  if (!g.done && g.phase === 'quote') {
+    const L = CTG.lastQ || { bid: Math.round(yf.ev) - 2, ask: Math.round(yf.ev) + 2, n: 2 };
+    root.append(h('div', { class: 'form' },
+      h('label', null, '买价 ', h('input', { id: 'ct-bid', type: 'number', step: '0.5', value: L.bid })),
+      h('label', null, '卖价 ', h('input', { id: 'ct-ask', type: 'number', step: '0.5', value: L.ask })),
+      h('label', null, '数量 ', h('input', { id: 'ct-n', type: 'number', min: '1', max: String(Core.CT.maxN), step: '1', value: L.n }))));
+    root.append(h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: () => ctDoQuote(false) }, '报价'), h('button', { onclick: () => ctDoQuote(true) }, '这一轮不报价')),
+      h('p', { class: 'muted' }, `价差（卖价 − 买价）最多 ${Core.CT.spread}，数量最多 ${Core.CT.maxN}。机器人看自己的牌，你的价对它有利（差 1 以上）就来成交，每个最多 ${Core.CT.botSize} 份。`));
+  }
+  if (!g.done && g.phase === 'trade') {
+    root.append(h('div', { class: 'scroll' }, h('table', { class: 'book' },
+      h('tr', null, h('th', null, '机器人'), h('th', null, '买价'), h('th', null, '卖价'), h('th', null, '剩余量'), h('th', null, '成交')),
+      g.bq.map((q, i) => h('tr', null, h('td', null, g.bots[i].name), h('td', null, q.bid.toFixed(1)), h('td', null, q.ask.toFixed(1)), h('td', null, q.left),
+        h('td', null, h('button', { disabled: q.left <= 0, onclick: () => ctTakeUI(i, -1) }, `卖给它 @ ${q.bid.toFixed(1)}`), ' ', h('button', { disabled: q.left <= 0, onclick: () => ctTakeUI(i, 1) }, `买它的 @ ${q.ask.toFixed(1)}`)))))));
+    root.append(h('div', { class: 'form' }, h('label', null, '每次成交几份 ', h('input', { id: 'ct-tn', type: 'number', min: '1', max: String(Core.CT.quoteSize), step: '1', value: '2' }))),
+      h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: ctEnd }, '结束成交，进入下一轮')),
+      h('p', { class: 'muted' }, g.swept ? '已过 2 秒的优先期：机器人之间已经按各自的牌互相成交过（某个机器人按自己的估值觉得对方的价差 2 以上就吃掉）。' : '现在只有你能成交；你结束成交（或计时模式下过了 2 秒）后，机器人之间会按各自的牌互相成交：某个机器人按自己的估值觉得对方的价差 2 以上，就把那个报价吃掉。'));
+  }
+  root.append(h('div', { class: 'err', id: 'ct-err' }));
+  const log = h('div', { class: 'log' }, g.log.map(x => h('div', { class: 'l-' + x.t }, x.text)));
+  root.append(h('h4', null, '牌桌记录'), log);
+  setTimeout(() => { log.scrollTop = log.scrollHeight; }, 0);
+  if (g.done) ctRecap(root);
+  void keepClock;
+}
+function ctRecap(root) {
+  const g = CTG.g, sc = Core.ctScore(g), adv = CTG.adv;
+  markSeen('ct');
+  const nm = { pricing: '定价', catch: '抓错价', disc: '纪律' };
+  root.append(h('div', { class: 'recap' },
+    h('div', { class: 'big' }, `所有牌之和 ${g.total}。得分 ${Math.round(sc.total)}（${Object.entries(sc.comp).map(([k, v]) => `${nm[k]} ${(100 * v).toFixed(0)}`).join('，')}）。PnL ${signed(sc.pnl)}（只显示，不计分）。`),
+    barsSVG(Object.entries(sc.comp).map(([k, v]) => ({ label: nm[k], vals: [100 * v, 100 * adv.comp[k]] })).filter(z => Number.isFinite(z.vals[1])), [{ name: '你', cls: 'you' }, { name: '照建议做', cls: 'kelly' }], { title: '三项得分（0 到 100）：你和照建议做', fmt: v => v.toFixed(0) }),
+    h('p', { class: 'one' }, `复盘：每一步照练习模式的建议做，同一局得 ${Math.round(adv.total)} 分、PnL ${signed(adv.pnl)}。错价一共 ${sc.nErr} 个，你抓到 ${sc.caught} 个。${sc.notes.length ? sc.notes.join('；') + '。' : '纪律上没有扣分。'}`),
+    h('p', null, '每个人的牌：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '座位'), h('th', { class: 'left' }, '两张牌'), h('th', null, '两张之和')),
+      h('tr', null, h('td', null, '你'), h('td', { class: 'left' }, g.you.map(i => cardName(g, i)).join('、')), h('td', null, Core.sum(g.you.map(g.val)))),
+      g.bots.map(b => h('tr', null, h('td', null, b.name), h('td', { class: 'left' }, b.cards.map(i => cardName(g, i)).join('、')), h('td', null, Core.sum(b.cards.map(g.val))))))),
+    h('p', null, '每轮回看（参考公允价 = 你看得到的牌 + 从上一轮机器人报价反推的它们的牌 + 其余暗牌按平均）：'),
+    h('div', { class: 'scroll' }, h('table', null, h('tr', null, h('th', null, '轮'), h('th', null, '参考公允价'), h('th', { class: 'left' }, '你的报价'), h('th', null, '定价分'), h('th', { class: 'left' }, '错价（哪个座位、偏多少）'), h('th', { class: 'left' }, '你的成交')),
+      g.recs.map((r, k) => h('tr', null, h('td', null, r.rnd), h('td', null, r.ref.toFixed(1)), h('td', { class: 'left' }, r.quote ? `${r.quote.bid} / ${r.quote.ask} × ${r.quote.n}` : '没报'), h('td', null, sc.pr[k] === null ? '不计' : (100 * sc.pr[k]).toFixed(0)),
+        h('td', { class: 'left' }, r.errs.map(i => `${g.bots[i].name} ${r.bq[i].err > 0 ? '+' : '−'}${Math.abs(r.bq[i].err).toFixed(1)}`).join('，') || '无'),
+        h('td', { class: 'left' }, r.qFills.concat(r.takes).map(t => `${t.side > 0 ? '买' : '卖'} ${t.n} @ ${t.px}（${t.who}${t.tag === 'quote' ? '，打你的价' : ''}）`).join('，') || '无'))))),
+    h('p', { class: 'muted' }, '打分是照 QuantVault「Card Table」公布的三项（定价、抓错价、纪律）做的近似：定价分 = 1 − |报价中心 − 参考公允价| ÷ 5；抓错价 = 抓到的错价 ÷ 错价总数；纪律从 1 扣：坏交易（比当时公允价差 1 以上）每笔 0.15，报价被打且按结算值亏了每次 0.1（最多扣 0.3），仓位超过 ±15 扣 0.3。')),
+    hbLine('cardtable', 'cardtable-err', '牌桌做市'),
+    h('div', { class: 'btns' }, h('button', { class: 'primary', onclick: ctStart }, '同一副牌再玩一遍'), h('button', { onclick: newSeed }, '换新种子再来')));
+}
+
+// ============================================================ 标签页和种子
+const STARTERS = { bet: betStart, mm: mmStart, est: estStart, hr: hrStart, emk: emStart, ct: ctStart };
+function show(tab) {
+  current = tab;
+  if (tab !== 'ct') ctStop();
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false'));
+  document.querySelectorAll('section.game').forEach(s => { s.hidden = s.id !== 'tab-' + tab; });
+  if (!started[tab]) { started[tab] = true; STARTERS[tab](); }
+  try { localStorage.setItem('optiver-sim-tab', tab); } catch (e) { /* 无痕模式等情况下不记 */ }
+}
+function newSeed() { SEED = String(100000 + Math.floor(Math.random() * 900000)); $('#seed').value = SEED; STARTERS[current](); }
+function init() {
+  $('#seed').value = SEED;
+  $('#seed').addEventListener('change', e => { const v = e.target.value.trim(); if (v) SEED = v; });
+  $('#seed-restart').addEventListener('click', () => { const v = $('#seed').value.trim(); if (v) SEED = v; STARTERS[current](); });
+  $('#seed-new').addEventListener('click', newSeed);
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.tab)));
+  $('#bet-hint').addEventListener('change', betRender);
+  $('#hr-hint').addEventListener('change', hrRender);
+  $('#hr-xto1').addEventListener('change', hrRender);
+  $('#bet-xto1').addEventListener('change', betRender);
+  $('#bet-short').addEventListener('change', betRender);
+  try { $('#practice').checked = localStorage.getItem('optiver-sim-practice') === '1'; } catch (e) { /* 读不到就不开 */ }
+  $('#practice').addEventListener('change', () => {
+    try { localStorage.setItem('optiver-sim-practice', $('#practice').checked ? '1' : '0'); } catch (e) { /* 不记 */ }
+    const R = { bet: betRender, mm: mmRender, est: estRender, hr: hrRender, emk: emRender, ct: ctRender };
+    for (const k of Object.keys(started)) R[k]();
+  });
+  $('#bet-rounds').addEventListener('change', betStart);
+  $('#hr-rounds').addEventListener('change', hrStart);
+  $('#est-cat').addEventListener('change', estStart);
+  document.querySelectorAll('details.howto').forEach(el => { try { if (localStorage.getItem('optiver-sim-seen-' + el.dataset.tab) === '1') el.open = false; } catch (e) { /* 读不到就展开 */ } });
+  let tab = 'bet';
+  try { const t = localStorage.getItem('optiver-sim-tab'); if (t && STARTERS[t]) tab = t; } catch (e) { /* 读不到就用默认 */ }
+  const m = location.hash.match(/^#(bet|mm|est|hr|emk|ct)$/);
+  if (m) tab = m[1];
+  show(tab);
+}
+init();
+
+</script>
+</body>
+</html>
+{% endraw %}

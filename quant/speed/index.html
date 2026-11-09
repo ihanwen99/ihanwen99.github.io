@@ -1,0 +1,101 @@
+---
+layout: null
+permalink: /quant/speed/
+sitemap: false
+---
+{% raw %}<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>概率速算</title>
+<style>
+:root{--bg:#fafaf8;--fg:#1d1d1b;--mut:#6b6b66;--card:#fff;--line:#e2e1dc;--acc:#1f5fbf;--ok:#1a7f45;--bad:#c0392b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e9e8e4;--mut:#a09f99;--card:#212225;--line:#34353a;--acc:#6ea0f0;--ok:#4cc27e;--bad:#ef6f61}}
+:root[data-theme="dark"]{--bg:#17181a;--fg:#e9e8e4;--mut:#a09f99;--card:#212225;--line:#34353a;--acc:#6ea0f0;--ok:#4cc27e;--bad:#ef6f61}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:19px;margin:28px 0 8px}
+.sub{color:var(--mut);margin:0 0 16px}
+nav a{color:var(--acc);margin-right:14px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+.kinds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.kinds label{font-size:14px;border:1px solid var(--line);border-radius:14px;padding:2px 10px;cursor:pointer}
+.q{font-size:19px;font-weight:600;margin:6px 0 12px}
+input[type=text]{font-size:18px;padding:8px 10px;width:150px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+button{font-size:16px;padding:8px 14px;border-radius:6px;border:1px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer;margin:4px 6px 4px 0}
+button.ghost{background:transparent;color:var(--acc)}
+.fb{margin-top:10px;min-height:1.6em}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.stat{color:var(--mut);font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+<h1>概率速算</h1>
+<p class="sub">骰子、硬币、扑克牌、门槛赔率。每题限时心算，答完看讲解。</p>
+<nav><a href="../">Quant 速查</a><a href="../games/">交易游戏</a></nav>
+
+<div class="card">
+  <div class="kinds" id="kinds"></div>
+  <div class="stat" id="stat">答对 0 / 0</div>
+  <div class="q" id="q"></div>
+  <input type="text" id="ans" inputmode="decimal" autocomplete="off" placeholder="答案">
+  <button id="go">提交</button><button class="ghost" id="skip">换一题</button>
+  <div class="fb" id="fb"></div>
+</div>
+
+<h2>先背这些</h2>
+<div class="scroll"><table>
+<tr><th>场景</th><th>全部情况</th><th>常考</th></tr>
+<tr><td>两颗骰子</td><td>6 × 6 = 36</td><td>和为 k 的情况数 = 6 − |k − 7|：和 7 有 6 种，6 和 8 各 5 种，2 和 12 各 1 种。对子 6 种（1/6）。至少一个 6：11 种</td></tr>
+<tr><td>n 颗骰子之和</td><td>6ⁿ</td><td>期望 3.5n；方差 35/12 × n ≈ 2.92n；标准差 1.7、2.4、3.0（1、2、3 颗）</td></tr>
+<tr><td>硬币 n 次</td><td>2ⁿ（3 次 = 8）</td><td>恰好 k 次正面 = C(n, k) 种：3 次里 1、3、3、1；4 次里 1、4、6、4、1</td></tr>
+<tr><td>一张牌</td><td>52</td><td>某花色 1/4，某点数 1/13，人头牌 J、Q、K 12/52 = 3/13，红色 1/2，点数平均 7</td></tr>
+<tr><td>两张牌（不放回）</td><td>52 × 51</td><td>同花色 12/51 ≈ 0.235；对子 3/51 ≈ 0.059；一红一黑 26/51 ≈ 0.51；两张都红 25/102 ≈ 0.245</td></tr>
+<tr><td>门槛赔率</td><td>1 ÷ p</td><td>赔率高过门槛才押。1/2 → 2，1/3 → 3，3/8 → 2.67，5/8 → 1.6，7/8 → 1.14，1/6 → 6，5/36 → 7.2，11/36 → 3.27</td></tr>
+<tr><td>Kelly</td><td>(p × d − 1) ÷ (d − 1)</td><td>心算：赔率高出门槛百分之几 × p。拿不准押一半</td></tr>
+<tr><td>套利</td><td>Σ 1/赔率</td><td>几项正好分完所有结果，和小于 1 就整组按 1/赔率 的比例押；大于 1 是庄家抽水</td></tr>
+</table></div>
+
+<h2>常用数字</h2>
+<div class="scroll"><table>
+<tr><td>光速</td><td>真空 300 km/ms（30 cm/ns）；光纤 200 km/ms（5 µs/km）</td></tr>
+<tr><td>芝加哥到纽约</td><td>约 1200 km：光纤单程约 6 ms，微波约 4 ms</td></tr>
+<tr><td>时间单位</td><td>1 s = 10³ ms = 10⁶ µs = 10⁹ ns</td></tr>
+<tr><td>交易日</td><td>美股约 252 天，年化 ≈ 日波动 × 16</td></tr>
+<tr><td>估算锚点</td><td>世界 80 亿人，美国 3.3 亿，地球周长 4 万 km，一年 ≈ π × 10⁷ 秒</td></tr>
+</table></div>
+</main>
+<script>
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)), pick=a=>a[R(0,a.length-1)];
+const C=(n,k)=>{let r=1;for(let i=1;i<=k;i++)r=r*(n-k+i)/i;return r};
+const f2=x=>Math.round(x*100)/100;
+const KINDS={
+ dice:{name:'骰子',gen(){const k=R(2,12),n=6-Math.abs(k-7);return{q:`两颗骰子，和为 ${k} 有几种情况（共 36 种）？`,a:n,tol:0,why:`和为 k 的情况数 = 6 − |k − 7| = 6 − ${Math.abs(k-7)} = ${n}，概率 ${n}/36。`}}},
+ dice2:{name:'骰子期望',gen(){const n=R(2,5),kn=R(0,n-1),known=Array.from({length:kn},()=>R(1,6)),s=known.reduce((a,b)=>a+b,0),fv=s+3.5*(n-kn);return{q:`${n} 颗骰子之和，已知 ${kn?known.join('、'):'无'}，公允价？`,a:fv,tol:0.01,why:`已知的照加（${s}），未知的每颗 3.5：${s} + 3.5 × ${n-kn} = ${fv}。`}}},
+ coin:{name:'硬币',gen(){const n=R(3,5),k=R(0,n),c=C(n,k);return{q:`公平硬币抛 ${n} 次，恰好 ${k} 次正面有几种（共 ${2**n} 种）？`,a:c,tol:0,why:`C(${n}, ${k}) = ${c}，概率 ${c}/${2**n}。`}}},
+ card:{name:'扑克牌',gen(){const t=pick([['一张牌是红桃',13,52],['一张牌是人头牌（J、Q、K）',12,52],['一张牌是 A',4,52],['一张牌是红色',26,52],['两张牌同花色（第二张和第一张同花）',12,51],['两张牌是对子（第二张和第一张同点数）',3,51],['两张牌一红一黑（第二张和第一张颜色不同）',26,51]]);return{q:`${t[0]}的概率？（写分数或小数）`,a:t[1]/t[2],tol:0.01,why:`${t[1]}/${t[2]} ≈ ${f2(t[1]/t[2])}。两张牌的题：先抽的那张不管是什么，只看第二张从剩下 51 张里抽中的机会。`}}},
+ thr:{name:'门槛赔率',gen(){const [a,b]=pick([[1,2],[1,3],[1,4],[3,8],[5,8],[7,8],[1,6],[5,36],[11,36],[1,12],[5,12],[3,13],[1,13],[4,19],[6,19],[3,10]]);return{q:`p = ${a}/${b}，门槛赔率（1 ÷ p）是多少？保留两位`,a:b/a,tol:0.02,why:`倒过来：${b}/${a} ≈ ${f2(b/a)}。实际赔率高过它才押。`}}},
+ bet:{name:'押不押',gen(){const [a,b]=pick([[1,2],[1,3],[3,8],[5,8],[7,8],[1,6],[5,36],[11,36],[1,4],[1,12]]),th=b/a,d=f2(th*(1+(Math.random()*0.3-0.15)));const yes=d>th;return{q:`赢的概率 ${a}/${b}，赔率 ${d}。押填 1，不押填 0`,a:yes?1:0,tol:0,why:`门槛 ${b}/${a} ≈ ${f2(th)}，赔率 ${d} ${yes?'高过':'没过'}门槛，${yes?`押。p × d = ${f2(a/b*d)}，Kelly ≈ ${f2((a/b*d-1)/(d-1)*100)}%`:'不押'}。`}}},
+ arb:{name:'套利',gen(){const n=R(2,4),ps=Array.from({length:n},()=>R(1,6));const S=ps.reduce((a,b)=>a+b,0),m=1+(Math.random()*0.16-0.08),ds=ps.map(p=>f2(S/p/m));const s=ds.reduce((a,d)=>a+1/d,0);return{q:`${n} 项正好分完所有结果，赔率 ${ds.join('、')}。Σ 1/赔率 = ？（两位小数）`,a:s,tol:0.02,why:`${ds.map(d=>f2(1/d)).join(' + ')} ≈ ${f2(s)}，${s<1?`小于 1，套利：按 1/赔率 比例全押，锁定约 ${f2((1/s-1)*100)}%`:'大于 1，庄家抽水，没有套利'}。`}}},
+ kelly:{name:'Kelly',gen(){const [a,b]=pick([[1,2],[1,3],[1,4],[3,8],[5,8]]),p=a/b,d=f2(b/a*(1+R(5,25)/100)),k=(p*d-1)/(d-1);return{q:`p = ${a}/${b}，赔率 ${d}，Kelly 押资金的百分之几？（整数，±2 算对）`,a:k*100,tol:2,why:`(p × d − 1) ÷ (d − 1) = (${f2(p*d)} − 1) ÷ ${f2(d-1)} ≈ ${f2(k*100)}%。心算：高出门槛 ${f2((d*p-1)*100)}% × p ≈ ${f2((d*p-1)*p*100)}%，偏保守，接近半 Kelly。`}}}
+};
+const on=new Set(Object.keys(KINDS));let cur,right=0,total=0;
+const kd=document.getElementById('kinds');
+for(const k in KINDS){const l=document.createElement('label');l.innerHTML=`<input type="checkbox" checked> ${KINDS[k].name}`;l.querySelector('input').onchange=e=>{e.target.checked?on.add(k):on.delete(k);if(!on.size){on.add(k);e.target.checked=true}next()};kd.append(l)}
+function next(){cur=KINDS[pick([...on])].gen();document.getElementById('q').textContent=cur.q;const a=document.getElementById('ans');a.value='';a.focus();document.getElementById('fb').textContent=''}
+function parse(s){s=s.trim().replace('％','%').replace('%','');if(s.includes('/')){const[x,y]=s.split('/').map(Number);return x/y}return Number(s)}
+function check(){const v=parse(document.getElementById('ans').value);if(!isFinite(v))return;total++;const ok=Math.abs(v-cur.a)<=cur.tol+1e-9;if(ok)right++;const fb=document.getElementById('fb');fb.innerHTML=`<span class="${ok?'ok':'bad'}">${ok?'✓ 对':'✗ 答案 '+f2(cur.a)}</span>　${cur.why}`;document.getElementById('stat').textContent=`答对 ${right} / ${total}`;cur.done=true}
+document.getElementById('go').onclick=()=>cur.done?next():check();
+document.getElementById('skip').onclick=next;
+document.getElementById('ans').addEventListener('keydown',e=>{if(e.key==='Enter')cur.done?next():check()});
+next();
+</script>
+</body>
+</html>
+{% endraw %}

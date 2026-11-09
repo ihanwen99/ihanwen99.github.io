@@ -1,0 +1,194 @@
+---
+layout: null
+permalink: /quant/
+sitemap: false
+---
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pandas 速查</title>
+<style>
+:root{--bg:#fff;--fg:#1f2328;--mut:#656d76;--line:#d0d7de;--code:#f6f8fa;--acc:#0969da}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mut:#8d96a0;--line:#30363d;--code:#161b22;--acc:#4493f8}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif}
+main{max-width:960px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 16px}
+#q{width:100%;padding:10px 12px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);margin-bottom:8px}
+nav{display:flex;flex-wrap:wrap;gap:6px 12px;margin:8px 0 20px;font-size:14px}
+nav a{color:var(--acc);text-decoration:none}
+h2{font-size:19px;margin:28px 0 8px;padding-top:8px;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
+td:first-child{width:38%;color:var(--fg)}
+code,pre{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+td code{background:var(--code);padding:1px 4px;border-radius:4px;word-break:break-word}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow-x:auto;margin:6px 0}
+.hide{display:none}
+@media (max-width:600px){td{display:block;width:100%!important;border:0;padding:2px 0}tr{display:block;border-bottom:1px solid var(--line);padding:6px 0}}
+</style>
+</head>
+<body>
+<main>
+<nav style="margin:0 0 12px;font-size:14px"><b>Quant 速查</b>｜<a href="/quant/games/">交易游戏</a>｜<a href="/quant/speed/">概率速算</a></nav>
+<h1>Pandas 速查</h1>
+<p class="sub">做数据题最常用的写法。左边是要做的事，右边是代码。上面搜索框可以按中文或代码过滤。</p>
+<input id="q" placeholder="搜：分组、合并、排名、rolling、shift……" autocomplete="off">
+<nav id="toc"></nav>
+
+<section><h2 id="read">读数据、先看一眼</h2><table>
+<tr><td>读 parquet / csv</td><td><code>df = pd.read_parquet('x.parquet')</code><br><code>df = pd.read_csv('x.csv')</code></td></tr>
+<tr><td>只读几列</td><td><code>pd.read_parquet(p, columns=['a', 'b'])</code></td></tr>
+<tr><td>行数、列数</td><td><code>df.shape</code></td></tr>
+<tr><td>看前几行</td><td><code>df.head()</code></td></tr>
+<tr><td>每列类型、空值</td><td><code>df.info()</code></td></tr>
+<tr><td>数值列汇总（均值、分位数）</td><td><code>df.describe()</code></td></tr>
+<tr><td>每列空值个数</td><td><code>df.isna().sum()</code></td></tr>
+<tr><td>某列有哪些值、各多少</td><td><code>df['col'].value_counts()</code></td></tr>
+<tr><td>不同值个数</td><td><code>df['col'].nunique()</code></td></tr>
+</table></section>
+
+<section><h2 id="select">选行、选列</h2><table>
+<tr><td>取一列（Series）</td><td><code>df['a']</code> 或 <code>df.a</code></td></tr>
+<tr><td>取几列（DataFrame）</td><td><code>df[['a', 'b']]</code></td></tr>
+<tr><td>按条件筛行</td><td><code>df[df.a &gt; 0]</code></td></tr>
+<tr><td>多个条件（要加括号）</td><td><code>df[(df.a &gt; 0) &amp; (df.b == 'x')]</code>；或用 <code>|</code></td></tr>
+<tr><td>在一组值里</td><td><code>df[df.id.isin([1, 2, 3])]</code></td></tr>
+<tr><td>按索引取行</td><td><code>df.loc[idx]</code>；多层索引 <code>df.loc[(0, 12)]</code></td></tr>
+<tr><td>按位置取行</td><td><code>df.iloc[0]</code>、<code>df.iloc[:5]</code></td></tr>
+<tr><td>按索引取行并选列</td><td><code>df.loc[df.a &gt; 0, 'b']</code></td></tr>
+<tr><td>丢掉空值行</td><td><code>df.dropna()</code>；只看某列 <code>df.dropna(subset=['a'])</code></td></tr>
+<tr><td>去重</td><td><code>df.drop_duplicates(['k1', 'k2'])</code></td></tr>
+</table></section>
+
+<section><h2 id="new">加列、改值</h2><table>
+<tr><td>加一列</td><td><code>df['r2'] = df.r ** 2</code></td></tr>
+<tr><td>多列算出一列</td><td><code>df['sp'] = (df.ask - df.bid) / df.mid</code></td></tr>
+<tr><td>按条件赋值</td><td><code>df['y'] = np.where(df.a &gt; 0, 1, 0)</code></td></tr>
+<tr><td>填空值</td><td><code>df['a'].fillna(0)</code></td></tr>
+<tr><td>改类型</td><td><code>df['a'].astype('float32')</code></td></tr>
+<tr><td>改列名</td><td><code>df.rename(columns={'old': 'new'})</code></td></tr>
+<tr><td>一次加多列（链式）</td><td><code>df.assign(r2=df.r**2, seg=df.sec // 60)</code></td></tr>
+<tr><td>对数、裁剪</td><td><code>np.log(x + 1e-10)</code>、<code>x.clip(lower=0)</code></td></tr>
+</table></section>
+
+<section><h2 id="group">分组汇总 groupby</h2><table>
+<tr><td>按两列分组求和（结果每组一行）</td><td><code>df.groupby(['stock_id', 'time_id']).r2.sum()</code></td></tr>
+<tr><td>一次算多个统计量</td><td><code>g.r.agg(['mean', 'std', 'count'])</code></td></tr>
+<tr><td>不同列不同统计量、并命名</td><td><code>g.agg(rv=('r2', 'sum'), sp=('sp', 'mean'))</code></td></tr>
+<tr><td>组内统计放回原表（行数不变）</td><td><code>df['m'] = df.groupby('t').x.transform('mean')</code></td></tr>
+<tr><td>组内减均值（去均值）</td><td><code>df.x - df.groupby('t').x.transform('mean')</code></td></tr>
+<tr><td>只对部分行分组</td><td><code>df[df.sec &gt;= 300].groupby(k).r2.sum()</code></td></tr>
+<tr><td>组内自定义函数</td><td><code>g.apply(lambda d: (d.r ** 2).sum())</code>（慢，能用 agg 就用 agg）</td></tr>
+<tr><td>组号（每组一个整数）</td><td><code>df.groupby(k).ngroup()</code></td></tr>
+<tr><td>分组后还原成普通列</td><td><code>.reset_index()</code></td></tr>
+</table>
+<pre># 例：每个 (stock, time) 一行的特征表
+d = df.assign(r2=df.log_return ** 2,
+              sp=(df.ask_price - df.bid_price) / df.weighted_average_price)
+k = ['stock_id', 'time_id']
+F = pd.DataFrame({
+    'rv':         d.groupby(k).r2.sum(),
+    'rv_last300': d[d.seconds_in_bucket &gt;= 300].groupby(k).r2.sum() * 2,
+    'spread':     d.groupby(k).sp.mean(),
+}).fillna(0)</pre>
+</section>
+
+<section><h2 id="index">多层索引 MultiIndex</h2><table>
+<tr><td>取某一层的值</td><td><code>s.index.get_level_values('time_id')</code></td></tr>
+<tr><td>按某一层分组</td><td><code>s.groupby(level='stock_id').median()</code> 或 <code>s.groupby('stock_id')</code></td></tr>
+<tr><td>差集（缺答案的那些）</td><td><code>all_idx.difference(known_idx)</code></td></tr>
+<tr><td>从两列造索引</td><td><code>pd.MultiIndex.from_frame(df[['a', 'b']])</code></td></tr>
+<tr><td>一层转成列（宽表）</td><td><code>s.unstack('stock_id')</code>；反过来 <code>.stack()</code></td></tr>
+</table></section>
+
+<section><h2 id="merge">合并、透视</h2><table>
+<tr><td>按键合并（像 SQL join）</td><td><code>a.merge(b, on=['k1', 'k2'], how='left')</code></td></tr>
+<tr><td>上下拼接</td><td><code>pd.concat([a, b])</code>；左右拼 <code>axis=1</code></td></tr>
+<tr><td>长表变宽表</td><td><code>df.pivot_table(index='time', columns='stock', values='x', aggfunc='mean')</code></td></tr>
+<tr><td>宽表变长表</td><td><code>df.melt(id_vars='time', var_name='stock', value_name='x')</code></td></tr>
+</table></section>
+
+<section><h2 id="sort">排序、排名、分位</h2><table>
+<tr><td>排序</td><td><code>df.sort_values(['a', 'b'], ascending=[True, False])</code></td></tr>
+<tr><td>最大的 n 行</td><td><code>df.nlargest(5, 'x')</code></td></tr>
+<tr><td>每天截面排名（0 到 1）</td><td><code>df.groupby('day').x.rank(pct=True)</code></td></tr>
+<tr><td>分位数</td><td><code>s.quantile([.25, .5, .99])</code></td></tr>
+<tr><td>按分位切成 5 组</td><td><code>pd.qcut(s, 5, labels=False)</code></td></tr>
+<tr><td>相关系数</td><td><code>df[['a', 'b']].corr()</code>；秩相关 <code>method='spearman'</code></td></tr>
+</table></section>
+
+<section><h2 id="time">时间序列：shift、diff、rolling</h2><table>
+<tr><td>上一行的值（组内）</td><td><code>df.groupby('id').x.shift(1)</code></td></tr>
+<tr><td>和上一行的差</td><td><code>df.groupby('id').x.diff()</code></td></tr>
+<tr><td>对数收益</td><td><code>np.log(p).groupby(df.id).diff()</code></td></tr>
+<tr><td>滚动均值 / 标准差</td><td><code>s.rolling(20, min_periods=10).mean()</code></td></tr>
+<tr><td>只用过去（防偷看未来）</td><td><code>s.rolling(20).mean().shift(1)</code></td></tr>
+<tr><td>累计和、累计最大</td><td><code>s.cumsum()</code>、<code>s.cummax()</code></td></tr>
+<tr><td>回撤</td><td><code>(x.cumsum().cummax() - x.cumsum()).max()</code></td></tr>
+<tr><td>转成日期、取年份</td><td><code>pd.to_datetime(df.t).dt.year</code></td></tr>
+</table></section>
+
+<section><h2 id="numpy">NumPy 常用</h2><table>
+<tr><td>忽略空值求和 / 均值</td><td><code>np.nansum(x)</code>、<code>np.nanmean(x)</code></td></tr>
+<tr><td>逐行取最小，忽略空值</td><td><code>np.fmin.reduce(L[:, [0, 9]], axis=1)</code></td></tr>
+<tr><td>空值掩码</td><td><code>np.isnan(x)</code></td></tr>
+<tr><td>条件选择</td><td><code>np.where(c, a, b)</code></td></tr>
+<tr><td>所有两两组合</td><td><code>itertools.combinations(range(12), 2)</code></td></tr>
+<tr><td>RMSE</td><td><code>np.sqrt(np.mean((pred - y) ** 2))</code></td></tr>
+</table></section>
+
+<section><h2 id="model">建模 sklearn</h2><table>
+<tr><td>线性回归 / 岭回归</td><td><code>LinearRegression().fit(X, y)</code>、<code>Ridge(alpha=1.0)</code></td></tr>
+<tr><td>Poisson 回归（正数目标）</td><td><code>PoissonRegressor(alpha=1e-4).fit(np.log(X), y)</code></td></tr>
+<tr><td>预测、看系数</td><td><code>m.predict(X_new)</code>、<code>m.coef_</code>、<code>m.intercept_</code></td></tr>
+<tr><td>标准化</td><td><code>(X - X.mean()) / X.std()</code></td></tr>
+<tr><td>按组切折（同组不拆开）</td><td><code>GroupKFold(5).split(X, y, groups=time_id)</code></td></tr>
+<tr><td>LightGBM</td><td><code>lgb.LGBMRegressor(n_estimators=300).fit(X, y)</code></td></tr>
+</table>
+<pre># 例：按 time_id 分组交叉验证
+from sklearn.model_selection import GroupKFold
+pred = np.zeros(len(y))
+for tr, te in GroupKFold(5).split(X, y, groups=tid):
+    m = PoissonRegressor(alpha=1e-4).fit(X[tr], y[tr])
+    pred[te] = m.predict(X[te])
+rmse = np.sqrt(np.mean((pred - y) ** 2))</pre>
+</section>
+
+<section><h2 id="plot">画图</h2><table>
+<tr><td>直方图（对数刻度）</td><td><code>np.log10(s).plot.hist(bins=50)</code></td></tr>
+<tr><td>按组分开画</td><td><code>s.groupby('stock_id').plot.hist(bins=50, histtype='step', legend=True)</code></td></tr>
+<tr><td>散点 + y=x 线</td><td><code>plt.scatter(p, y, s=4); plt.plot([lo, hi], [lo, hi], 'r--')</code></td></tr>
+<tr><td>对数坐标</td><td><code>plt.xscale('log'); plt.yscale('log')</code></td></tr>
+<tr><td>热力图</td><td><code>plt.imshow(M); plt.colorbar()</code></td></tr>
+<tr><td>折线</td><td><code>s.plot(marker='o')</code></td></tr>
+</table></section>
+
+<section><h2 id="pit">常见坑</h2><table>
+<tr><td>多条件忘了加括号</td><td><code>df[(a &gt; 0) &amp; (b &lt; 1)]</code>，不是 <code>a &gt; 0 &amp; b &lt; 1</code></td></tr>
+<tr><td>改切片报 SettingWithCopyWarning</td><td>先 <code>.copy()</code> 再改</td></tr>
+<tr><td>agg 还是 transform</td><td>要每组一行用 agg；要和原表对齐用 transform</td></tr>
+<tr><td>log(0) 变成 -inf</td><td><code>np.log(x + 1e-10)</code></td></tr>
+<tr><td>随机切验证集造成泄漏</td><td>同一时刻 / 同一组的数据要整组放进同一折</td></tr>
+<tr><td>交错了量（波动率 vs 方差）</td><td>交之前看一眼数量级</td></tr>
+</table></section>
+</main>
+<script>
+const toc=document.getElementById('toc');
+document.querySelectorAll('h2').forEach(h=>{const a=document.createElement('a');a.href='#'+h.id;a.textContent=h.textContent;toc.appendChild(a)});
+document.getElementById('q').addEventListener('input',e=>{
+  const q=e.target.value.trim().toLowerCase();
+  document.querySelectorAll('section').forEach(sec=>{
+    let any=false;
+    sec.querySelectorAll('tr').forEach(tr=>{const hit=!q||tr.textContent.toLowerCase().includes(q)||sec.querySelector('h2').textContent.toLowerCase().includes(q);tr.classList.toggle('hide',!hit);if(hit)any=true});
+    const pre=sec.querySelectorAll('pre');pre.forEach(p=>p.classList.toggle('hide',!!q&&!p.textContent.toLowerCase().includes(q)));
+    sec.classList.toggle('hide',!any&&![...pre].some(p=>!p.classList.contains('hide')));
+  });
+});
+</script>
+</body>
+</html>
